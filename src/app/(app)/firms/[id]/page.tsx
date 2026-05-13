@@ -20,7 +20,7 @@ import {
   getFirmEngagements,
   getFirmNotes,
 } from "@/server/insights";
-import { listPracticeAreas } from "@/server/reference-data";
+import { listPracticeAreas, listJurisdictions } from "@/server/reference-data";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { NpsBadge, NpsBreakdown } from "@/components/ui/NpsBadge";
@@ -28,6 +28,8 @@ import { RatingAverages } from "@/components/ui/StarRating";
 import { NpsForm } from "@/components/insights/NpsForm";
 import { RatingForm } from "@/components/insights/RatingForm";
 import { NoteForm } from "@/components/insights/NoteForm";
+import { EngagementForm } from "@/components/insights/EngagementForm";
+import { CostBenchmarkForm } from "@/components/insights/CostBenchmarkForm";
 import {
   FIRM_TYPE_LABELS,
   LAWYER_ROLE_LABELS,
@@ -51,7 +53,7 @@ interface FirmDetailPageProps {
 
 export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
   const { id } = await params;
-  const [firm, rankings, nps, internalRatings, engagements, notes, allPracticeAreas] =
+  const [firm, rankings, nps, internalRatings, engagements, notes, allPracticeAreas, allJurisdictions] =
     await Promise.all([
       getFirmById(id),
       getFirmRankings(id),
@@ -60,6 +62,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
       getFirmEngagements(id),
       getFirmNotes(id),
       listPracticeAreas(),
+      listJurisdictions(),
     ]);
 
   if (!firm || firm.deletedAt) {
@@ -395,13 +398,13 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
       </div>
 
       {/* Engagements section — full width below */}
-      {engagements.length > 0 && (
-        <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
-            <DollarSign size={14} className="mr-2 inline" />
-            Engagements ({engagements.length})
-          </h3>
-          <div className="overflow-x-auto">
+      <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
+        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
+          <DollarSign size={14} className="mr-2 inline" />
+          Engagements ({engagements.length})
+        </h3>
+        {engagements.length > 0 && (
+          <div className="mb-4 overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -459,8 +462,24 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
               </tbody>
             </table>
           </div>
+        )}
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <EngagementForm
+              firmId={id}
+              lawyers={currentLawyers.map((fl) => ({ id: fl.lawyer.id, name: fl.lawyer.name }))}
+              jurisdictions={allJurisdictions.map((j) => ({ id: j.id, name: j.name }))}
+            />
+          </div>
+          <div className="flex-1">
+            <CostBenchmarkForm
+              firmId={id}
+              practiceAreas={allPracticeAreas.map((pa) => ({ id: pa.id, name: pa.name }))}
+              jurisdictions={allJurisdictions.map((j) => ({ id: j.id, name: j.name }))}
+            />
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

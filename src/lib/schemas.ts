@@ -288,6 +288,107 @@ export const createNoteSchema = z.object({
 
 export type CreateNoteInput = z.infer<typeof createNoteSchema>;
 
+// ─── Engagement schemas ────────────────────────────────────────────────────
+
+export const matterTypeEnum = z.enum([
+  "LITIGATION",
+  "ARBITRATION",
+  "REGULATORY",
+  "TRANSACTIONAL",
+  "ADVISORY",
+  "IP",
+  "EMPLOYMENT",
+  "OTHER",
+]);
+export type MatterTypeEnum = z.infer<typeof matterTypeEnum>;
+
+export const engagementOutcomeEnum = z.enum([
+  "WON",
+  "LOST",
+  "SETTLED",
+  "ONGOING",
+  "COMPLETED",
+  "OTHER",
+]);
+export type EngagementOutcomeEnum = z.infer<typeof engagementOutcomeEnum>;
+
+export const MATTER_TYPE_LABELS: Record<MatterTypeEnum, string> = {
+  LITIGATION: "Litigation",
+  ARBITRATION: "Arbitration",
+  REGULATORY: "Regulatory",
+  TRANSACTIONAL: "Transactional",
+  ADVISORY: "Advisory",
+  IP: "Intellectual Property",
+  EMPLOYMENT: "Employment",
+  OTHER: "Other",
+};
+
+export const OUTCOME_LABELS: Record<EngagementOutcomeEnum, string> = {
+  WON: "Won",
+  LOST: "Lost",
+  SETTLED: "Settled",
+  ONGOING: "Ongoing",
+  COMPLETED: "Completed",
+  OTHER: "Other",
+};
+
+export const createEngagementSchema = z.object({
+  firmId: z.string().min(1, "Firm is required"),
+  lawyerId: z.string().optional(),
+  matterName: z.string().min(1, "Matter name is required").max(500),
+  matterType: matterTypeEnum,
+  jurisdictionId: z.string().optional(),
+  entityName: z.string().max(200).optional(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date().optional(),
+  outcome: engagementOutcomeEnum.default("ONGOING"),
+  totalFeesUsd: z.coerce.number().int().min(0).optional(),
+  notes: z.string().max(2000).optional(),
+});
+
+export type CreateEngagementInput = z.infer<typeof createEngagementSchema>;
+
+// ─── Cost Benchmark schemas ────────────────────────────────────────────────
+
+export const benchmarkRoleEnum = z.enum([
+  "PARTNER",
+  "OF_COUNSEL",
+  "ASSOCIATE",
+  "PARALEGAL",
+]);
+export type BenchmarkRoleEnum = z.infer<typeof benchmarkRoleEnum>;
+
+export const benchmarkSourceEnum = z.enum(["ACTUAL", "PROPOSED", "MARKET"]);
+export type BenchmarkSourceEnum = z.infer<typeof benchmarkSourceEnum>;
+
+export const BENCHMARK_ROLE_LABELS: Record<BenchmarkRoleEnum, string> = {
+  PARTNER: "Partner",
+  OF_COUNSEL: "Of Counsel",
+  ASSOCIATE: "Associate",
+  PARALEGAL: "Paralegal",
+};
+
+export const BENCHMARK_SOURCE_LABELS: Record<BenchmarkSourceEnum, string> = {
+  ACTUAL: "Actual",
+  PROPOSED: "Proposed",
+  MARKET: "Market",
+};
+
+export const createCostBenchmarkSchema = z.object({
+  firmId: z.string().min(1, "Firm is required"),
+  lawyerId: z.string().optional(),
+  role: benchmarkRoleEnum,
+  practiceAreaId: z.string().min(1, "Practice area is required"),
+  jurisdictionId: z.string().min(1, "Jurisdiction is required"),
+  hourlyRateUsd: z.coerce.number().int().min(0, "Hourly rate is required"),
+  blendedRateUsd: z.coerce.number().int().min(0).optional(),
+  fixedFeeUsd: z.coerce.number().int().min(0).optional(),
+  year: z.coerce.number().int().min(2000).max(new Date().getFullYear() + 1),
+  source: benchmarkSourceEnum,
+});
+
+export type CreateCostBenchmarkInput = z.infer<typeof createCostBenchmarkSchema>;
+
 // ─── Ranking display helpers ─────────────────────────────────────────────────
 
 /** Chambers bands: 1 = best */
