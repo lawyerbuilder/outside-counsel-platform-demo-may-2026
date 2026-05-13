@@ -128,3 +128,63 @@
     @apply font-sans;
   }
 }
+
+/* ─── Print-friendly styles ──────────────────────────────────────────────── */
+@media print {
+  /* Hide navigation and non-essential UI */
+  aside,
+  nav,
+  .topbar,
+  button,
+  a[href="/settings"],
+  a[href*="/edit"] {
+    display: none !important;
+  }
+
+  /* Full-width content */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .flex.h-screen {
+    display: block !important;
+  }
+
+  /* Remove backgrounds and shadows for clean print */
+  .bg-white,
+  .bg-gray-50,
+  .bg-teal-50\/50,
+  .bg-amber-50\/50 {
+    background: white !important;
+  }
+
+  .shadow-sm,
+  .shadow-md,
+  .hover\:shadow-md {
+    box-shadow: none !important;
+  }
+
+  /* Ensure borders are visible in print */
+  .border,
+  .border-gray-200 {
+    border-color: #e5e7eb !important;
+  }
+
+  /* Ensure text is dark enough for print */
+  .text-gray-400,
+  .text-gray-500 {
+    color: #6b7280 !important;
+  }
+
+  /* Page breaks */
+  .rounded-lg {
+    break-inside: avoid;
+  }
+
+  /* Print header */
+  @page {
+    margin: 1.5cm;
+    size: A4;
+  }
+}

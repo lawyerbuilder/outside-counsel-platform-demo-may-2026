@@ -1,9 +1,19 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { computeNps } from "@/server/insights";
 import { serializeCsv } from "@/lib/csv";
+import { checkRateLimit, rateLimitHeaders } from "@/lib/rate-limit";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Rate limit: 10 exports per minute per IP
+  const ip = request.headers.get("x-forwarded-for") ?? "anonymous";
+  const rl = checkRateLimit(`export:${ip}`, { limit: 10, windowMs: 60_000 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: rateLimitHeaders(rl) }
+    );
+  }
   const firms = await prisma.firm.findMany({
     where: { isActive: true, deletedAt: null },
     include: {
