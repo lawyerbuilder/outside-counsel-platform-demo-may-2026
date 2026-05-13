@@ -58,19 +58,28 @@ export default async function AdminRankingsPage() {
         <CsvImportForm />
         <div className="rounded-lg border border-gray-200 bg-white p-6">
           <h3 className="mb-2 text-sm font-semibold text-gray-900">
-            Export Firm Data
+            Export Data
           </h3>
           <p className="mb-4 text-xs text-gray-500">
-            Download a CSV of all firms with rankings, NPS, ratings, and
-            engagement data.
+            Download CSVs of all firms or lawyers with rankings, NPS, ratings,
+            and engagement data.
           </p>
-          <a
-            href="/api/export/firms"
-            className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            <Download size={14} />
-            Export Firms CSV
-          </a>
+          <div className="flex gap-2">
+            <a
+              href="/api/export/firms"
+              className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              <Download size={14} />
+              Firms CSV
+            </a>
+            <a
+              href="/api/export/lawyers"
+              className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              <Download size={14} />
+              Lawyers CSV
+            </a>
+          </div>
         </div>
       </div>
 
