@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import {
   addEngagementAction,
   type InsightActionState,
@@ -28,6 +28,13 @@ export function EngagementForm({
     { success: false }
   );
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (state.success) {
+      const timer = setTimeout(() => setIsOpen(false), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [state.success]);
 
   if (!isOpen) {
     return (
