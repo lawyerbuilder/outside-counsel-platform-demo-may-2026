@@ -207,6 +207,50 @@ export const rankingFilterSchema = z.object({
 
 export type RankingFilterInput = z.infer<typeof rankingFilterSchema>;
 
+// ─── User Preference schemas ────────────────────────────────────────────────
+
+export const updatePreferenceSchema = z.object({
+  weightResponsiveness: z.coerce.number().min(0).max(2).default(1.0),
+  weightQuality: z.coerce.number().min(0).max(2).default(1.0),
+  weightCommercialAwareness: z.coerce.number().min(0).max(2).default(1.0),
+  weightValue: z.coerce.number().min(0).max(2).default(1.0),
+  weightSubjectMatterExpertise: z.coerce.number().min(0).max(2).default(1.0),
+  weightNps: z.coerce.number().min(0).max(2).default(1.0),
+});
+
+export type UpdatePreferenceInput = z.infer<typeof updatePreferenceSchema>;
+
+export const PREFERENCE_LABELS: Record<keyof UpdatePreferenceInput, string> = {
+  weightResponsiveness: "Responsiveness",
+  weightQuality: "Quality of Work",
+  weightCommercialAwareness: "Commercial Awareness",
+  weightValue: "Value for Money",
+  weightSubjectMatterExpertise: "Subject-Matter Expertise",
+  weightNps: "Peer Sentiment (NPS)",
+};
+
+export const PREFERENCE_DESCRIPTIONS: Record<keyof UpdatePreferenceInput, string> = {
+  weightResponsiveness: "How quickly they respond and meet deadlines",
+  weightQuality: "Thoroughness, accuracy, and depth of legal analysis",
+  weightCommercialAwareness: "Understanding of business context and commercial implications",
+  weightValue: "Cost efficiency and value relative to fees charged",
+  weightSubjectMatterExpertise: "Depth of expertise in the specific area of law",
+  weightNps: "How strongly peers recommend them (Net Promoter Score)",
+};
+
+// ─── Directory filter schemas ───────────────────────────────────────────────
+
+export const directoryFilterSchema = z.object({
+  search: z.string().optional(),
+  type: z.enum(["firms", "lawyers"]).default("firms"),
+  practiceAreaId: z.string().optional(),
+  jurisdictionId: z.string().optional(),
+  firmType: firmTypeEnum.optional(),
+  minNps: z.coerce.number().int().min(-100).max(100).optional(),
+});
+
+export type DirectoryFilterInput = z.infer<typeof directoryFilterSchema>;
+
 // ─── Ranking display helpers ─────────────────────────────────────────────────
 
 /** Chambers bands: 1 = best */

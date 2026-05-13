@@ -678,6 +678,35 @@ async function main() {
   }
   console.log(`  Relationship Notes: ${noteData.length}`);
 
+  // ─── User Preferences ──────────────────────────────────────────────────
+  await prisma.userPreference.upsert({
+    where: { userId: userSarah.id },
+    update: {},
+    create: {
+      userId: userSarah.id,
+      weightResponsiveness: 1.2,
+      weightQuality: 1.5,
+      weightCommercialAwareness: 1.0,
+      weightValue: 0.8,
+      weightSubjectMatterExpertise: 1.3,
+      weightNps: 1.4,
+    },
+  });
+  await prisma.userPreference.upsert({
+    where: { userId: userJames.id },
+    update: {},
+    create: {
+      userId: userJames.id,
+      weightResponsiveness: 1.0,
+      weightQuality: 1.0,
+      weightCommercialAwareness: 1.2,
+      weightValue: 1.5,
+      weightSubjectMatterExpertise: 1.0,
+      weightNps: 1.3,
+    },
+  });
+  console.log("  User Preferences: 2");
+
   console.log("Seed complete!");
 }
 

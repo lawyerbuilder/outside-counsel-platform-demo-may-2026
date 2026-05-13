@@ -98,6 +98,7 @@ model User {
   engagements        Engagement[]
   relationshipNotes  RelationshipNote[]
   costBenchmarks     CostBenchmark[]
+  preference         UserPreference?
 
   @@map("users")
 }
@@ -417,4 +418,21 @@ model CostBenchmark {
   updatedAt      DateTime        @updatedAt @map("updated_at")
 
   @@map("cost_benchmarks")
+}
+
+// ─── User Preferences (Self-Improving Layer) ────────────────────────────────
+
+model UserPreference {
+  id                           String @id @default(cuid())
+  userId                       String @unique @map("user_id")
+  user                         User   @relation(fields: [userId], references: [id])
+  weightResponsiveness         Float  @default(1.0) @map("weight_responsiveness")
+  weightQuality                Float  @default(1.0) @map("weight_quality")
+  weightCommercialAwareness    Float  @default(1.0) @map("weight_commercial_awareness")
+  weightValue                  Float  @default(1.0) @map("weight_value")
+  weightSubjectMatterExpertise Float  @default(1.0) @map("weight_subject_matter_expertise")
+  weightNps                    Float  @default(1.0) @map("weight_nps")
+  updatedAt                    DateTime @updatedAt @map("updated_at")
+
+  @@map("user_preferences")
 }
