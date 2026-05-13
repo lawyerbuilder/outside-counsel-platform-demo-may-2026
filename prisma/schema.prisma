@@ -7,10 +7,29 @@ datasource db {
   provider = "sqlite"
 }
 
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
 enum UserRole {
   LAWYER
   ADMIN
 }
+
+enum FirmType {
+  FULL_SERVICE
+  BOUTIQUE
+  MID_SIZE
+  REGIONAL
+}
+
+enum LawyerRole {
+  PARTNER
+  OF_COUNSEL
+  ASSOCIATE
+  COUNSEL
+  OTHER
+}
+
+// ─── Auth / Users ────────────────────────────────────────────────────────────
 
 model User {
   id        String    @id @default(cuid())
@@ -22,4 +41,131 @@ model User {
   deletedAt DateTime? @map("deleted_at")
 
   @@map("users")
+}
+
+// ─── Reference Data ──────────────────────────────────────────────────────────
+
+model PracticeArea {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  slug      String        @unique
+  parentId  String?       @map("parent_id")
+  parent    PracticeArea? @relation("PracticeAreaHierarchy", fields: [parentId], references: [id])
+  children  PracticeArea[] @relation("PracticeAreaHierarchy")
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  firmPracticeAreas   FirmPracticeArea[]
+  lawyerPracticeAreas LawyerPracticeArea[]
+
+  @@map("practice_areas")
+}
+
+model Jurisdiction {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  country   String
+  region    String   // APAC, EMEA, AMERICAS, GLOBAL
+  createdAt DateTime @default(now()) @map("created_at")
+
+  firmPracticeAreas   FirmPracticeArea[]
+  lawyerPracticeAreas LawyerPracticeArea[]
+
+  @@map("jurisdictions")
+}
+
+// ─── Firms ───────────────────────────────────────────────────────────────────
+
+model Firm {
+  id           String    @id @default(cuid())
+  name         String
+  shortName    String?   @map("short_name")
+  country      String
+  city         String
+  website      String?
+  firmType     FirmType  @default(FULL_SERVICE) @map("firm_type")
+  headcount    Int?
+  foundedYear  Int?      @map("founded_year")
+  parentFirmId String?   @map("parent_firm_id")
+  parentFirm   Firm?     @relation("FirmSpinOffs", fields: [parentFirmId], references: [id])
+  spinOffs     Firm[]    @relation("FirmSpinOffs")
+  isActive     Boolean   @default(true) @map("is_active")
+  notes        String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  firmLawyers     FirmLawyer[]
+  practiceAreas   FirmPracticeArea[]
+
+  @@map("firms")
+}
+
+// ─── Lawyers ─────────────────────────────────────────────────────────────────
+
+model Lawyer {
+  id                String    @id @default(cuid())
+  name              String
+  email             String?
+  title             String?
+  qualificationYear Int?      @map("qualification_year")
+  barAdmissions     String?   @map("bar_admissions")
+  bio               String?
+  linkedInUrl       String?   @map("linkedin_url")
+  isActive          Boolean   @default(true) @map("is_active")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  deletedAt         DateTime? @map("deleted_at")
+
+  firmLawyers     FirmLawyer[]
+  practiceAreas   LawyerPracticeArea[]
+
+  @@map("lawyers")
+}
+
+// ─── Join Tables ─────────────────────────────────────────────────────────────
+
+model FirmLawyer {
+  id        String     @id @default(cuid())
+  firmId    String     @map("firm_id")
+  firm      Firm       @relation(fields: [firmId], references: [id])
+  lawyerId  String     @map("lawyer_id")
+  lawyer    Lawyer     @relation(fields: [lawyerId], references: [id])
+  role      LawyerRole @default(PARTNER)
+  startDate DateTime?  @map("start_date")
+  endDate   DateTime?  @map("end_date")
+  isCurrent Boolean    @default(true) @map("is_current")
+  notes     String?
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@unique([firmId, lawyerId, startDate])
+  @@map("firm_lawyers")
+}
+
+model FirmPracticeArea {
+  id             String       @id @default(cuid())
+  firmId         String       @map("firm_id")
+  firm           Firm         @relation(fields: [firmId], references: [id])
+  practiceAreaId String       @map("practice_area_id")
+  practiceArea   PracticeArea @relation(fields: [practiceAreaId], references: [id])
+  jurisdictionId String?      @map("jurisdiction_id")
+  jurisdiction   Jurisdiction? @relation(fields: [jurisdictionId], references: [id])
+  createdAt      DateTime     @default(now()) @map("created_at")
+
+  @@unique([firmId, practiceAreaId, jurisdictionId])
+  @@map("firm_practice_areas")
+}
+
+model LawyerPracticeArea {
+  id             String       @id @default(cuid())
+  lawyerId       String       @map("lawyer_id")
+  lawyer         Lawyer       @relation(fields: [lawyerId], references: [id])
+  practiceAreaId String       @map("practice_area_id")
+  practiceArea   PracticeArea @relation(fields: [practiceAreaId], references: [id])
+  jurisdictionId String?      @map("jurisdiction_id")
+  jurisdiction   Jurisdiction? @relation(fields: [jurisdictionId], references: [id])
+  createdAt      DateTime     @default(now()) @map("created_at")
+
+  @@unique([lawyerId, practiceAreaId, jurisdictionId])
+  @@map("lawyer_practice_areas")
 }
