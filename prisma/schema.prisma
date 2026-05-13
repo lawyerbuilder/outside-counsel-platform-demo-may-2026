@@ -99,6 +99,7 @@ model User {
   relationshipNotes  RelationshipNote[]
   costBenchmarks     CostBenchmark[]
   preference         UserPreference?
+  reviewedUpdates    ResearchUpdate[]
 
   @@map("users")
 }
@@ -162,14 +163,15 @@ model Firm {
   updatedAt    DateTime  @updatedAt @map("updated_at")
   deletedAt    DateTime? @map("deleted_at")
 
-  firmLawyers     FirmLawyer[]
-  practiceAreas   FirmPracticeArea[]
-  rankings        FirmRanking[]
-  internalRatings InternalRating[]
-  recommendations Recommendation[]
-  engagements     Engagement[]
+  firmLawyers      FirmLawyer[]
+  practiceAreas    FirmPracticeArea[]
+  rankings         FirmRanking[]
+  internalRatings  InternalRating[]
+  recommendations  Recommendation[]
+  engagements      Engagement[]
   relationshipNotes RelationshipNote[]
-  costBenchmarks  CostBenchmark[]
+  costBenchmarks   CostBenchmark[]
+  researchUpdates  ResearchUpdate[]
 
   @@map("firms")
 }
@@ -190,14 +192,15 @@ model Lawyer {
   updatedAt         DateTime  @updatedAt @map("updated_at")
   deletedAt         DateTime? @map("deleted_at")
 
-  firmLawyers     FirmLawyer[]
-  practiceAreas   LawyerPracticeArea[]
-  rankings        LawyerRanking[]
-  internalRatings InternalRating[]
-  recommendations Recommendation[]
-  engagements     Engagement[]
+  firmLawyers      FirmLawyer[]
+  practiceAreas    LawyerPracticeArea[]
+  rankings         LawyerRanking[]
+  internalRatings  InternalRating[]
+  recommendations  Recommendation[]
+  engagements      Engagement[]
   relationshipNotes RelationshipNote[]
-  costBenchmarks  CostBenchmark[]
+  costBenchmarks   CostBenchmark[]
+  researchUpdates  ResearchUpdate[]
 
   @@map("lawyers")
 }
@@ -435,4 +438,49 @@ model UserPreference {
   updatedAt                    DateTime @updatedAt @map("updated_at")
 
   @@map("user_preferences")
+}
+
+// ─── AI Research Queue (Weekly Cron) ──────────────────────────────────────
+
+enum ResearchUpdateStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  APPLIED
+}
+
+enum ResearchUpdateType {
+  RANKING_UPDATE
+  FIRM_NEWS
+  LAWYER_MOVE
+  NEW_FIRM
+  NEW_LAWYER
+  COST_UPDATE
+  GENERAL
+}
+
+model ResearchUpdate {
+  id           String               @id @default(cuid())
+  type         ResearchUpdateType
+  status       ResearchUpdateStatus @default(PENDING)
+  title        String               // Short summary (e.g. "Chambers 2026 rankings released")
+  description  String               // AI-generated detail
+  rawData      String?              @map("raw_data") // JSON payload from AI research
+  targetType   TargetType?          @map("target_type")
+  firmId       String?              @map("firm_id")
+  firm         Firm?                @relation(fields: [firmId], references: [id])
+  lawyerId     String?              @map("lawyer_id")
+  lawyer       Lawyer?              @relation(fields: [lawyerId], references: [id])
+  source       String?              // URL or source name
+  confidence   Float                @default(0.5) // AI confidence 0-1
+  reviewedById String?              @map("reviewed_by_id")
+  reviewedBy   User?                @relation(fields: [reviewedById], references: [id])
+  reviewNote   String?              @map("review_note")
+  batchId      String?              @map("batch_id") // Groups updates from same cron run
+  createdAt    DateTime             @default(now()) @map("created_at")
+  updatedAt    DateTime             @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([batchId])
+  @@map("research_updates")
 }

@@ -11,6 +11,7 @@ import {
   GitBranch,
   Settings,
   Shield,
+  Bot,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -29,6 +30,7 @@ const navItems = [
 
 const adminItems = [
   { label: "Manage Rankings", href: "/admin/rankings", icon: Shield },
+  { label: "AI Research", href: "/admin/research", icon: Bot },
 ];
 
 export function Sidebar() {
