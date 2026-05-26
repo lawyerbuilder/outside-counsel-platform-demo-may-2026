@@ -1,4 +1,4 @@
-import { Sparkles, Brain, MessageSquare } from "lucide-react";
+import { Sparkles, Brain, MessageSquare, Navigation } from "lucide-react";
 import { getCurrentUser } from "@/server/current-user";
 import { getUserPreference } from "@/server/preferences";
 import { getAiBriefing } from "@/server/platform-settings";
@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { PreferenceForm } from "@/components/settings/PreferenceForm";
 import { AiBriefingForm } from "@/components/settings/AiBriefingForm";
 import { AiNotesAssistant } from "@/components/settings/AiNotesAssistant";
+import { RestartTourButton } from "@/components/settings/RestartTourButton";
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +85,25 @@ export default async function SettingsPage() {
         </h3>
 
         <PreferenceForm userId={user.id} currentWeights={weights} />
+
+        {/* Product Tour */}
+        <div className="mt-8 rounded-lg border border-gray-200 bg-white p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-3">
+              <Navigation size={20} className="mt-0.5 text-scg-600" />
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900">
+                  Product Tour
+                </h3>
+                <p className="mt-1 text-xs text-gray-500">
+                  Replay the guided walkthrough that introduces the key areas of
+                  the platform.
+                </p>
+              </div>
+            </div>
+            <RestartTourButton />
+          </div>
+        </div>
 
         <div className="mt-8 rounded-lg border border-gray-200 bg-white p-6">
           <h3 className="mb-2 text-sm font-semibold text-gray-700">

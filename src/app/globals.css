@@ -145,6 +145,79 @@
   }
 }
 
+/* ─── Driver.js Tour Theming (SCG brand) ─────────────────────────────────── */
+.driver-popover.ocp-tour-popover {
+  border-radius: 12px !important;
+  padding: 20px 24px !important;
+  max-width: 340px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-title {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-description {
+  font-size: 13px !important;
+  color: #6b7280 !important;
+  line-height: 1.6 !important;
+  margin-top: 6px !important;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-progress-text {
+  font-size: 11px !important;
+  color: #9ca3af !important;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-next-btn {
+  background-color: #E0251C !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 6px 16px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-shadow: none !important;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-next-btn:hover {
+  background-color: #bc1f17 !important;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-prev-btn {
+  background-color: transparent !important;
+  color: #6b7280 !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  padding: 6px 16px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-shadow: none !important;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-prev-btn:hover {
+  background-color: #f9fafb !important;
+  color: #374151 !important;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-close-btn {
+  color: #9ca3af;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-close-btn:hover {
+  color: #374151;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-arrow-side-left {
+  border-left-color: white;
+}
+
+.driver-popover.ocp-tour-popover .driver-popover-arrow-side-right {
+  border-right-color: white;
+}
+
 /* ─── Print-friendly styles ──────────────────────────────────────────────── */
 @media print {
   /* Hide navigation and non-essential UI */

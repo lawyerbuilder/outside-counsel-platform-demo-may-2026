@@ -21,15 +21,15 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Directory", href: "/directory", icon: Home },
-  { label: "Firms", href: "/firms", icon: Building2 },
-  { label: "Lawyers", href: "/lawyers", icon: Users },
-  { label: "Rankings", href: "/rankings", icon: Trophy },
-  { label: "Engagements", href: "/engagements", icon: Briefcase },
-  { label: "RFP", href: "/rfp", icon: FileText },
-  { label: "Insights", href: "/insights", icon: Brain },
-  { label: "Network", href: "/network", icon: GitBranch },
-  { label: "Settings", href: "/settings", icon: Settings },
+  { label: "Directory", href: "/directory", icon: Home, tourId: "tour-directory" },
+  { label: "Firms", href: "/firms", icon: Building2, tourId: "tour-firms" },
+  { label: "Lawyers", href: "/lawyers", icon: Users, tourId: "tour-lawyers" },
+  { label: "Rankings", href: "/rankings", icon: Trophy, tourId: "tour-rankings" },
+  { label: "Engagements", href: "/engagements", icon: Briefcase, tourId: "tour-engagements" },
+  { label: "RFP", href: "/rfp", icon: FileText, tourId: "tour-rfp" },
+  { label: "Insights", href: "/insights", icon: Brain, tourId: "tour-insights" },
+  { label: "Network", href: "/network", icon: GitBranch, tourId: "tour-network" },
+  { label: "Settings", href: "/settings", icon: Settings, tourId: "tour-settings" },
 ];
 
 const adminItems = [
@@ -79,6 +79,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              id={item.tourId}
               className={cn(
                 "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive
