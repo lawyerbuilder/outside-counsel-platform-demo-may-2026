@@ -40,7 +40,7 @@ export function EngagementForm({
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="w-full rounded-md border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 hover:border-teal-400 hover:text-teal-600"
+        className="w-full rounded-md border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 hover:border-scg-400 hover:text-scg-600"
       >
         + Log Engagement
       </button>
@@ -64,7 +64,7 @@ export function EngagementForm({
             type="text"
             name="matterName"
             required
-            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             placeholder="e.g. SCG Chemicals JV Dispute"
           />
         </div>
@@ -77,7 +77,7 @@ export function EngagementForm({
             <select
               name="matterType"
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             >
               {(Object.keys(MATTER_TYPE_LABELS) as MatterTypeEnum[]).map(
                 (key) => (
@@ -94,7 +94,7 @@ export function EngagementForm({
             </label>
             <select
               name="outcome"
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             >
               {(Object.keys(OUTCOME_LABELS) as EngagementOutcomeEnum[]).map(
                 (key) => (
@@ -116,7 +116,7 @@ export function EngagementForm({
               type="date"
               name="startDate"
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             />
           </div>
           <div>
@@ -126,7 +126,7 @@ export function EngagementForm({
             <input
               type="date"
               name="endDate"
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             />
           </div>
         </div>
@@ -138,7 +138,7 @@ export function EngagementForm({
             </label>
             <select
               name="lawyerId"
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             >
               <option value="">None</option>
               {lawyers.map((l) => (
@@ -157,7 +157,7 @@ export function EngagementForm({
             </label>
             <select
               name="jurisdictionId"
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             >
               <option value="">Any</option>
               {jurisdictions.map((j) => (
@@ -177,7 +177,7 @@ export function EngagementForm({
             <input
               type="text"
               name="entityName"
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
               placeholder="e.g. SCG Chemicals"
             />
           </div>
@@ -189,7 +189,7 @@ export function EngagementForm({
               type="number"
               name="totalFeesUsd"
               min="0"
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
               placeholder="e.g. 5000000"
             />
           </div>
@@ -202,7 +202,7 @@ export function EngagementForm({
           <textarea
             name="notes"
             rows={2}
-            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             placeholder="Any additional context..."
           />
         </div>
@@ -220,7 +220,7 @@ export function EngagementForm({
           <button
             type="submit"
             disabled={isPending}
-            className="rounded-md bg-teal-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
+            className="rounded-md bg-scg-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-scg-700 disabled:opacity-50"
           >
             {isPending ? "Saving..." : "Log Engagement"}
           </button>

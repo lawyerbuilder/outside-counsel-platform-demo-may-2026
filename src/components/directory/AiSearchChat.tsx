@@ -117,7 +117,7 @@ function parseResultLinks(text: string): React.ReactNode[] {
           <Link
             key={key++}
             href={href}
-            className="font-medium text-teal-700 underline hover:text-teal-900"
+            className="font-medium text-scg-700 underline hover:text-scg-900"
           >
             {linkMatch[1]}
           </Link>
@@ -165,7 +165,7 @@ function ActionButtonUI({
 
   const styleMap: Record<string, string> = {
     add_shortlist:
-      "border-teal-300 bg-teal-50 text-teal-700 hover:bg-teal-100",
+      "border-scg-300 bg-scg-50 text-scg-700 hover:bg-scg-100",
     view_shortlist:
       "border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100",
     approve_shortlist:
@@ -216,7 +216,7 @@ function MessageBubble({
     <div className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""}`}>
       <div
         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-          isUser ? "bg-teal-600" : "bg-amber-100"
+          isUser ? "bg-scg-600" : "bg-amber-100"
         }`}
       >
         {isUser ? (
@@ -228,7 +228,7 @@ function MessageBubble({
       <div
         className={`max-w-[85%] rounded-lg px-3.5 py-2.5 text-sm leading-relaxed ${
           isUser
-            ? "bg-teal-600 text-white"
+            ? "bg-scg-600 text-white"
             : "border border-gray-200 bg-white text-gray-800"
         }`}
       >
@@ -299,9 +299,9 @@ function ShortlistPanel({
   onClose: () => void;
 }) {
   return (
-    <div className="border-b border-gray-200 bg-teal-50/50 px-4 py-3">
+    <div className="border-b border-gray-200 bg-scg-50/50 px-4 py-3">
       <div className="mb-2 flex items-center justify-between">
-        <h4 className="flex items-center gap-1.5 text-xs font-semibold text-teal-800">
+        <h4 className="flex items-center gap-1.5 text-xs font-semibold text-scg-800">
           <ListChecks size={14} />
           Shortlist ({firms.length} firm{firms.length !== 1 ? "s" : ""})
         </h4>
@@ -595,16 +595,16 @@ export function AiSearchChat() {
     <div className="space-y-2">
       <div
         onClick={() => setIsOpen(true)}
-        className="flex cursor-pointer items-center gap-3 rounded-lg border border-teal-200 bg-gradient-to-r from-teal-50 to-amber-50/30 px-4 py-2.5 transition-all hover:border-teal-300 hover:shadow-md"
+        className="flex cursor-pointer items-center gap-3 rounded-lg border border-scg-200 bg-gradient-to-r from-scg-50 to-amber-50/30 px-4 py-2.5 transition-all hover:border-scg-300 hover:shadow-md"
       >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-600">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-scg-600">
           <Sparkles size={14} className="text-white" />
         </div>
         <span className="flex-1 text-sm text-gray-400">
           Find me a lawyer for...
         </span>
         {messages.length > 0 && (
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-100 text-teal-600">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-scg-100 text-scg-600">
             <MessageSquare size={12} />
           </div>
         )}
@@ -615,7 +615,7 @@ export function AiSearchChat() {
             <button
               key={s}
               onClick={() => handleSuggestionClick(s)}
-              className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-600 transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-700"
+              className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-600 transition-colors hover:border-scg-300 hover:bg-scg-50 hover:text-scg-700"
             >
               {s}
             </button>
@@ -640,7 +640,7 @@ export function AiSearchChat() {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-teal-600">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-scg-600">
               <Sparkles size={14} className="text-white" />
             </div>
             <div>
@@ -656,8 +656,8 @@ export function AiSearchChat() {
                 onClick={() => setShowShortlist((v) => !v)}
                 className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
                   showShortlist
-                    ? "bg-teal-600 text-white"
-                    : "bg-teal-100 text-teal-700 hover:bg-teal-200"
+                    ? "bg-scg-600 text-white"
+                    : "bg-scg-100 text-scg-700 hover:bg-scg-200"
                 }`}
               >
                 <ListChecks size={12} />
@@ -701,7 +701,7 @@ export function AiSearchChat() {
                   <button
                     key={suggestion}
                     onClick={() => submitMessage(suggestion)}
-                    className="block w-full rounded-md border border-gray-200 px-3 py-2 text-left text-xs text-gray-600 hover:border-teal-300 hover:bg-teal-50/50"
+                    className="block w-full rounded-md border border-gray-200 px-3 py-2 text-left text-xs text-gray-600 hover:border-scg-300 hover:bg-scg-50/50"
                   >
                     &ldquo;{suggestion}&rdquo;
                   </button>
@@ -750,13 +750,13 @@ export function AiSearchChat() {
               onKeyDown={handleKeyDown}
               placeholder="Find me a lawyer for..."
               rows={1}
-              className="flex-1 resize-none rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
+              className="flex-1 resize-none rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none"
               style={{ minHeight: "38px", maxHeight: "100px" }}
             />
             <button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="flex h-[38px] w-[38px] items-center justify-center rounded-md bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-40"
+              className="flex h-[38px] w-[38px] items-center justify-center rounded-md bg-scg-600 text-white hover:bg-scg-700 disabled:opacity-40"
             >
               <Send size={16} />
             </button>

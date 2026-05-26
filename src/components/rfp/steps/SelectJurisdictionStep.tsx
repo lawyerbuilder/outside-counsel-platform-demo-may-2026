@@ -69,7 +69,7 @@ export function SelectJurisdictionStep({
                 onClick={() => setSelected(j.id)}
                 className={`rounded-md border p-2 text-left text-sm transition-colors ${
                   selected === j.id
-                    ? "border-teal-500 bg-teal-50 font-medium"
+                    ? "border-scg-500 bg-scg-50 font-medium"
                     : "border-gray-200 hover:border-gray-300"
                 }`}
               >
@@ -88,7 +88,7 @@ export function SelectJurisdictionStep({
           onClick={() => setSelected(OTHER_ID)}
           className={`w-full rounded-md border p-2 text-left text-sm transition-colors ${
             selected === OTHER_ID
-              ? "border-teal-500 bg-teal-50 font-medium"
+              ? "border-scg-500 bg-scg-50 font-medium"
               : "border-gray-200 hover:border-gray-300"
           }`}
         >
@@ -109,7 +109,7 @@ export function SelectJurisdictionStep({
         <button
           onClick={handleNext}
           disabled={!isValid}
-          className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+          className="rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
         >
           Next
         </button>

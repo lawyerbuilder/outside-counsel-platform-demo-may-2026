@@ -255,6 +255,7 @@ model User {
   mattersCreated     Matter[]       @relation("MatterCreatedBy")
   mattersSupervised  Matter[]       @relation("MatterSupervisor")
   panelReviews       PanelReview[]
+  timesheetUploads   TimesheetUpload[]
 
   @@map("users")
 }
@@ -1344,6 +1345,56 @@ model AiOutput {
   @@index([outputType])
   @@index([skillId])
   @@map("ai_outputs")
+}
+
+// ─── Timesheet Intelligence ───────────────────────────────────────────────
+
+enum TimesheetUploadStatus {
+  PENDING
+  PROCESSING
+  ANALYZED
+  FAILED
+}
+
+model TimesheetUpload {
+  id            String                @id @default(cuid())
+  fileName      String                @map("file_name")
+  status        TimesheetUploadStatus @default(PENDING)
+  totalRows     Int                   @default(0) @map("total_rows")
+  processedRows Int                   @default(0) @map("processed_rows")
+  analysisJson  String?               @map("analysis_json") // AI-structured insights
+  errorMessage  String?               @map("error_message")
+  uploadedById  String                @map("uploaded_by_id")
+  uploadedBy    User                  @relation(fields: [uploadedById], references: [id])
+  createdAt     DateTime              @default(now()) @map("created_at")
+  updatedAt     DateTime              @updatedAt @map("updated_at")
+
+  entries TimesheetEntry[]
+
+  @@map("timesheet_uploads")
+}
+
+model TimesheetEntry {
+  id                  String          @id @default(cuid())
+  uploadId            String          @map("upload_id")
+  upload              TimesheetUpload @relation(fields: [uploadId], references: [id], onDelete: Cascade)
+  rowNumber           Int             @map("row_number")
+  clientNo            String?         @map("client_no")
+  matterNo            String?         @map("matter_no")
+  matterShortName     String?         @map("matter_short_name")
+  activity            String?
+  activityDescription String?         @map("activity_description")
+  lawyerInitials      String?         @map("lawyer_initials")
+  entryRate           Float?          @map("entry_rate")
+  dateWorked          DateTime?       @map("date_worked")
+  billingUnits        Float?          @map("billing_units")
+  billingAmount       Float?          @map("billing_amount")
+  currencyCode        String          @default("THB") @map("currency_code")
+  createdAt           DateTime        @default(now()) @map("created_at")
+
+  @@index([uploadId])
+  @@index([matterNo])
+  @@map("timesheet_entries")
 }
 
 // ─── Platform Settings ─────────────────────────────────────────────────────

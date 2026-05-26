@@ -40,7 +40,7 @@ export function CostBenchmarkForm({
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="w-full rounded-md border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 hover:border-teal-400 hover:text-teal-600"
+        className="w-full rounded-md border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 hover:border-scg-400 hover:text-scg-600"
       >
         + Add Cost Benchmark
       </button>
@@ -64,7 +64,7 @@ export function CostBenchmarkForm({
             <select
               name="role"
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             >
               {(Object.keys(BENCHMARK_ROLE_LABELS) as BenchmarkRoleEnum[]).map(
                 (key) => (
@@ -82,7 +82,7 @@ export function CostBenchmarkForm({
             <select
               name="source"
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             >
               {(
                 Object.keys(BENCHMARK_SOURCE_LABELS) as BenchmarkSourceEnum[]
@@ -103,7 +103,7 @@ export function CostBenchmarkForm({
             <select
               name="practiceAreaId"
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             >
               <option value="">Select...</option>
               {practiceAreas.map((pa) => (
@@ -120,7 +120,7 @@ export function CostBenchmarkForm({
             <select
               name="jurisdictionId"
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             >
               <option value="">Select...</option>
               {jurisdictions.map((j) => (
@@ -142,7 +142,7 @@ export function CostBenchmarkForm({
               name="hourlyRateUsd"
               required
               min="0"
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
               placeholder="cents"
             />
           </div>
@@ -154,7 +154,7 @@ export function CostBenchmarkForm({
               type="number"
               name="blendedRateUsd"
               min="0"
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
               placeholder="cents"
             />
           </div>
@@ -166,7 +166,7 @@ export function CostBenchmarkForm({
               type="number"
               name="fixedFeeUsd"
               min="0"
-              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
               placeholder="cents"
             />
           </div>
@@ -183,7 +183,7 @@ export function CostBenchmarkForm({
             min="2000"
             max={new Date().getFullYear() + 1}
             defaultValue={new Date().getFullYear()}
-            className="w-32 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+            className="w-32 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
           />
         </div>
 
@@ -200,7 +200,7 @@ export function CostBenchmarkForm({
           <button
             type="submit"
             disabled={isPending}
-            className="rounded-md bg-teal-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
+            className="rounded-md bg-scg-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-scg-700 disabled:opacity-50"
           >
             {isPending ? "Saving..." : "Save Benchmark"}
           </button>

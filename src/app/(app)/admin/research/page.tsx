@@ -42,12 +42,12 @@ export default async function ResearchPage() {
           </p>
           <p className="text-xs text-gray-500">Dismissed</p>
         </div>
-        <div className="rounded-lg border border-teal-200 bg-teal-50 p-4 text-center">
-          <Zap size={18} className="mx-auto text-teal-500" />
-          <p className="mt-1 text-2xl font-bold text-teal-700">
+        <div className="rounded-lg border border-scg-200 bg-scg-50 p-4 text-center">
+          <Zap size={18} className="mx-auto text-scg-500" />
+          <p className="mt-1 text-2xl font-bold text-scg-700">
             {stats.applied}
           </p>
-          <p className="text-xs text-teal-600">Applied</p>
+          <p className="text-xs text-scg-600">Applied</p>
         </div>
       </div>
 

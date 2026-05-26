@@ -13,6 +13,7 @@ import {
   Settings,
   Shield,
   Bot,
+  Brain,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -26,6 +27,7 @@ const navItems = [
   { label: "Rankings", href: "/rankings", icon: Trophy },
   { label: "Engagements", href: "/engagements", icon: Briefcase },
   { label: "RFP", href: "/rfp", icon: FileText },
+  { label: "Insights", href: "/insights", icon: Brain },
   { label: "Network", href: "/network", icon: GitBranch },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
@@ -48,9 +50,14 @@ export function Sidebar() {
     >
       <div className="flex h-14 items-center justify-between border-b border-gray-200 px-4">
         {!collapsed && (
-          <span className="text-sm font-semibold text-teal-700">
-            Counsel Directory
-          </span>
+          <div className="flex items-center gap-2">
+            <div className="flex h-6 w-6 items-center justify-center rounded bg-scg-600">
+              <span className="text-[10px] font-bold text-white">SCG</span>
+            </div>
+            <span className="text-sm font-semibold text-gray-900">
+              Legal OCP
+            </span>
+          </div>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
@@ -75,7 +82,7 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-teal-50 text-teal-700"
+                  ? "bg-scg-50 text-scg-700"
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               )}
             >
@@ -103,7 +110,7 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-teal-50 text-teal-700"
+                  ? "bg-scg-50 text-scg-700"
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               )}
             >

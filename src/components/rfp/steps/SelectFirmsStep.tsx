@@ -167,7 +167,7 @@ export function SelectFirmsStep({
                   });
                 }
               }}
-              className="text-xs text-teal-700 hover:text-teal-800"
+              className="text-xs text-scg-700 hover:text-scg-800"
             >
               {firms.every((f) => selectedIds.has(f.firmId)) ? "Deselect all" : "Select all"}
             </button>
@@ -201,7 +201,7 @@ export function SelectFirmsStep({
           <button
             onClick={addManualFirm}
             disabled={!newFirmName.trim()}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-teal-700 px-3 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-scg-700 px-3 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
           >
             <Plus size={14} />
             Add
@@ -215,7 +215,7 @@ export function SelectFirmsStep({
                 key={firm.tempId}
                 className={`flex items-start gap-3 rounded-lg border p-3 ${
                   selectedIds.has(firm.tempId)
-                    ? "border-teal-500 bg-teal-50"
+                    ? "border-scg-500 bg-scg-50"
                     : "border-gray-200"
                 }`}
               >
@@ -232,7 +232,7 @@ export function SelectFirmsStep({
                       </span>
                     )}
                     {firm.status === "added" && (
-                      <span className="inline-flex items-center gap-1 text-[10px] text-teal-600">
+                      <span className="inline-flex items-center gap-1 text-[10px] text-scg-600">
                         <Sparkles size={10} />
                         Researched
                       </span>
@@ -258,7 +258,7 @@ export function SelectFirmsStep({
         <button
           onClick={handleNext}
           disabled={!canProceed}
-          className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+          className="rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
         >
           Next
         </button>

@@ -116,7 +116,7 @@ export function EvaluationForm({
                 <button
                   onClick={() => saveScores(inv.id)}
                   disabled={saving === inv.id}
-                  className="rounded-md bg-teal-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+                  className="rounded-md bg-scg-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
                 >
                   {saving === inv.id ? "Saving..." : saved.has(inv.id) ? "Saved" : "Save scores"}
                 </button>
@@ -146,8 +146,8 @@ export function EvaluationForm({
                         onClick={() => updateScore(inv.id, c.name, n)}
                         className={`h-8 w-8 rounded-md text-xs font-medium transition-colors ${
                           (scores[inv.id]?.[c.name]?.score ?? 0) === n
-                            ? "bg-teal-700 text-white"
-                            : "border border-gray-200 text-gray-500 hover:border-teal-300"
+                            ? "bg-scg-700 text-white"
+                            : "border border-gray-200 text-gray-500 hover:border-scg-300"
                         }`}
                       >
                         {n}

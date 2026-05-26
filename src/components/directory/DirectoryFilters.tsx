@@ -53,7 +53,7 @@ export function DirectoryFilters({
           onClick={() => updateParam("type", "firms")}
           className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
             currentType === "firms"
-              ? "bg-white text-teal-700 shadow-sm"
+              ? "bg-white text-scg-700 shadow-sm"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -63,7 +63,7 @@ export function DirectoryFilters({
           onClick={() => updateParam("type", "lawyers")}
           className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
             currentType === "lawyers"
-              ? "bg-white text-teal-700 shadow-sm"
+              ? "bg-white text-scg-700 shadow-sm"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -88,7 +88,7 @@ export function DirectoryFilters({
               updateParam("search", val);
             }, 300);
           }}
-          className="w-full rounded-md border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+          className="w-full rounded-md border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
         />
       </div>
 
@@ -97,7 +97,7 @@ export function DirectoryFilters({
         <select
           value={currentPa}
           onChange={(e) => updateParam("practiceAreaId", e.target.value)}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
         >
           <option value="">All Practice Areas</option>
           {practiceAreas.map((pa) => (
@@ -110,7 +110,7 @@ export function DirectoryFilters({
         <select
           value={currentJur}
           onChange={(e) => updateParam("jurisdictionId", e.target.value)}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
         >
           <option value="">All Jurisdictions</option>
           {jurisdictions.map((j) => (
@@ -124,7 +124,7 @@ export function DirectoryFilters({
           <select
             value={currentFirmType}
             onChange={(e) => updateParam("firmType", e.target.value)}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
           >
             <option value="">All Firm Types</option>
             <option value="FULL_SERVICE">Full Service</option>
@@ -137,7 +137,7 @@ export function DirectoryFilters({
         <select
           value={currentMinNps}
           onChange={(e) => updateParam("minNps", e.target.value)}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
         >
           <option value="">Any NPS</option>
           <option value="50">NPS ≥ 50</option>

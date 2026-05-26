@@ -10,7 +10,7 @@ export function ScoreBadge({ score, label = "Fit Score" }: ScoreBadgeProps) {
     score >= 75
       ? "bg-green-50 text-green-700 border-green-200"
       : score >= 50
-      ? "bg-teal-50 text-teal-700 border-teal-200"
+      ? "bg-scg-50 text-scg-700 border-scg-200"
       : score >= 25
       ? "bg-amber-50 text-amber-700 border-amber-200"
       : "bg-gray-50 text-gray-600 border-gray-200";

@@ -14,10 +14,10 @@
  *   npx tsx src/server/research-cron.ts          # Run once manually
  *   Schedule via OS cron or cloud scheduler      # Weekly automation
  *
- * Requires: ANTHROPIC_API_KEY in .env
+ * Powered by Claude Max (claude CLI child process) — no API key needed.
  */
 
-import Anthropic from "@anthropic-ai/sdk";
+import { callClaude } from "./ai/anthropic";
 import { prisma } from "./db";
 
 const RESEARCH_SYSTEM_PROMPT = `You are a legal market research analyst for SCG's in-house legal team in Thailand. Your job is to research updates about law firms and lawyers that SCG works with in the Asia-Pacific region.
@@ -53,12 +53,6 @@ type ResearchFinding = {
 };
 
 async function runResearch(): Promise<void> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    console.error("ANTHROPIC_API_KEY not set. Skipping research run.");
-    return;
-  }
-
   console.log(`[${new Date().toISOString()}] Starting weekly research...`);
 
   // Get current directory state
@@ -105,27 +99,18 @@ ${lawyers
 
 Research any updates from the past week for these firms and lawyers. Focus on the Asia-Pacific legal market.`;
 
-  const client = new Anthropic({ apiKey });
-
   try {
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 4096,
-      system: RESEARCH_SYSTEM_PROMPT,
-      messages: [{ role: "user", content: directoryContext }],
+    const response = await callClaude({
+      systemPrompt: RESEARCH_SYSTEM_PROMPT,
+      userMessage: directoryContext,
+      maxTokens: 4096,
     });
-
-    const textBlock = response.content.find((b) => b.type === "text");
-    if (!textBlock || textBlock.type !== "text") {
-      console.log("No text response from AI. Skipping.");
-      return;
-    }
 
     // Parse findings
     let findings: ResearchFinding[] = [];
     try {
       // Extract JSON from response (might be wrapped in markdown code block)
-      const text = textBlock.text;
+      const text = response.content;
       const jsonMatch = text.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
         findings = JSON.parse(jsonMatch[0]) as ResearchFinding[];

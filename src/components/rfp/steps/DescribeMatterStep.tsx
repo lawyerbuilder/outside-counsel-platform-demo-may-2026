@@ -97,7 +97,7 @@ export function DescribeMatterStep({
         <button
           onClick={handleNext}
           disabled={description.length < 10}
-          className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+          className="rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
         >
           Next
         </button>

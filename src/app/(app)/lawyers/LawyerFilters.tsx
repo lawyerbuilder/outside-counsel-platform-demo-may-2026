@@ -51,14 +51,14 @@ export function LawyerFilters({
           placeholder="Search lawyers..."
           defaultValue={currentFilters.search ?? ""}
           onChange={(e) => updateFilter("search", e.target.value)}
-          className="w-full rounded-md border border-gray-300 py-2 pl-9 pr-3 text-sm placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+          className="w-full rounded-md border border-gray-300 py-2 pl-9 pr-3 text-sm placeholder:text-gray-400 focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
         />
       </div>
 
       <select
         value={currentFilters.firmId ?? ""}
         onChange={(e) => updateFilter("firmId", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All firms</option>
         {firms.map((f) => (
@@ -71,7 +71,7 @@ export function LawyerFilters({
       <select
         value={currentFilters.role ?? ""}
         onChange={(e) => updateFilter("role", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All roles</option>
         {(
@@ -86,7 +86,7 @@ export function LawyerFilters({
       <select
         value={currentFilters.practiceAreaId ?? ""}
         onChange={(e) => updateFilter("practiceAreaId", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All practice areas</option>
         {practiceAreas.map((pa) => (
@@ -99,7 +99,7 @@ export function LawyerFilters({
       <select
         value={currentFilters.jurisdictionId ?? ""}
         onChange={(e) => updateFilter("jurisdictionId", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All jurisdictions</option>
         {jurisdictions.map((j) => (

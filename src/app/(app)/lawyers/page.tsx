@@ -52,7 +52,7 @@ export default async function LawyersPage({ searchParams }: LawyersPageProps) {
         action={
           <Link
             href="/lawyers/new"
-            className="inline-flex items-center gap-2 rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800"
+            className="inline-flex items-center gap-2 rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800"
           >
             <Plus size={16} />
             Add Lawyer
@@ -75,7 +75,7 @@ export default async function LawyersPage({ searchParams }: LawyersPageProps) {
           action={
             <Link
               href="/lawyers/new"
-              className="inline-flex items-center gap-2 rounded-md bg-teal-700 px-3 py-2 text-sm font-medium text-white hover:bg-teal-800"
+              className="inline-flex items-center gap-2 rounded-md bg-scg-700 px-3 py-2 text-sm font-medium text-white hover:bg-scg-800"
             >
               <Plus size={16} />
               Add Lawyer
@@ -113,7 +113,7 @@ export default async function LawyersPage({ searchParams }: LawyersPageProps) {
                       <td className="px-4 py-3">
                         <Link
                           href={`/lawyers/${lawyer.id}`}
-                          className="text-sm font-medium text-gray-900 hover:text-teal-700"
+                          className="text-sm font-medium text-gray-900 hover:text-scg-700"
                         >
                           {lawyer.name}
                         </Link>
@@ -127,7 +127,7 @@ export default async function LawyersPage({ searchParams }: LawyersPageProps) {
                         {currentFirm ? (
                           <Link
                             href={`/firms/${currentFirm.firm.id}`}
-                            className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-teal-700"
+                            className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-scg-700"
                           >
                             <Building2 size={12} />
                             {currentFirm.firm.shortName ?? currentFirm.firm.name}

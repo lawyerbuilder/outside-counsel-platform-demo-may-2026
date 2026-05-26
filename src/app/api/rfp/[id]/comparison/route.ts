@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getLatestComparison, generateComparisonReport } from "@/server/rfp/comparison";
-import { resolveApiKey } from "@/server/ai/anthropic";
 import { getCurrentUserId } from "../../current-user";
 
 export async function GET(
@@ -16,12 +15,11 @@ export async function GET(
 }
 
 export async function POST(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
   const userId = await getCurrentUserId();
-  const apiKey = resolveApiKey(req);
-  const content = await generateComparisonReport(id, userId, apiKey);
+  const content = await generateComparisonReport(id, userId);
   return NextResponse.json({ content }, { status: 201 });
 }

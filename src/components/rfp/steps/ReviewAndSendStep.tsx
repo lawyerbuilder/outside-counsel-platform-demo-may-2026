@@ -56,7 +56,7 @@ export function ReviewAndSendStep({
   if (sent) {
     return (
       <div className="flex flex-col items-center gap-4 py-12">
-        <CheckCircle2 size={48} className="text-teal-600" />
+        <CheckCircle2 size={48} className="text-scg-600" />
         <h2 className="text-xl font-semibold text-gray-900">Invitations sent!</h2>
         <p className="text-sm text-gray-500">
           {data.firmCount} firm(s) have been invited. Redirecting to RFP list...
@@ -131,8 +131,8 @@ export function ReviewAndSendStep({
       </div>
 
       <div className="flex flex-wrap gap-3 text-xs text-gray-500">
-        {data.requestFeeCap && <span className="rounded bg-teal-50 px-2 py-1 text-teal-700">Fee cap requested</span>}
-        {data.requestSuggestedBudget && <span className="rounded bg-teal-50 px-2 py-1 text-teal-700">Budget estimate requested</span>}
+        {data.requestFeeCap && <span className="rounded bg-scg-50 px-2 py-1 text-scg-700">Fee cap requested</span>}
+        {data.requestSuggestedBudget && <span className="rounded bg-scg-50 px-2 py-1 text-scg-700">Budget estimate requested</span>}
         {data.additionalRequirements && <span className="rounded bg-amber-50 px-2 py-1 text-amber-700">Additional requirements attached</span>}
       </div>
 
@@ -146,7 +146,7 @@ export function ReviewAndSendStep({
         <button
           onClick={handleSend}
           disabled={sending}
-          className="inline-flex items-center gap-2 rounded-md bg-teal-700 px-6 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+          className="inline-flex items-center gap-2 rounded-md bg-scg-700 px-6 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
         >
           <Send size={14} />
           {sending ? "Sending..." : "Send invitations"}

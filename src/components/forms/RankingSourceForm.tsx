@@ -63,7 +63,7 @@ export function RankingSourceForm({ action }: RankingSourceFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md bg-teal-700 px-6 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:opacity-50"
+          className="rounded-md bg-scg-700 px-6 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:opacity-50"
         >
           {isPending ? "Creating..." : "Create Source"}
         </button>

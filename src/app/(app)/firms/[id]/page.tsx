@@ -11,7 +11,7 @@ import {
   GitBranch,
   Briefcase,
 } from "lucide-react";
-import { Trophy, MessageSquare, Pin, DollarSign } from "lucide-react";
+import { Trophy, MessageSquare, Pin, DollarSign, Brain, FileText } from "lucide-react";
 import { getFirmById } from "@/server/firms";
 import { getFirmRankings } from "@/server/rankings";
 import {
@@ -21,6 +21,7 @@ import {
   getFirmNotes,
   getFirmCostBenchmarks,
 } from "@/server/insights";
+import { getFirmTimesheetMentions } from "@/server/timesheet";
 import { listPracticeAreas, listJurisdictions } from "@/server/reference-data";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
@@ -45,8 +46,8 @@ import type { FirmTypeEnum, RankingPublisherEnum, BenchmarkRoleEnum, BenchmarkSo
 
 export const dynamic = "force-dynamic";
 
-const firmTypeBadgeVariant: Record<FirmTypeEnum, "teal" | "amber" | "blue" | "gray"> = {
-  FULL_SERVICE: "teal",
+const firmTypeBadgeVariant: Record<FirmTypeEnum, "scg" | "amber" | "blue" | "gray"> = {
+  FULL_SERVICE: "scg",
   BOUTIQUE: "amber",
   MID_SIZE: "blue",
   REGIONAL: "gray",
@@ -59,7 +60,7 @@ interface FirmDetailPageProps {
 
 export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
   const { id } = await params;
-  const [firm, rankings, nps, internalRatings, engagements, notes, costBenchmarks, allPracticeAreas, allJurisdictions] =
+  const [firm, rankings, nps, internalRatings, engagements, notes, costBenchmarks, timesheetMentions, allPracticeAreas, allJurisdictions] =
     await Promise.all([
       getFirmById(id),
       getFirmRankings(id),
@@ -68,6 +69,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
       getFirmEngagements(id),
       getFirmNotes(id),
       getFirmCostBenchmarks(id),
+      getFirmTimesheetMentions(id),
       listPracticeAreas(),
       listJurisdictions(),
     ]);
@@ -136,7 +138,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
                     href={firm.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-teal-700 hover:underline"
+                    className="text-scg-700 hover:underline"
                   >
                     Website
                     <ExternalLink size={12} className="ml-1 inline" />
@@ -260,7 +262,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
                   <p className="text-xs text-gray-400 mb-1">Spin-off from</p>
                   <Link
                     href={`/firms/${firm.parentFirm.id}`}
-                    className="text-sm font-medium text-teal-700 hover:underline"
+                    className="text-sm font-medium text-scg-700 hover:underline"
                   >
                     {firm.parentFirm.name}
                   </Link>
@@ -274,7 +276,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
                       <Link
                         key={so.id}
                         href={`/firms/${so.id}`}
-                        className="block text-sm text-teal-700 hover:underline"
+                        className="block text-sm text-scg-700 hover:underline"
                       >
                         {so.name}
                       </Link>
@@ -304,7 +306,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
                       <Badge
                         variant={
                           r.rankingSource.publisher === "CHAMBERS"
-                            ? "teal"
+                            ? "scg"
                             : r.rankingSource.publisher === "LEGAL500"
                             ? "blue"
                             : r.rankingSource.publisher === "BENCHMARK_LITIGATION"
@@ -321,7 +323,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
                     </div>
                     <div className="text-right">
                       {r.band != null && (
-                        <span className="text-sm font-medium text-teal-700">
+                        <span className="text-sm font-medium text-scg-700">
                           {formatBand(r.band)}
                         </span>
                       )}
@@ -341,6 +343,80 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
               </div>
             )}
           </div>
+
+          {/* Timesheet Intelligence */}
+          {timesheetMentions.length > 0 && (
+            <div className="rounded-lg border border-scg-200 bg-scg-50/30 p-6">
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-scg-700">
+                <Brain size={14} className="mr-2 inline" />
+                Timesheet Intelligence
+              </h3>
+              <div className="space-y-3">
+                {timesheetMentions.map((tm) => (
+                  <div
+                    key={`${tm.uploadId}-${tm.mention.shortName}`}
+                    className="rounded-md border border-scg-100 bg-white p-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-bold text-scg-800">
+                        {tm.mention.mentionCount}
+                      </span>
+                      <span className="text-[10px] text-gray-400">
+                        mentions
+                      </span>
+                    </div>
+                    <div className="mt-2 space-y-1">
+                      {tm.mention.matters.map((m) => (
+                        <div
+                          key={m}
+                          className="flex items-start gap-1.5 text-xs text-gray-700"
+                        >
+                          <Briefcase size={10} className="mt-0.5 flex-shrink-0 text-gray-400" />
+                          {m}
+                        </div>
+                      ))}
+                    </div>
+                    {tm.mention.activityTypes.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {tm.mention.activityTypes.map((at) => (
+                          <span
+                            key={at}
+                            className="rounded bg-scg-100/60 px-1.5 py-0.5 text-[10px] text-scg-700"
+                          >
+                            {at}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="mt-2 flex items-center gap-1 text-[10px] text-gray-400">
+                      <FileText size={8} />
+                      <Link
+                        href={`/insights`}
+                        className="hover:text-scg-600 hover:underline"
+                      >
+                        {tm.uploadFileName}
+                      </Link>
+                      <span>&middot;</span>
+                      <span>
+                        {new Date(tm.analyzedAt).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Link
+                href="/insights"
+                className="mt-3 flex items-center gap-1 text-xs text-scg-700 hover:underline"
+              >
+                <Brain size={10} />
+                View full analysis
+              </Link>
+            </div>
+          )}
 
           {/* NPS & Internal Ratings */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
@@ -437,7 +513,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
                     </td>
                     <td className="px-3 py-2 text-sm text-gray-600">
                       {eng.lawyer ? (
-                        <Link href={`/lawyers/${eng.lawyer.id}`} className="hover:text-teal-700">
+                        <Link href={`/lawyers/${eng.lawyer.id}`} className="hover:text-scg-700">
                           {eng.lawyer.name}
                         </Link>
                       ) : "-"}
@@ -451,7 +527,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
                         variant={
                           eng.outcome === "WON" ? "green" :
                           eng.outcome === "ONGOING" ? "blue" :
-                          eng.outcome === "COMPLETED" ? "teal" :
+                          eng.outcome === "COMPLETED" ? "scg" :
                           eng.outcome === "SETTLED" ? "amber" :
                           eng.outcome === "LOST" ? "red" : "gray"
                         }

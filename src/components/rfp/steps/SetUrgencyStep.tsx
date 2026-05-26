@@ -46,7 +46,7 @@ export function SetUrgencyStep({
             onClick={() => setSelected(opt.value)}
             className={`rounded-md border p-4 text-left transition-colors ${
               selected === opt.value
-                ? "border-teal-500 bg-teal-50"
+                ? "border-scg-500 bg-scg-50"
                 : "border-gray-200 hover:border-gray-300"
             }`}
           >
@@ -59,7 +59,7 @@ export function SetUrgencyStep({
         <button
           onClick={handleNext}
           disabled={!selected}
-          className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+          className="rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
         >
           Next
         </button>

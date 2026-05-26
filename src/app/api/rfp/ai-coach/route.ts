@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
-import { callClaude, resolveApiKey } from "@/server/ai/anthropic";
+import { callClaude } from "@/server/ai/anthropic";
 import { z } from "zod";
 
 const bodySchema = z.object({
@@ -12,8 +12,6 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
   }
-
-  const apiKey = resolveApiKey(req);
 
   try {
     const response = await callClaude({
@@ -30,7 +28,6 @@ Check for these elements:
 
 Be concise — 2-4 bullet points max. If the description is sufficient, say so briefly. If it's missing key information, suggest what to add. Do not rewrite the description — just coach the lawyer on what to improve.`,
       userMessage: `Review this matter description for an RFP:\n\n"${parsed.data.description}"`,
-      apiKey,
     });
 
     return NextResponse.json({ feedback: response.content });

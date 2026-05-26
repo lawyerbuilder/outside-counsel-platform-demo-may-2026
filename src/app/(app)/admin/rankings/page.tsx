@@ -9,8 +9,8 @@ import type { RankingPublisherEnum } from "@/lib/schemas";
 
 export const dynamic = "force-dynamic";
 
-const publisherBadge: Record<RankingPublisherEnum, "teal" | "blue" | "amber" | "green"> = {
-  CHAMBERS: "teal",
+const publisherBadge: Record<RankingPublisherEnum, "scg" | "blue" | "amber" | "green"> = {
+  CHAMBERS: "scg",
   LEGAL500: "blue",
   BENCHMARK_LITIGATION: "amber",
   ASIALAW: "green",
@@ -32,7 +32,7 @@ export default async function AdminRankingsPage() {
           <div className="flex gap-2">
             <Link
               href="/admin/rankings/sources/new"
-              className="inline-flex items-center gap-2 rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800"
+              className="inline-flex items-center gap-2 rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800"
             >
               <Plus size={16} />
               Add Source
@@ -96,7 +96,7 @@ export default async function AdminRankingsPage() {
           </p>
           <Link
             href="/admin/rankings/sources/new"
-            className="inline-flex items-center gap-2 rounded-md bg-teal-700 px-3 py-2 text-sm font-medium text-white hover:bg-teal-800"
+            className="inline-flex items-center gap-2 rounded-md bg-scg-700 px-3 py-2 text-sm font-medium text-white hover:bg-scg-800"
           >
             <Plus size={16} />
             Add Source
@@ -133,7 +133,7 @@ export default async function AdminRankingsPage() {
                   <td className="px-4 py-3">
                     <Link
                       href={`/admin/rankings/sources/${source.id}`}
-                      className="text-sm font-medium text-gray-900 hover:text-teal-700"
+                      className="text-sm font-medium text-gray-900 hover:text-scg-700"
                     >
                       {source.name}
                     </Link>
@@ -155,7 +155,7 @@ export default async function AdminRankingsPage() {
                   <td className="px-4 py-3 text-right">
                     <Link
                       href={`/admin/rankings/sources/${source.id}`}
-                      className="text-sm text-teal-700 hover:underline"
+                      className="text-sm text-scg-700 hover:underline"
                     >
                       View
                     </Link>

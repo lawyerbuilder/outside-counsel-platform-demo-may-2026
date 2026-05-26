@@ -323,7 +323,7 @@ function SelectedNodeDetail({
         <div>
           <Link
             href={`/firms/${node.id}`}
-            className="text-sm font-semibold text-teal-700 hover:underline"
+            className="text-sm font-semibold text-scg-700 hover:underline"
           >
             {node.name}
           </Link>
@@ -365,7 +365,7 @@ function SelectedNodeDetail({
               >
                 <Link
                   href={`/lawyers/${edge.lawyerId}`}
-                  className="font-medium text-teal-700 hover:underline"
+                  className="font-medium text-scg-700 hover:underline"
                 >
                   {edge.lawyerName}
                 </Link>

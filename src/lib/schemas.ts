@@ -412,19 +412,19 @@ export function formatStars(rating: number): string {
 export function rankingBadgeVariant(
   publisher: RankingPublisherEnum,
   value: number
-): "green" | "teal" | "blue" | "amber" | "gray" {
+): "green" | "scg" | "blue" | "amber" | "gray" {
   if (publisher === "CHAMBERS") {
     if (value <= 2) return "green";
-    if (value <= 4) return "teal";
+    if (value <= 4) return "scg";
     return "gray";
   }
   if (publisher === "LEGAL500") {
     if (value <= 2) return "green";
-    if (value <= 3) return "teal";
+    if (value <= 3) return "scg";
     return "gray";
   }
   // Benchmark / AsiaLaw star ratings (higher = better)
   if (value >= 4) return "green";
-  if (value >= 3) return "teal";
+  if (value >= 3) return "scg";
   return "gray";
 }

@@ -63,7 +63,7 @@ export function FirmResponseForm({
   if (submitted) {
     return (
       <div className="flex flex-col items-center gap-4 py-12">
-        <CheckCircle2 size={48} className="text-teal-600" />
+        <CheckCircle2 size={48} className="text-scg-600" />
         <h2 className="text-xl font-semibold text-gray-900">Response submitted</h2>
         <p className="text-sm text-gray-500">Redirecting to RFP detail...</p>
       </div>
@@ -159,7 +159,7 @@ export function FirmResponseForm({
         <button
           onClick={handleSubmit}
           disabled={submitting}
-          className="inline-flex items-center gap-2 rounded-md bg-teal-700 px-6 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+          className="inline-flex items-center gap-2 rounded-md bg-scg-700 px-6 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
         >
           <Send size={14} />
           {submitting ? "Submitting..." : "Submit response"}

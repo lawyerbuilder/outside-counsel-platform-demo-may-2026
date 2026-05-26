@@ -50,7 +50,7 @@ export function FirmFilters({
           placeholder="Search firms..."
           defaultValue={currentFilters.search ?? ""}
           onChange={(e) => updateFilter("search", e.target.value)}
-          className="w-full rounded-md border border-gray-300 py-2 pl-9 pr-3 text-sm placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+          className="w-full rounded-md border border-gray-300 py-2 pl-9 pr-3 text-sm placeholder:text-gray-400 focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
         />
       </div>
 
@@ -58,7 +58,7 @@ export function FirmFilters({
       <select
         value={currentFilters.country ?? ""}
         onChange={(e) => updateFilter("country", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All countries</option>
         {countries.map((c) => (
@@ -72,7 +72,7 @@ export function FirmFilters({
       <select
         value={currentFilters.firmType ?? ""}
         onChange={(e) => updateFilter("firmType", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All types</option>
         {(
@@ -88,7 +88,7 @@ export function FirmFilters({
       <select
         value={currentFilters.practiceAreaId ?? ""}
         onChange={(e) => updateFilter("practiceAreaId", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All practice areas</option>
         {practiceAreas.map((pa) => (

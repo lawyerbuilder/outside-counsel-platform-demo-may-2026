@@ -1,4 +1,4 @@
-import { callClaude, resolveApiKey } from "@/server/ai/anthropic";
+import { callClaude } from "@/server/ai/anthropic";
 
 export const dynamic = "force-dynamic";
 
@@ -73,8 +73,6 @@ export async function POST(request: Request) {
     return Response.json({ error: "No messages" }, { status: 400 });
   }
 
-  const apiKey = resolveApiKey(request);
-
   const systemPrompt = SYSTEM_PROMPT
     .replace("{JURISDICTIONS}", JSON.stringify(jurisdictions.map((j) => ({ id: j.id, name: j.name }))))
     .replace("{PRACTICE_AREAS}", JSON.stringify(practiceAreas.map((p) => ({ id: p.id, name: p.name }))));
@@ -89,7 +87,6 @@ export async function POST(request: Request) {
     const response = await callClaude({
       systemPrompt,
       userMessage,
-      apiKey,
     });
 
     let parsed: { message: string; fields?: Record<string, unknown> };

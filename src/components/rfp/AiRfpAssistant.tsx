@@ -38,10 +38,10 @@ type ExtractedFields = {
 function FieldBadge({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return (
-    <div className="flex items-center gap-1.5 rounded-full bg-teal-50 px-2.5 py-1 text-xs">
-      <CheckCircle2 size={12} className="text-teal-600" />
-      <span className="font-medium text-teal-800">{label}:</span>
-      <span className="text-teal-600">{value}</span>
+    <div className="flex items-center gap-1.5 rounded-full bg-scg-50 px-2.5 py-1 text-xs">
+      <CheckCircle2 size={12} className="text-scg-600" />
+      <span className="font-medium text-scg-800">{label}:</span>
+      <span className="text-scg-600">{value}</span>
     </div>
   );
 }
@@ -244,7 +244,7 @@ export function AiRfpAssistant({
               >
                 <div
                   className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                    msg.role === "user" ? "bg-teal-600" : "bg-purple-100"
+                    msg.role === "user" ? "bg-scg-600" : "bg-purple-100"
                   }`}
                 >
                   {msg.role === "user" ? (
@@ -256,7 +256,7 @@ export function AiRfpAssistant({
                 <div
                   className={`max-w-[80%] rounded-lg px-3.5 py-2.5 text-sm leading-relaxed ${
                     msg.role === "user"
-                      ? "bg-teal-600 text-white"
+                      ? "bg-scg-600 text-white"
                       : "border border-gray-200 bg-white text-gray-800"
                   }`}
                 >
@@ -353,7 +353,7 @@ export function AiRfpAssistant({
           <button
             onClick={handleCreateRfp}
             disabled={!requiredReady}
-            className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-md bg-teal-600 px-3 py-2 text-xs font-medium text-white hover:bg-teal-700 disabled:opacity-40"
+            className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-md bg-scg-600 px-3 py-2 text-xs font-medium text-white hover:bg-scg-700 disabled:opacity-40"
           >
             <FileText size={14} />
             Review & Send RFP

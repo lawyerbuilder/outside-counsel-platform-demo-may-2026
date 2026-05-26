@@ -56,14 +56,14 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
       />
 
       {!hasPrefs && (
-        <div className="mb-6 rounded-lg border border-teal-200 bg-teal-50 p-4">
+        <div className="mb-6 rounded-lg border border-scg-200 bg-scg-50 p-4">
           <div className="flex items-start gap-3">
-            <Sparkles size={20} className="mt-0.5 text-teal-600" />
+            <Sparkles size={20} className="mt-0.5 text-scg-600" />
             <div className="flex-1">
-              <h3 className="text-sm font-semibold text-teal-800">
+              <h3 className="text-sm font-semibold text-scg-800">
                 Welcome! Tell us what matters most to you
               </h3>
-              <p className="mt-1 text-xs text-teal-700">
+              <p className="mt-1 text-xs text-scg-700">
                 The directory ranks firms and lawyers using a personalized fit
                 score. Set your weights to prioritize what you value most —
                 responsiveness, quality, cost efficiency, expertise, or peer
@@ -71,7 +71,7 @@ export default async function DirectoryPage({ searchParams }: DirectoryPageProps
               </p>
               <Link
                 href="/settings"
-                className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-teal-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-teal-700"
+                className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-scg-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-scg-700"
               >
                 <Sparkles size={14} />
                 Set Your Preferences
@@ -197,7 +197,7 @@ function FirmCard({
               {FIRM_TYPE_LABELS[firm.firmType as FirmTypeEnum]}
             </Badge>
             {firm.bestBand != null && (
-              <Badge variant="teal">Band {firm.bestBand}</Badge>
+              <Badge variant="scg">Band {firm.bestBand}</Badge>
             )}
             {firm.bestTier != null && (
               <Badge variant="blue">Tier {firm.bestTier}</Badge>
@@ -329,7 +329,7 @@ function LawyerCard({
             <p className="mt-0.5 text-xs text-gray-500">{lawyer.title}</p>
           )}
           {lawyer.currentFirm && (
-            <p className="text-xs text-teal-600">
+            <p className="text-xs text-scg-600">
               {lawyer.currentFirm.shortName ?? lawyer.currentFirm.name}
             </p>
           )}

@@ -16,17 +16,17 @@ import { RankingFilters } from "./RankingFilters";
 
 export const dynamic = "force-dynamic";
 
-const publisherBadge: Record<RankingPublisherEnum, "teal" | "blue" | "amber" | "green"> = {
-  CHAMBERS: "teal",
+const publisherBadge: Record<RankingPublisherEnum, "scg" | "blue" | "amber" | "green"> = {
+  CHAMBERS: "scg",
   LEGAL500: "blue",
   BENCHMARK_LITIGATION: "amber",
   ASIALAW: "green",
 };
 
-const categoryBadge: Record<LawyerRankingCategoryEnum, "green" | "teal" | "amber" | "default" | "blue"> = {
+const categoryBadge: Record<LawyerRankingCategoryEnum, "green" | "scg" | "amber" | "default" | "blue"> = {
   STAR: "green",
   LEADING: "green",
-  RECOMMENDED: "teal",
+  RECOMMENDED: "scg",
   UP_AND_COMING: "amber",
   RECOGNISED: "default",
 };
@@ -74,7 +74,7 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
           href={{ pathname: "/rankings", query: { ...params, tab: "firms" } }}
           className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
             tab === "firms"
-              ? "bg-white text-teal-700 shadow-sm"
+              ? "bg-white text-scg-700 shadow-sm"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -85,7 +85,7 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
           href={{ pathname: "/rankings", query: { ...params, tab: "lawyers" } }}
           className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
             tab === "lawyers"
-              ? "bg-white text-teal-700 shadow-sm"
+              ? "bg-white text-scg-700 shadow-sm"
               : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -124,7 +124,7 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
                   {firmRankings.map((fr) => (
                     <tr key={fr.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3">
-                        <Link href={`/firms/${fr.firm.id}`} className="text-sm font-medium text-gray-900 hover:text-teal-700">
+                        <Link href={`/firms/${fr.firm.id}`} className="text-sm font-medium text-gray-900 hover:text-scg-700">
                           {fr.firm.shortName ?? fr.firm.name}
                         </Link>
                         <p className="text-xs text-gray-400">{fr.firm.city}, {fr.firm.country}</p>
@@ -137,8 +137,8 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
                         </Badge>
                       </td>
                       <td className="px-4 py-3">
-                        {fr.band != null && <Badge variant={fr.band <= 2 ? "green" : fr.band <= 4 ? "teal" : "gray"}>{formatBand(fr.band)}</Badge>}
-                        {fr.tier != null && <Badge variant={fr.tier <= 2 ? "green" : fr.tier <= 3 ? "teal" : "gray"}>{formatTier(fr.tier)}</Badge>}
+                        {fr.band != null && <Badge variant={fr.band <= 2 ? "green" : fr.band <= 4 ? "scg" : "gray"}>{formatBand(fr.band)}</Badge>}
+                        {fr.tier != null && <Badge variant={fr.tier <= 2 ? "green" : fr.tier <= 3 ? "scg" : "gray"}>{formatTier(fr.tier)}</Badge>}
                         {fr.starRating != null && <span className="text-sm text-amber-500">{formatStars(fr.starRating)}</span>}
                       </td>
                     </tr>
@@ -175,14 +175,14 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
                     return (
                       <tr key={lr.id} className="hover:bg-gray-50">
                         <td className="px-4 py-3">
-                          <Link href={`/lawyers/${lr.lawyer.id}`} className="text-sm font-medium text-gray-900 hover:text-teal-700">
+                          <Link href={`/lawyers/${lr.lawyer.id}`} className="text-sm font-medium text-gray-900 hover:text-scg-700">
                             {lr.lawyer.name}
                           </Link>
                           {lr.lawyer.title && <p className="text-xs text-gray-400">{lr.lawyer.title}</p>}
                         </td>
                         <td className="px-4 py-3">
                           {currentFirm ? (
-                            <Link href={`/firms/${currentFirm.firm.id}`} className="text-sm text-gray-600 hover:text-teal-700">
+                            <Link href={`/firms/${currentFirm.firm.id}`} className="text-sm text-gray-600 hover:text-scg-700">
                               {currentFirm.firm.shortName ?? currentFirm.firm.name}
                             </Link>
                           ) : <span className="text-sm text-gray-400">-</span>}

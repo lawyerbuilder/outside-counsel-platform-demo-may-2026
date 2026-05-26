@@ -102,7 +102,7 @@ export default async function LawyerDetailPage({
                   <Building2 size={16} className="text-gray-400" />
                   <Link
                     href={`/firms/${currentPositions[0].firm.id}`}
-                    className="text-teal-700 hover:underline"
+                    className="text-scg-700 hover:underline"
                   >
                     {currentPositions[0].firm.name}
                   </Link>
@@ -136,7 +136,7 @@ export default async function LawyerDetailPage({
                     href={lawyer.linkedInUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-teal-700 hover:underline"
+                    className="text-scg-700 hover:underline"
                   >
                     LinkedIn
                     <ExternalLink size={12} className="ml-1 inline" />
@@ -166,18 +166,18 @@ export default async function LawyerDetailPage({
               {currentPositions.map((fl) => (
                 <div
                   key={fl.id}
-                  className="flex items-start gap-3 rounded-md border border-teal-100 bg-teal-50/50 p-3"
+                  className="flex items-start gap-3 rounded-md border border-scg-100 bg-scg-50/50 p-3"
                 >
-                  <div className="mt-0.5 h-2 w-2 rounded-full bg-teal-500" />
+                  <div className="mt-0.5 h-2 w-2 rounded-full bg-scg-500" />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <Link
                         href={`/firms/${fl.firm.id}`}
-                        className="text-sm font-medium text-gray-900 hover:text-teal-700"
+                        className="text-sm font-medium text-gray-900 hover:text-scg-700"
                       >
                         {fl.firm.name}
                       </Link>
-                      <Badge variant="teal">Current</Badge>
+                      <Badge variant="scg">Current</Badge>
                     </div>
                     <p className="text-xs text-gray-500">
                       {LAWYER_ROLE_LABELS[fl.role]}
@@ -199,7 +199,7 @@ export default async function LawyerDetailPage({
                     <div className="flex items-center justify-between">
                       <Link
                         href={`/firms/${fl.firm.id}`}
-                        className="text-sm font-medium text-gray-700 hover:text-teal-700"
+                        className="text-sm font-medium text-gray-700 hover:text-scg-700"
                       >
                         {fl.firm.name}
                       </Link>
@@ -284,7 +284,7 @@ export default async function LawyerDetailPage({
                       <Badge
                         variant={
                           r.rankingSource.publisher === "CHAMBERS"
-                            ? "teal"
+                            ? "scg"
                             : r.rankingSource.publisher === "LEGAL500"
                             ? "blue"
                             : r.rankingSource.publisher === "BENCHMARK_LITIGATION"
@@ -393,7 +393,7 @@ export default async function LawyerDetailPage({
                     {eng.matterName}
                   </p>
                   <p className="text-xs text-gray-500">
-                    <Link href={`/firms/${eng.firm.id}`} className="hover:text-teal-700">
+                    <Link href={`/firms/${eng.firm.id}`} className="hover:text-scg-700">
                       {eng.firm.shortName ?? eng.firm.name}
                     </Link>
                     {" | "}
@@ -406,7 +406,7 @@ export default async function LawyerDetailPage({
                     variant={
                       eng.outcome === "WON" ? "green" :
                       eng.outcome === "ONGOING" ? "blue" :
-                      eng.outcome === "COMPLETED" ? "teal" : "gray"
+                      eng.outcome === "COMPLETED" ? "scg" : "gray"
                     }
                   >
                     {eng.outcome}

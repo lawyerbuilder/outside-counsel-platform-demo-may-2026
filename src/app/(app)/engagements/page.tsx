@@ -47,13 +47,13 @@ export default async function EngagementsPage() {
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <Link href={`/firms/${eng.firm.id}`} className="text-sm text-gray-700 hover:text-teal-700">
+                    <Link href={`/firms/${eng.firm.id}`} className="text-sm text-gray-700 hover:text-scg-700">
                       {eng.firm.shortName ?? eng.firm.name}
                     </Link>
                   </td>
                   <td className="px-4 py-3">
                     {eng.lawyer ? (
-                      <Link href={`/lawyers/${eng.lawyer.id}`} className="text-sm text-gray-600 hover:text-teal-700">
+                      <Link href={`/lawyers/${eng.lawyer.id}`} className="text-sm text-gray-600 hover:text-scg-700">
                         {eng.lawyer.name}
                       </Link>
                     ) : <span className="text-sm text-gray-400">-</span>}
@@ -70,7 +70,7 @@ export default async function EngagementsPage() {
                       variant={
                         eng.outcome === "WON" ? "green" :
                         eng.outcome === "ONGOING" ? "blue" :
-                        eng.outcome === "COMPLETED" ? "teal" :
+                        eng.outcome === "COMPLETED" ? "scg" :
                         eng.outcome === "SETTLED" ? "amber" :
                         eng.outcome === "LOST" ? "red" : "gray"
                       }

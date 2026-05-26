@@ -11,8 +11,8 @@ import { FirmFilters } from "./FirmFilters";
 
 export const dynamic = "force-dynamic";
 
-const firmTypeBadgeVariant: Record<FirmTypeEnum, "teal" | "amber" | "blue" | "gray"> = {
-  FULL_SERVICE: "teal",
+const firmTypeBadgeVariant: Record<FirmTypeEnum, "scg" | "amber" | "blue" | "gray"> = {
+  FULL_SERVICE: "scg",
   BOUTIQUE: "amber",
   MID_SIZE: "blue",
   REGIONAL: "gray",
@@ -56,7 +56,7 @@ export default async function FirmsPage({ searchParams }: FirmsPageProps) {
         action={
           <Link
             href="/firms/new"
-            className="inline-flex items-center gap-2 rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800"
+            className="inline-flex items-center gap-2 rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800"
           >
             <Plus size={16} />
             Add Firm
@@ -81,7 +81,7 @@ export default async function FirmsPage({ searchParams }: FirmsPageProps) {
           action={
             <Link
               href="/firms/new"
-              className="inline-flex items-center gap-2 rounded-md bg-teal-700 px-3 py-2 text-sm font-medium text-white hover:bg-teal-800"
+              className="inline-flex items-center gap-2 rounded-md bg-scg-700 px-3 py-2 text-sm font-medium text-white hover:bg-scg-800"
             >
               <Plus size={16} />
               Add Firm
@@ -99,11 +99,11 @@ export default async function FirmsPage({ searchParams }: FirmsPageProps) {
               >
                 <div className="mb-3 flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-scg-50 text-scg-700">
                       <Building2 size={20} />
                     </div>
                     <div>
-                      <h3 className="font-medium text-gray-900 group-hover:text-teal-700">
+                      <h3 className="font-medium text-gray-900 group-hover:text-scg-700">
                         {firm.name}
                       </h3>
                       {firm.shortName && firm.shortName !== firm.name && (

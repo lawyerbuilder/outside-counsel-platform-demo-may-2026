@@ -27,7 +27,7 @@ export function AlumniSearch({ firms }: AlumniSearchProps) {
           }
           router.push(`/network?${params.toString()}`);
         }}
-        className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+        className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
       >
         <option value="">Select a firm...</option>
         {firms.map((f) => (

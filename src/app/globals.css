@@ -6,6 +6,19 @@
 /* @custom-variant dark (&:is(.dark *)); */
 
 @theme inline {
+  /* ─── SCG Brand Palette (primary red #E0251C) ─────────────────────── */
+  --color-scg-50: #fef2f2;
+  --color-scg-100: #fde8e8;
+  --color-scg-200: #fcd1d1;
+  --color-scg-300: #f9a8a8;
+  --color-scg-400: #f47171;
+  --color-scg-500: #e84040;
+  --color-scg-600: #E0251C;
+  --color-scg-700: #bc1f17;
+  --color-scg-800: #9b1d1a;
+  --color-scg-900: #801d1b;
+  --color-scg-950: #450a09;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
@@ -157,7 +170,7 @@
   /* Remove backgrounds and shadows for clean print */
   .bg-white,
   .bg-gray-50,
-  .bg-teal-50\/50,
+  .bg-scg-50\/50,
   .bg-amber-50\/50 {
     background: white !important;
   }

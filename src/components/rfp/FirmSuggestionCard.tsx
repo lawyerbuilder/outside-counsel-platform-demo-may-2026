@@ -15,7 +15,7 @@ export function FirmSuggestionCard({
   return (
     <div
       className={`flex items-start gap-3 rounded-lg border p-4 transition-colors ${
-        selected ? "border-teal-500 bg-teal-50" : "border-gray-200 hover:border-gray-300"
+        selected ? "border-scg-500 bg-scg-50" : "border-gray-200 hover:border-gray-300"
       }`}
     >
       <Checkbox

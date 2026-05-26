@@ -40,7 +40,7 @@ export function NpsForm({ targetType, targetId, practiceAreas }: NpsFormProps) {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="w-full rounded-md border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 hover:border-teal-400 hover:text-teal-600"
+        className="w-full rounded-md border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 hover:border-scg-400 hover:text-scg-600"
       >
         + Add NPS Recommendation
       </button>
@@ -48,7 +48,7 @@ export function NpsForm({ targetType, targetId, practiceAreas }: NpsFormProps) {
   }
 
   return (
-    <div className="rounded-lg border border-teal-200 bg-teal-50/30 p-4">
+    <div className="rounded-lg border border-scg-200 bg-scg-50/30 p-4">
       <h4 className="mb-3 text-sm font-semibold text-gray-900">
         Would you recommend this {targetType === "FIRM" ? "firm" : "lawyer"}?
       </h4>
@@ -98,7 +98,7 @@ export function NpsForm({ targetType, targetId, practiceAreas }: NpsFormProps) {
           </label>
           <select
             name="practiceAreaId"
-            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
           >
             <option value="">Any</option>
             {practiceAreas.map((pa) => (
@@ -117,7 +117,7 @@ export function NpsForm({ targetType, targetId, practiceAreas }: NpsFormProps) {
           <textarea
             name="reason"
             rows={2}
-            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             placeholder="Share your experience..."
           />
         </div>
@@ -135,7 +135,7 @@ export function NpsForm({ targetType, targetId, practiceAreas }: NpsFormProps) {
           <button
             type="submit"
             disabled={isPending || selectedScore === null}
-            className="rounded-md bg-teal-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
+            className="rounded-md bg-scg-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-scg-700 disabled:opacity-50"
           >
             {isPending ? "Saving..." : "Submit"}
           </button>

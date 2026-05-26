@@ -34,8 +34,8 @@ const TYPE_LABELS: Record<string, string> = {
   GENERAL: "General",
 };
 
-const TYPE_VARIANTS: Record<string, "teal" | "amber" | "blue" | "green" | "red" | "gray" | "default"> = {
-  RANKING_UPDATE: "teal",
+const TYPE_VARIANTS: Record<string, "scg" | "amber" | "blue" | "green" | "red" | "gray" | "default"> = {
+  RANKING_UPDATE: "scg",
   FIRM_NEWS: "blue",
   LAWYER_MOVE: "amber",
   NEW_FIRM: "green",
@@ -86,7 +86,7 @@ export function ResearchReviewCard({ update }: ResearchReviewCardProps) {
             {update.firm && (
               <Link
                 href={`/firms/${update.firm.id}`}
-                className="text-teal-600 hover:underline"
+                className="text-scg-600 hover:underline"
               >
                 {update.firm.shortName ?? update.firm.name}
               </Link>
@@ -94,7 +94,7 @@ export function ResearchReviewCard({ update }: ResearchReviewCardProps) {
             {update.lawyer && (
               <Link
                 href={`/lawyers/${update.lawyer.id}`}
-                className="text-teal-600 hover:underline"
+                className="text-scg-600 hover:underline"
               >
                 {update.lawyer.name}
               </Link>

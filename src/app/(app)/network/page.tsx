@@ -80,14 +80,14 @@ export default async function NetworkPage({ searchParams }: NetworkPageProps) {
                     <div className="mb-2 flex items-center justify-between">
                       <Link
                         href={`/firms/${comp.parent.id}`}
-                        className="text-sm font-semibold text-gray-900 hover:text-teal-700"
+                        className="text-sm font-semibold text-gray-900 hover:text-scg-700"
                       >
                         {comp.parent.shortName ?? comp.parent.name}
                       </Link>
                       <Badge variant="default">Parent</Badge>
                     </div>
                     <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <Badge variant="teal">
+                      <Badge variant="scg">
                         {FIRM_TYPE_LABELS[comp.parent.firmType as FirmTypeEnum]}
                       </Badge>
                       <span className="flex items-center gap-1">
@@ -107,7 +107,7 @@ export default async function NetworkPage({ searchParams }: NetworkPageProps) {
                     <div className="mb-2 flex items-center justify-between">
                       <Link
                         href={`/firms/${comp.spinOff.id}`}
-                        className="text-sm font-semibold text-gray-900 hover:text-teal-700"
+                        className="text-sm font-semibold text-gray-900 hover:text-scg-700"
                       >
                         {comp.spinOff.shortName ?? comp.spinOff.name}
                       </Link>
@@ -142,7 +142,7 @@ export default async function NetworkPage({ searchParams }: NetworkPageProps) {
                         <Link
                           key={l.id}
                           href={`/lawyers/${l.id}`}
-                          className="rounded-md bg-white px-2 py-1 text-xs text-gray-700 shadow-sm hover:text-teal-700"
+                          className="rounded-md bg-white px-2 py-1 text-xs text-gray-700 shadow-sm hover:text-scg-700"
                         >
                           {l.name}
                           <span className="ml-1 text-gray-400">
@@ -194,7 +194,7 @@ export default async function NetworkPage({ searchParams }: NetworkPageProps) {
                       <div>
                         <Link
                           href={`/lawyers/${a.id}`}
-                          className="text-sm font-medium text-gray-900 hover:text-teal-700"
+                          className="text-sm font-medium text-gray-900 hover:text-scg-700"
                         >
                           {a.name}
                         </Link>
@@ -213,7 +213,7 @@ export default async function NetworkPage({ searchParams }: NetworkPageProps) {
                         {a.currentFirm ? (
                           <Link
                             href={`/firms/${a.currentFirm.id}`}
-                            className="flex items-center gap-2 text-xs text-gray-600 hover:text-teal-700"
+                            className="flex items-center gap-2 text-xs text-gray-600 hover:text-scg-700"
                           >
                             <ArrowRight size={12} className="text-amber-500" />
                             <span>

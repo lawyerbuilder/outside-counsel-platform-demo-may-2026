@@ -6,7 +6,7 @@ const statusConfig: Record<string, { label: string; className: string }> = {
   OPEN: { label: "Open", className: "bg-blue-100 text-blue-700" },
   EVALUATING: { label: "Evaluating", className: "bg-amber-100 text-amber-700" },
   SHORTLISTED: { label: "Shortlisted", className: "bg-purple-100 text-purple-700" },
-  CLOSED: { label: "Closed", className: "bg-teal-100 text-teal-700" },
+  CLOSED: { label: "Closed", className: "bg-scg-100 text-scg-700" },
   CANCELLED: { label: "Cancelled", className: "bg-red-100 text-red-700" },
 };
 

@@ -19,7 +19,7 @@ export default async function RfpListPage() {
         action={
           <Link
             href="/rfp/new?step=1"
-            className="inline-flex items-center gap-2 rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800"
+            className="inline-flex items-center gap-2 rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800"
           >
             <Plus size={16} />
             New Request
@@ -65,7 +65,7 @@ export default async function RfpListPage() {
                   <td className="px-4 py-3">
                     <Link
                       href={`/rfp/${rfp.id}`}
-                      className="font-medium text-teal-700 hover:text-teal-800"
+                      className="font-medium text-scg-700 hover:text-scg-800"
                     >
                       {rfp.title}
                     </Link>

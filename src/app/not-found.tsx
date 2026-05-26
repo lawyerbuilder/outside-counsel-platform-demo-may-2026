@@ -5,8 +5,8 @@ export default function NotFound() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
       <div className="w-full max-w-md text-center">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-teal-50">
-          <FileQuestion className="h-8 w-8 text-teal-600" />
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-scg-50">
+          <FileQuestion className="h-8 w-8 text-scg-600" />
         </div>
         <h1 className="mb-2 text-2xl font-semibold text-gray-900">
           Page not found
@@ -16,7 +16,7 @@ export default function NotFound() {
         </p>
         <Link
           href="/directory"
-          className="inline-flex rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-teal-700"
+          className="inline-flex rounded-md bg-scg-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-scg-700"
         >
           Go to Directory
         </Link>

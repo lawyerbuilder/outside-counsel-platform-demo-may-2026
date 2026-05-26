@@ -37,7 +37,7 @@ export default async function SourceDetailPage({ params }: SourceDetailPageProps
       />
 
       <div className="mb-4 flex items-center gap-3">
-        <Badge variant="teal">
+        <Badge variant="scg">
           {RANKING_PUBLISHER_LABELS[source.publisher]}
         </Badge>
         <span className="text-sm text-gray-500">
@@ -60,7 +60,7 @@ export default async function SourceDetailPage({ params }: SourceDetailPageProps
                   <div>
                     <Link
                       href={`/firms/${fr.firm.id}`}
-                      className="text-sm font-medium text-gray-900 hover:text-teal-700"
+                      className="text-sm font-medium text-gray-900 hover:text-scg-700"
                     >
                       {fr.firm.shortName ?? fr.firm.name}
                     </Link>
@@ -70,7 +70,7 @@ export default async function SourceDetailPage({ params }: SourceDetailPageProps
                   </div>
                   <div>
                     {fr.band != null && (
-                      <Badge variant="teal">{formatBand(fr.band)}</Badge>
+                      <Badge variant="scg">{formatBand(fr.band)}</Badge>
                     )}
                     {fr.tier != null && (
                       <Badge variant="blue">{formatTier(fr.tier)}</Badge>
@@ -101,7 +101,7 @@ export default async function SourceDetailPage({ params }: SourceDetailPageProps
                   <div>
                     <Link
                       href={`/lawyers/${lr.lawyer.id}`}
-                      className="text-sm font-medium text-gray-900 hover:text-teal-700"
+                      className="text-sm font-medium text-gray-900 hover:text-scg-700"
                     >
                       {lr.lawyer.name}
                     </Link>

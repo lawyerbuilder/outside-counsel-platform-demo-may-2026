@@ -42,7 +42,7 @@ export function RankingFilters({
       <select
         value={currentFilters.publisher ?? ""}
         onChange={(e) => updateFilter("publisher", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All publishers</option>
         {(Object.entries(RANKING_PUBLISHER_LABELS) as [RankingPublisherEnum, string][]).map(
@@ -55,7 +55,7 @@ export function RankingFilters({
       <select
         value={currentFilters.practiceAreaId ?? ""}
         onChange={(e) => updateFilter("practiceAreaId", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All practice areas</option>
         {practiceAreas.map((pa) => (
@@ -66,7 +66,7 @@ export function RankingFilters({
       <select
         value={currentFilters.jurisdictionId ?? ""}
         onChange={(e) => updateFilter("jurisdictionId", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All jurisdictions</option>
         {jurisdictions.map((j) => (
@@ -77,7 +77,7 @@ export function RankingFilters({
       <select
         value={currentFilters.editionYear ?? ""}
         onChange={(e) => updateFilter("editionYear", e.target.value)}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
       >
         <option value="">All years</option>
         {editionYears.map((y) => (

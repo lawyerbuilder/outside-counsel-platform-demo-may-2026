@@ -49,8 +49,8 @@ export function WizardShell({
                   disabled={!isCompleted}
                   className={cn(
                     "flex h-8 w-8 items-center justify-center rounded-full text-xs font-medium transition-colors",
-                    isActive && "bg-teal-700 text-white",
-                    isCompleted && "bg-teal-100 text-teal-700 hover:bg-teal-200 cursor-pointer",
+                    isActive && "bg-scg-700 text-white",
+                    isCompleted && "bg-scg-100 text-scg-700 hover:bg-scg-200 cursor-pointer",
                     !isActive && !isCompleted && "bg-gray-100 text-gray-400"
                   )}
                 >
@@ -60,7 +60,7 @@ export function WizardShell({
                   <div
                     className={cn(
                       "h-0.5 w-6",
-                      step < currentStep ? "bg-teal-300" : "bg-gray-200"
+                      step < currentStep ? "bg-scg-300" : "bg-gray-200"
                     )}
                   />
                 )}

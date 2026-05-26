@@ -29,7 +29,7 @@ export function NoteForm({ targetType, targetId }: NoteFormProps) {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="w-full rounded-md border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 hover:border-teal-400 hover:text-teal-600"
+        className="w-full rounded-md border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 hover:border-scg-400 hover:text-scg-600"
       >
         + Add Note
       </button>
@@ -53,7 +53,7 @@ export function NoteForm({ targetType, targetId }: NoteFormProps) {
             name="content"
             rows={3}
             required
-            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             placeholder="Write a relationship note..."
           />
         </div>
@@ -64,7 +64,7 @@ export function NoteForm({ targetType, targetId }: NoteFormProps) {
             id="isPinned"
             name="isPinned"
             value="true"
-            className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
+            className="h-4 w-4 rounded border-gray-300 text-scg-600 focus:ring-scg-500"
           />
           <label htmlFor="isPinned" className="text-xs text-gray-600">
             Pin this note (pinned notes appear first)
@@ -82,7 +82,7 @@ export function NoteForm({ targetType, targetId }: NoteFormProps) {
           <button
             type="submit"
             disabled={isPending}
-            className="rounded-md bg-teal-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
+            className="rounded-md bg-scg-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-scg-700 disabled:opacity-50"
           >
             {isPending ? "Saving..." : "Save Note"}
           </button>

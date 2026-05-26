@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
-import { callClaude, resolveApiKey } from "@/server/ai/anthropic";
+import { callClaude } from "@/server/ai/anthropic";
 import { prisma } from "@/server/db";
 import { z } from "zod";
 
@@ -28,15 +28,12 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const apiKey = resolveApiKey(req);
-
   let summary = `${firmName} — added as unranked firm.`;
   try {
     const response = await callClaude({
       systemPrompt: `You are a legal industry research assistant. Given a law firm or lawyer name, provide a brief 1-2 sentence summary of who they are, their key practice areas, and their jurisdiction. If you don't recognise the name, say so honestly. Do not fabricate information. Keep the response under 100 words.`,
       userMessage: `Research this law firm or lawyer: "${firmName}"`,
       maxTokens: 200,
-      apiKey,
     });
     summary = response.content;
   } catch {

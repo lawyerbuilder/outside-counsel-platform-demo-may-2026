@@ -114,13 +114,13 @@ export function EvaluationCriteriaStep({
         ))}
         <button
           onClick={addCriterion}
-          className="flex items-center gap-1 text-sm text-teal-700 hover:text-teal-800"
+          className="flex items-center gap-1 text-sm text-scg-700 hover:text-scg-800"
         >
           <Plus size={14} /> Add criterion
         </button>
         <p
           className={`text-xs font-medium ${
-            Math.abs(totalWeight - 100) < 0.01 ? "text-teal-600" : "text-red-500"
+            Math.abs(totalWeight - 100) < 0.01 ? "text-scg-600" : "text-red-500"
           }`}
         >
           Total: {totalWeight}%{" "}
@@ -175,7 +175,7 @@ export function EvaluationCriteriaStep({
         <button
           onClick={handleNext}
           disabled={!isValid}
-          className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+          className="rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
         >
           Next
         </button>

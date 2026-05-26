@@ -81,7 +81,7 @@ export function RatingForm({ targetType, targetId }: RatingFormProps) {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="w-full rounded-md border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 hover:border-teal-400 hover:text-teal-600"
+        className="w-full rounded-md border border-dashed border-gray-300 px-4 py-3 text-sm text-gray-500 hover:border-scg-400 hover:text-scg-600"
       >
         + Add Internal Rating
       </button>
@@ -123,7 +123,7 @@ export function RatingForm({ targetType, targetId }: RatingFormProps) {
           <textarea
             name="comment"
             rows={2}
-            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-teal-500 focus:outline-none"
+            className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-scg-500 focus:outline-none"
             placeholder="Any additional thoughts..."
           />
         </div>
@@ -139,7 +139,7 @@ export function RatingForm({ targetType, targetId }: RatingFormProps) {
           <button
             type="submit"
             disabled={isPending}
-            className="rounded-md bg-teal-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-teal-700 disabled:opacity-50"
+            className="rounded-md bg-scg-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-scg-700 disabled:opacity-50"
           >
             {isPending ? "Saving..." : "Submit Rating"}
           </button>

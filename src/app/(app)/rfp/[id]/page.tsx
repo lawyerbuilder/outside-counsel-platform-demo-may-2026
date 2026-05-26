@@ -56,7 +56,7 @@ export default async function RfpDetailPage({
               {rfp.status !== "DRAFT" && rfp.status !== "CANCELLED" && (
                 <Link
                   href={`/rfp/${id}/evaluate`}
-                  className="text-xs text-teal-700 hover:text-teal-800"
+                  className="text-xs text-scg-700 hover:text-scg-800"
                 >
                   Evaluate firms
                 </Link>

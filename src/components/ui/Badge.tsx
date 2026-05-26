@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 
-export type BadgeVariant = "default" | "teal" | "amber" | "red" | "gray" | "blue" | "green" | "outline";
+export type BadgeVariant = "default" | "scg" | "amber" | "red" | "gray" | "blue" | "green" | "outline";
 
 const variantClasses: Record<BadgeVariant, string> = {
   default: "bg-gray-100 text-gray-700",
-  teal: "bg-teal-50 text-teal-700",
+  scg: "bg-scg-50 text-scg-700",
   amber: "bg-amber-50 text-amber-700",
   red: "bg-red-50 text-red-700",
   gray: "bg-gray-100 text-gray-600",

@@ -126,15 +126,15 @@ export function CostCenterStep({
           <button
             onClick={() => lookupCostCenter(code)}
             disabled={code.length < 3 || lookupStatus === "searching"}
-            className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+            className="rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
           >
             {lookupStatus === "searching" ? "Looking up..." : "Look up"}
           </button>
         </div>
 
         {lookupStatus === "found" && match && (
-          <div className="flex items-start gap-3 rounded-lg border border-teal-300 bg-teal-50 p-3">
-            <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-teal-600" />
+          <div className="flex items-start gap-3 rounded-lg border border-scg-300 bg-scg-50 p-3">
+            <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-scg-600" />
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-gray-900">{match.code}</span>
@@ -147,7 +147,7 @@ export function CostCenterStep({
                 </span>
               </div>
             </div>
-            <Badge variant="outline" className="shrink-0 border-teal-300 text-teal-700 text-[10px]">
+            <Badge variant="outline" className="shrink-0 border-scg-300 text-scg-700 text-[10px]">
               Matched
             </Badge>
           </div>
@@ -208,7 +208,7 @@ export function CostCenterStep({
 
         <button
           onClick={addContact}
-          className="flex items-center gap-1 text-sm text-teal-700 hover:text-teal-800"
+          className="flex items-center gap-1 text-sm text-scg-700 hover:text-scg-800"
         >
           <Plus size={14} /> Add another contact
         </button>
@@ -218,7 +218,7 @@ export function CostCenterStep({
         <button
           onClick={handleNext}
           disabled={!canProceed}
-          className="rounded-md bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+          className="rounded-md bg-scg-700 px-4 py-2 text-sm font-medium text-white hover:bg-scg-800 disabled:bg-gray-200 disabled:text-gray-400"
         >
           Next
         </button>

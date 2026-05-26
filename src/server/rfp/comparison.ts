@@ -17,7 +17,6 @@ export async function shouldAutoGenerate(rfpId: string): Promise<boolean> {
 export async function generateComparisonReport(
   rfpId: string,
   userId: string,
-  apiKey?: string
 ): Promise<string> {
   const rfp = await prisma.rfp.findUniqueOrThrow({
     where: { id: rfpId },
@@ -95,7 +94,6 @@ Be specific and actionable. This report goes to the General Counsel.`;
     systemPrompt:
       "You are an expert legal operations advisor evaluating outside counsel RFP responses for SCG (Siam Cement Group). Be analytical, fair, and specific. Produce a professional report suitable for GC review. No markdown headers larger than ##.",
     userMessage: prompt,
-    apiKey,
   });
 
   await prisma.aiOutput.create({

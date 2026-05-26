@@ -1,7 +1,7 @@
 import { prisma } from "@/server/db";
 import { computeNps } from "@/server/insights";
 import { getCurrentUser } from "@/server/current-user";
-import { callClaude, resolveApiKey } from "@/server/ai/anthropic";
+import { callClaude } from "@/server/ai/anthropic";
 
 const INSTRUCTIONS = `You are the AI assistant for SCG's Outside Counsel Directory — an internal tool used by the in-house legal team to find and evaluate law firms and individual lawyers.
 
@@ -182,8 +182,6 @@ export async function POST(request: Request) {
     return Response.json({ error: "No messages provided" }, { status: 400 });
   }
 
-  const apiKey = resolveApiKey(request);
-
   try {
     const user = await getCurrentUser();
     const [directoryContext, shortlistContext] = await Promise.all([
@@ -210,7 +208,6 @@ export async function POST(request: Request) {
     const response = await callClaude({
       systemPrompt,
       userMessage,
-      apiKey,
     });
 
     return Response.json({ message: response.content });
