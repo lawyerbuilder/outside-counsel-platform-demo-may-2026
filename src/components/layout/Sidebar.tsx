@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Home,
+  LayoutDashboard,
+  Search,
   Building2,
   Users,
   Trophy,
@@ -21,7 +22,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Directory", href: "/directory", icon: Home, tourId: "tour-directory" },
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, tourId: "tour-dashboard" },
+  { label: "Directory", href: "/directory", icon: Search, tourId: "tour-directory" },
   { label: "Firms", href: "/firms", icon: Building2, tourId: "tour-firms" },
   { label: "Lawyers", href: "/lawyers", icon: Users, tourId: "tour-lawyers" },
   { label: "Rankings", href: "/rankings", icon: Trophy, tourId: "tour-rankings" },

@@ -19,11 +19,21 @@ const tourSteps: DriveStep[] = [
     },
   },
   {
+    element: "#tour-dashboard",
+    popover: {
+      title: "Dashboard",
+      description:
+        "Your home base. See active RFPs, firm panel health, pending responses, and recent AI activity at a glance.",
+      side: "right",
+      align: "start",
+    },
+  },
+  {
     element: "#tour-directory",
     popover: {
       title: "Directory",
       description:
-        "Your starting point. Browse and search your full database of outside counsel lawyers across all jurisdictions.",
+        "Search across firms and lawyers with AI-powered recommendations ranked by your personalised fit score.",
       side: "right",
       align: "start",
     },
@@ -92,7 +102,7 @@ const tourSteps: DriveStep[] = [
     popover: {
       title: "You're all set!",
       description:
-        "Start by exploring the <strong>Directory</strong> or create your first <strong>RFP</strong>. You can always restart this tour from Settings.",
+        "Start by exploring the <strong>Dashboard</strong> or create your first <strong>RFP</strong>. You can restart this tour anytime from the top bar.",
       side: "over",
       align: "center",
     },
@@ -113,7 +123,7 @@ export function ProductTour() {
 
   useEffect(() => {
     // Only show on the main pages, not deep links
-    const mainPaths = ["/directory", "/firms", "/rfp", "/engagements", "/insights", "/rankings", "/lawyers", "/network", "/settings"];
+    const mainPaths = ["/dashboard", "/directory", "/firms", "/rfp", "/engagements", "/insights", "/rankings", "/lawyers", "/network", "/settings"];
     const isMainPage = mainPaths.some((p) => pathname === p);
 
     if (isMainPage && checkFirstVisit()) {
