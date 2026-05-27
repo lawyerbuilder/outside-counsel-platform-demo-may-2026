@@ -14,9 +14,10 @@ export function TourTrigger() {
     <button
       onClick={handleClick}
       title="Take a guided tour"
-      className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+      className="inline-flex items-center gap-1.5 rounded-md border border-gray-200 px-2.5 py-1.5 text-xs font-medium text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
     >
-      <Navigation size={16} />
+      <Navigation size={14} />
+      Tour
     </button>
   );
 }
