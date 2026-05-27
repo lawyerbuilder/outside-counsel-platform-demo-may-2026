@@ -32,7 +32,7 @@ const STEP_CONFIG = [
       title: "Dashboard",
       description:
         "Your home base. See active RFPs, firm panel health, pending responses, and recent AI activity at a glance.",
-      side: "right" as const,
+      side: "bottom" as const,
       align: "start" as const,
     },
   },
@@ -43,7 +43,7 @@ const STEP_CONFIG = [
       title: "AI Counsel Finder",
       description:
         "Search across firms and lawyers with AI-powered recommendations ranked by your personalised fit score.",
-      side: "right" as const,
+      side: "bottom" as const,
       align: "start" as const,
     },
   },
@@ -54,7 +54,7 @@ const STEP_CONFIG = [
       title: "Firms",
       description:
         "View and manage outside counsel firms. See ratings, practice areas, active engagements, and AI-powered timesheet intelligence.",
-      side: "right" as const,
+      side: "bottom" as const,
       align: "start" as const,
     },
   },
@@ -65,7 +65,7 @@ const STEP_CONFIG = [
       title: "Request for Proposals",
       description:
         "Create RFPs, invite firms to bid, and get AI-powered comparison reports that analyse scope coverage, fees, and risk across all proposals.",
-      side: "right" as const,
+      side: "bottom" as const,
       align: "start" as const,
     },
   },
@@ -76,7 +76,7 @@ const STEP_CONFIG = [
       title: "Engagements",
       description:
         "Track active legal engagements with firms. Monitor budgets, timelines, and matter progress.",
-      side: "right" as const,
+      side: "bottom" as const,
       align: "start" as const,
     },
   },
@@ -87,7 +87,7 @@ const STEP_CONFIG = [
       title: "Insights",
       description:
         "AI-powered timesheet analysis. Upload invoices and get instant insights on billing patterns, rate anomalies, and cost optimisation opportunities.",
-      side: "right" as const,
+      side: "bottom" as const,
       align: "start" as const,
     },
   },
@@ -98,7 +98,7 @@ const STEP_CONFIG = [
       title: "Rankings",
       description:
         "See how firms stack up. View rankings by practice area, jurisdiction, and internal performance scores.",
-      side: "right" as const,
+      side: "bottom" as const,
       align: "start" as const,
     },
   },
@@ -109,7 +109,7 @@ const STEP_CONFIG = [
       title: "Settings",
       description:
         "Configure your platform preferences, AI briefing context, and evaluation criteria.",
-      side: "right" as const,
+      side: "bottom" as const,
       align: "start" as const,
     },
   },
@@ -201,7 +201,7 @@ export function ProductTour() {
       animate: true,
       smoothScroll: true,
       allowClose: true,
-      overlayColor: "rgba(0, 0, 0, 0.6)",
+      overlayColor: "rgba(0, 0, 0, 0.12)",
       stagePadding: 8,
       stageRadius: 8,
       popoverClass: "ocp-tour-popover",
