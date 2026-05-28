@@ -23,7 +23,7 @@ type Invitation = {
   respondedAt?: string | null;
 };
 
-export function InvitationStatusTracker({ rfpId, invitations }: { rfpId: string; invitations: Invitation[] }) {
+export function InvitationStatusTracker({ rfpId, rfpTitle, invitations }: { rfpId: string; rfpTitle: string; invitations: Invitation[] }) {
   if (invitations.length === 0) {
     return <p className="text-sm text-gray-400">No invitations sent yet.</p>;
   }
@@ -52,7 +52,7 @@ export function InvitationStatusTracker({ rfpId, invitations }: { rfpId: string;
               <div className="flex items-center gap-2">
                 {inv.status === "INVITED" && (
                   <>
-                    <CopyLinkButton rfpId={rfpId} invitationId={inv.id} />
+                    <CopyLinkButton rfpId={rfpId} invitationId={inv.id} rfpTitle={rfpTitle} firmName={inv.firmName} />
                     <Link
                       href={`/rfp/${rfpId}/respond/${inv.id}`}
                       className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-medium text-scg-700 hover:bg-scg-50"
