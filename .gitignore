@@ -63,3 +63,4 @@ mcp-server/node_modules/
 /data/
 /scripts/
 /docs/
+.env.turso

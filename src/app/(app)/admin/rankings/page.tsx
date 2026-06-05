@@ -7,7 +7,7 @@ import { CsvImportForm } from "@/components/admin/CsvImportForm";
 import { RANKING_PUBLISHER_LABELS } from "@/lib/schemas";
 import type { RankingPublisherEnum } from "@/lib/schemas";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 const publisherBadge: Record<RankingPublisherEnum, "scg" | "blue" | "amber" | "green"> = {
   CHAMBERS: "scg",

@@ -5,7 +5,7 @@ import { RfpStatusBadge } from "@/components/rfp/RfpStatusBadge";
 import { Plus } from "lucide-react";
 import { DeleteDraftButton } from "@/components/rfp/DeleteDraftButton";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function RfpListPage() {
   const [rfps, counts] = await Promise.all([listRfps(), countRfpsByStatus()]);

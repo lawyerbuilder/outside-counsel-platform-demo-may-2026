@@ -9,7 +9,7 @@ import { LAWYER_ROLE_LABELS } from "@/lib/schemas";
 import type { LawyerRoleEnum } from "@/lib/schemas";
 import { LawyerFilters } from "./LawyerFilters";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface LawyersPageProps {
   searchParams: Promise<{
