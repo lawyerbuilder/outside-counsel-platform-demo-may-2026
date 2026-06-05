@@ -10,7 +10,9 @@
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 
-const adapter = new PrismaLibSql({ url: "file:./prisma/dev.db" });
+const url = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
+const authToken = process.env.TURSO_AUTH_TOKEN;
+const adapter = new PrismaLibSql({ url, ...(authToken ? { authToken } : {}) });
 const prisma = new PrismaClient({ adapter });
 
 // ─── Deterministic PRNG (mulberry32) ────────────────────────────────────────
