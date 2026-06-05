@@ -10,6 +10,8 @@ export async function getDashboardStats() {
     pendingResponses,
     recentAiOutputs,
     panelHealth,
+    jurisdictionCount,
+    entityCount,
   ] = await Promise.all([
     // Total active firms
     prisma.firm.count({ where: { isActive: true } }),
@@ -65,6 +67,12 @@ export async function getDashboardStats() {
       where: { isActive: true },
       _count: { id: true },
     }),
+
+    // Total jurisdictions
+    prisma.jurisdiction.count(),
+
+    // Total entities (subsidiaries)
+    prisma.entity.count({ where: { isActive: true } }),
   ]);
 
   // Parse RFP status counts into a map
@@ -103,5 +111,7 @@ export async function getDashboardStats() {
     recentRfps,
     recentAiOutputs,
     panelMap,
+    jurisdictionCount,
+    entityCount,
   };
 }

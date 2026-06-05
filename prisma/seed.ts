@@ -62,6 +62,10 @@ async function main() {
       { name: "England & Wales", country: "United Kingdom", region: "EMEA" },
       { name: "New York", country: "United States", region: "AMERICAS" },
       { name: "Japan", country: "Japan", region: "APAC" },
+      { name: "Malaysia", country: "Malaysia", region: "APAC" },
+      { name: "China", country: "China", region: "APAC" },
+      { name: "South Korea", country: "South Korea", region: "APAC" },
+      { name: "Germany", country: "Germany", region: "EMEA" },
     ].map((j) =>
       prisma.jurisdiction.upsert({
         where: { name: j.name },
@@ -762,6 +766,142 @@ async function main() {
     });
   }
   console.log(`  Cost Centers: ${costCenterData.length}`);
+
+  // ─── Bulk Firms from seed-firms.json ──────────────────────────────────────
+  // Import the 66 firms from data/seed-firms.json, skipping any that already exist
+  const fs = await import("fs");
+  const path = await import("path");
+  const seedFirmsPath = path.join(__dirname, "..", "data", "seed-firms.json");
+  const seedFirmsRaw = fs.readFileSync(seedFirmsPath, "utf-8");
+  const seedFirms: { name: string; shortName: string | null; firmType: string; country: string; city: string; website: string }[] = JSON.parse(seedFirmsRaw);
+
+  // Collect existing firm names to avoid duplicates
+  const existingFirms = await prisma.firm.findMany({ select: { name: true } });
+  const existingNames = new Set(existingFirms.map((f) => f.name));
+
+  let bulkFirmCount = 0;
+  for (const sf of seedFirms) {
+    if (existingNames.has(sf.name)) continue;
+    await prisma.firm.create({
+      data: {
+        name: sf.name,
+        shortName: sf.shortName,
+        firmType: sf.firmType as "FULL_SERVICE" | "BOUTIQUE" | "MID_SIZE" | "REGIONAL" | "ALSP",
+        country: sf.country,
+        city: sf.city,
+        website: sf.website,
+        panelStatus: "ACTIVE",
+      },
+    });
+    existingNames.add(sf.name);
+    bulkFirmCount++;
+  }
+  console.log(`  Bulk Firms (from seed-firms.json): ${bulkFirmCount} new (skipped ${seedFirms.length - bulkFirmCount} duplicates)`);
+
+  // ─── Bulk Entities (SCG Subsidiaries) ─────────────────────────────────────
+  // SCG has 350+ subsidiaries across 4 BUs in multiple countries.
+  // We generate realistic entity names for each BU × country combination.
+
+  const buDefs = [
+    { prefix: "SCGC", fullName: "SCG Chemicals", segments: [
+      "Olefins", "Polyethylene", "Polypropylene", "PVC", "Chlor-Alkali",
+      "Performance Chemicals", "Petrochemicals Trading", "Specialty Polymers",
+      "Chemicals Logistics", "Feedstock Supply", "Aromatics",
+    ]},
+    { prefix: "SCGP", fullName: "SCG Packaging", segments: [
+      "Corrugated", "Flexible Packaging", "Fiber-Based", "Consumer Packaging",
+      "Packaging Solutions", "Board & Paper", "Rigid Containers", "Recycling",
+      "Printing & Converting", "Packaging Automation", "Sustainable Materials",
+    ]},
+    { prefix: "CBM", fullName: "SCG Cement-Building Materials", segments: [
+      "Cement", "Ready-Mixed Concrete", "Mortar & Plaster", "Roof Tiles",
+      "Ceramic Tiles", "Sanitaryware", "Fiber Cement", "Concrete Products",
+      "Building Adhesives", "Distribution", "Pipe Systems",
+    ]},
+    { prefix: "SCGD", fullName: "SCG Decor", segments: [
+      "Decor Solutions", "Surface Materials", "Design Studio", "Décor Distribution",
+    ]},
+    { prefix: "SCGE", fullName: "SCG Cleanergy", segments: [
+      "Solar", "Wind Energy", "Battery Storage", "Green Hydrogen", "EV Charging",
+    ]},
+    { prefix: "SCGL", fullName: "SCG Smart Living", segments: [
+      "Home Solutions", "Digital Products", "Retail", "Smart Home",
+    ]},
+    { prefix: "SCGi", fullName: "SCG International", segments: [
+      "Trading", "Logistics", "Investment Holding", "Procurement",
+    ]},
+  ];
+
+  const subCountries = [
+    { name: "Thailand", code: "TH" },
+    { name: "Vietnam", code: "VN" },
+    { name: "Indonesia", code: "ID" },
+    { name: "Philippines", code: "PH" },
+    { name: "Myanmar", code: "MM" },
+    { name: "Cambodia", code: "KH" },
+    { name: "Laos", code: "LA" },
+    { name: "Malaysia", code: "MY" },
+    { name: "China", code: "CN" },
+    { name: "India", code: "IN" },
+    { name: "Japan", code: "JP" },
+    { name: "United States", code: "US" },
+    { name: "United Kingdom", code: "GB" },
+    { name: "Germany", code: "DE" },
+  ];
+
+  // Collect existing entity names
+  const existingEntities = await prisma.entity.findMany({ select: { name: true } });
+  const existingEntityNames = new Set(existingEntities.map((e) => e.name));
+
+  // Collect existing cost center codes
+  const existingCCs = await prisma.costCenter.findMany({ select: { code: true } });
+  const existingCCCodes = new Set(existingCCs.map((c) => c.code));
+
+  let entityCount = existingEntities.length;
+  let ccCount = existingCCs.length;
+  let ccCodeCounter = 1000; // Start cost center codes from 1000
+
+  for (const bu of buDefs) {
+    for (const country of subCountries) {
+      for (const segment of bu.segments) {
+        if (entityCount >= 355) break; // Target ~350
+
+        const entityName = `${bu.fullName} ${segment} (${country.name})`;
+        const shortName = `${bu.prefix}-${segment.replace(/[^A-Za-z]/g, "").substring(0, 6)}-${country.code}`;
+
+        if (existingEntityNames.has(entityName)) continue;
+
+        const entity = await prisma.entity.create({
+          data: {
+            name: entityName,
+            shortName: shortName,
+            country: country.name,
+          },
+        });
+        existingEntityNames.add(entityName);
+        entityCount++;
+
+        // Create 1 cost center per entity
+        const ccCode = String(ccCodeCounter++);
+        if (!existingCCCodes.has(ccCode)) {
+          await prisma.costCenter.create({
+            data: {
+              code: ccCode,
+              name: `${segment} — ${country.code}`,
+              entityId: entity.id,
+            },
+          });
+          existingCCCodes.add(ccCode);
+          ccCount++;
+        }
+      }
+      if (entityCount >= 355) break;
+    }
+    if (entityCount >= 355) break;
+  }
+
+  console.log(`  Total Entities (subsidiaries): ${entityCount}`);
+  console.log(`  Total Cost Centers: ${ccCount}`);
 
   console.log("Seed complete!");
 }

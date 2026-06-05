@@ -12,6 +12,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   Send,
+  Globe,
+  Landmark,
 } from "lucide-react";
 import { getDashboardStats } from "@/server/dashboard";
 
@@ -66,13 +68,27 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-6">
         <StatCard
           label="Active Firms"
           value={stats.firmCount}
           icon={<Building2 size={20} />}
           href="/firms"
           detail={`${stats.panelMap["ACTIVE"] ?? 0} on panel`}
+        />
+        <StatCard
+          label="Subsidiaries"
+          value={stats.entityCount}
+          icon={<Landmark size={20} />}
+          href="/firms"
+          detail="cost centers"
+        />
+        <StatCard
+          label="Jurisdictions"
+          value={stats.jurisdictionCount}
+          icon={<Globe size={20} />}
+          href="/rankings"
+          detail="tracked"
         />
         <StatCard
           label="Lawyers"
