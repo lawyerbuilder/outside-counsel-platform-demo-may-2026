@@ -8,8 +8,8 @@ import { tmpdir } from "os";
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY ?? "";
 const GROQ_BASE_URL = "https://api.groq.com/openai/v1";
-const GROQ_DEFAULT_MODEL = "deepseek-r1-distill-llama-70b";
-const GROQ_FAST_MODEL = "llama-3.3-70b-versatile";
+const GROQ_DEFAULT_MODEL = "llama-3.3-70b-versatile";
+const GROQ_FAST_MODEL = "llama-3.1-8b-instant";
 
 export const DEFAULT_MODEL = GROQ_API_KEY ? GROQ_DEFAULT_MODEL : "claude-sonnet-4-6";
 
