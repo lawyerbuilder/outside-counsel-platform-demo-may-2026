@@ -87,101 +87,49 @@ type ChatMessage = {
 export const dynamic = "force-dynamic";
 
 async function getDirectoryContext(): Promise<string> {
-  const [firms, lawyers] = await Promise.all([
-    prisma.firm.findMany({
-      select: {
-        id: true,
-        name: true,
-        shortName: true,
-        country: true,
-        city: true,
-        firmType: true,
-        headcount: true,
-        website: true,
-        internalNotes: true,
-        practiceAreas: {
-          include: { practiceArea: true, jurisdiction: true },
-        },
-        rankings: {
-          include: { rankingSource: true, practiceArea: true },
-        },
-        recommendations: {
-          where: { targetType: "FIRM" },
-          select: { npsScore: true },
-        },
+  // Compact summary — only top firms with NPS/rankings to stay within
+  // Groq free tier token limits (12K TPM). For detailed queries, the
+  // GraphRAG endpoint (/api/graph-query) provides focused subgraphs.
+  const firms = await prisma.firm.findMany({
+    select: {
+      id: true,
+      name: true,
+      shortName: true,
+      country: true,
+      city: true,
+      firmType: true,
+      internalNotes: true,
+      practiceAreas: {
+        include: { practiceArea: { select: { name: true } }, jurisdiction: { select: { name: true } } },
       },
-    }),
-    prisma.lawyer.findMany({
-      select: {
-        id: true,
-        name: true,
-        title: true,
-        email: true,
-        linkedInUrl: true,
-        firmLawyers: {
-          where: { isCurrent: true },
-          include: { firm: { select: { id: true, name: true } } },
-          take: 1,
-        },
-        practiceAreas: { include: { practiceArea: true } },
-        rankings: {
-          include: { rankingSource: true, practiceArea: true },
-        },
-        recommendations: {
-          where: { targetType: "LAWYER" },
-          select: { npsScore: true },
-        },
+      recommendations: {
+        where: { targetType: "FIRM" },
+        select: { npsScore: true },
       },
-    }),
-  ]);
+      rankings: {
+        include: { practiceArea: { select: { name: true } } },
+        take: 2, // Only top 2 rankings per firm
+      },
+    },
+  });
 
-  const firmSummaries = firms.map((f) => ({
-    id: f.id,
-    name: f.name,
-    shortName: f.shortName,
-    country: f.country,
-    city: f.city,
-    type: f.firmType,
-    headcount: f.headcount,
-    website: f.website,
-    internalNotes: f.internalNotes,
-    nps: computeNps(f.recommendations.map((r) => r.npsScore)).score,
-    practiceAreas: [
-      ...new Set(f.practiceAreas.map((pa) => pa.practiceArea.name)),
-    ],
-    jurisdictions: [
-      ...new Set(
-        f.practiceAreas
-          .filter((pa) => pa.jurisdiction)
-          .map((pa) => pa.jurisdiction!.name)
-      ),
-    ],
-    rankings: f.rankings.map(
-      (r) =>
-        `${r.rankingSource.publisher} ${r.rankingSource.editionYear}: ${r.practiceArea.name}${r.band ? ` Band ${r.band}` : ""}${r.tier ? ` Tier ${r.tier}` : ""}`
-    ),
-  }));
+  // Only include firms that have practice areas (skip empty shells)
+  const activeFirms = firms.filter((f) => f.practiceAreas.length > 0);
 
-  const lawyerSummaries = lawyers.map((l) => ({
-    id: l.id,
-    name: l.name,
-    title: l.title,
-    email: l.email,
-    linkedIn: l.linkedInUrl,
-    firm: l.firmLawyers[0]?.firm
-      ? { id: l.firmLawyers[0].firm.id, name: l.firmLawyers[0].firm.name }
-      : null,
-    practiceAreas: [
-      ...new Set(l.practiceAreas.map((pa) => pa.practiceArea.name)),
-    ],
-    nps: computeNps(l.recommendations.map((r) => r.npsScore)).score,
-    rankings: l.rankings.map(
-      (r) =>
-        `${r.rankingSource.publisher} ${r.rankingSource.editionYear}: ${r.practiceArea.name}${r.category ? ` (${r.category})` : ""}`
-    ),
-  }));
+  const summaries = activeFirms.map((f) => {
+    const nps = computeNps(f.recommendations.map((r) => r.npsScore));
+    const pas = [...new Set(f.practiceAreas.map((pa) => pa.practiceArea.name))];
+    const jurs = [...new Set(f.practiceAreas.filter((pa) => pa.jurisdiction).map((pa) => pa.jurisdiction!.name))];
+    const topRank = f.rankings[0];
+    const rankStr = topRank
+      ? `${topRank.band ? `Band ${topRank.band}` : ""}${topRank.tier ? `Tier ${topRank.tier}` : ""} ${topRank.practiceArea.name}`
+      : "";
 
-  return JSON.stringify({ firms: firmSummaries, lawyers: lawyerSummaries });
+    // Compact one-line format: "Baker McKenzie (id) | Full Service | Bangkok,Thailand | NPS:+50 | M&A,Litigation | Band 1 M&A"
+    return `${f.name} (${f.id}) | ${f.firmType} | ${f.city},${f.country} | NPS:${nps.total > 0 ? (nps.score >= 0 ? "+" : "") + nps.score : "n/a"} | ${pas.join(",")} | ${jurs.join(",")} | ${rankStr}${f.internalNotes ? ` | NOTE: ${f.internalNotes}` : ""}`;
+  });
+
+  return `${activeFirms.length} firms in directory:\n${summaries.join("\n")}`;
 }
 
 async function getTimesheetContext(): Promise<string> {
