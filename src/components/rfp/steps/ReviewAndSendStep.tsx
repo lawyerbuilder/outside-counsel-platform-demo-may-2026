@@ -77,7 +77,7 @@ export function ReviewAndSendStep({
     { label: "Complexity", value: data.complexityTier },
     { label: "Urgency", value: data.urgency },
     { label: "Title", value: data.title },
-    ...(data.matterNumber ? [{ label: "Matter No.", value: data.matterNumber }] : []),
+    { label: "Matter No.", value: data.matterNumber || "Not assigned" },
     { label: "Deadline", value: data.deadline ?? "Not set" },
     { label: "Firms invited", value: `${data.firmCount} firm(s)` },
   ];

@@ -16,10 +16,27 @@ export async function POST(req: NextRequest) {
 
   const { firmName } = parsed.data;
 
-  const existing = await prisma.firm.findFirst({
+  // Try exact match first, then fuzzy (contains) match
+  let existing = await prisma.firm.findFirst({
     where: { name: { equals: firmName } },
     select: { id: true, name: true },
   });
+
+  if (!existing) {
+    // Fuzzy match: firm name contains the search term or vice versa
+    existing = await prisma.firm.findFirst({
+      where: {
+        OR: [
+          { name: { contains: firmName } },
+          // Also check if the input is a longer form of a DB name
+          ...(firmName.length >= 4
+            ? [{ name: { contains: firmName.split(/[&,]| and /i)[0].trim() } }]
+            : []),
+        ],
+      },
+      select: { id: true, name: true },
+    });
+  }
 
   if (existing) {
     return NextResponse.json({

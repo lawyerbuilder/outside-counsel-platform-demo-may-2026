@@ -15,10 +15,14 @@ function str(val: string | string[] | undefined): string {
 
 export function ReviewAndSendClient({ params, firmNameMap = {}, manualFirmNames = [] }: Props) {
   const firmIds = str(params.firmIds).split(",").filter(Boolean);
-  const allFirmNames = [
-    ...firmIds.map((id) => firmNameMap[id] ?? id),
-    ...manualFirmNames,
-  ];
+  // Deduplicate: manual firm names that already matched a DB firm appear in both
+  // firmIds (as resolved IDs) and manualFirmNames. Remove duplicates by name.
+  const firmNamesFromIds = firmIds.map((id) => firmNameMap[id] ?? id);
+  const resolvedNameSet = new Set(firmNamesFromIds.map((n) => n.toLowerCase()));
+  const uniqueManualNames = manualFirmNames.filter(
+    (name) => !resolvedNameSet.has(name.toLowerCase())
+  );
+  const allFirmNames = [...firmNamesFromIds, ...uniqueManualNames];
 
   const data = {
     costCenterCode: str(params.costCenterCode) || "—",
@@ -32,7 +36,7 @@ export function ReviewAndSendClient({ params, firmNameMap = {}, manualFirmNames 
     matterNumber: str(params.matterNumber) || undefined,
     scopeDocument: str(params.scopeDocument) || undefined,
     deadline: str(params.deadline) || undefined,
-    firmCount: firmIds.length + manualFirmNames.length,
+    firmCount: allFirmNames.length,
     firmNames: allFirmNames,
     requestFeeCap: params.requestFeeCap !== "false",
     requestSuggestedBudget: params.requestSuggestedBudget !== "false",

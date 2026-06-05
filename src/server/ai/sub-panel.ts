@@ -69,7 +69,7 @@ export async function querySubPanel(
     take: query.limit ?? 10,
   });
 
-  const firms: SubPanelFirm[] = capabilities.map((c) => ({
+  let firms: SubPanelFirm[] = capabilities.map((c) => ({
     firmId: c.firm.id,
     firmName: c.firm.name,
     firmType: c.firm.firmType,
@@ -83,6 +83,51 @@ export async function querySubPanel(
     notes: c.notes,
     lastReviewedAt: c.lastReviewedAt,
   }));
+
+  // ── Fallback: if FirmCapability table is empty for this combo,
+  // ── look in FirmPracticeArea instead (covers firms without capability records)
+  if (firms.length === 0) {
+    const practiceAreaFirms = await prisma.firmPracticeArea.findMany({
+      where: {
+        practiceAreaId: query.practiceAreaId,
+        jurisdictionId: query.jurisdictionId,
+        firm: {
+          isActive: true,
+          deletedAt: null,
+          panelStatus: { in: ["ACTIVE", "PROBATION", "PROSPECTIVE"] },
+        },
+      },
+      include: {
+        firm: {
+          select: { id: true, name: true, firmType: true, panelStatus: true },
+        },
+      },
+      take: query.limit ?? 20,
+    });
+
+    // Deduplicate by firm ID (a firm might have multiple FirmPracticeArea entries)
+    const seen = new Set<string>();
+    firms = practiceAreaFirms
+      .filter((fpa) => {
+        if (seen.has(fpa.firm.id)) return false;
+        seen.add(fpa.firm.id);
+        return true;
+      })
+      .map((fpa) => ({
+        firmId: fpa.firm.id,
+        firmName: fpa.firm.name,
+        firmType: fpa.firm.firmType,
+        panelStatus: fpa.firm.panelStatus,
+        complexityTier: query.complexityTier ?? ("STANDARD" as ComplexityTier),
+        overallScore: null,
+        performanceScore: null,
+        rateScore: null,
+        rankingScore: null,
+        manualPriority: 0,
+        notes: null,
+        lastReviewedAt: null,
+      }));
+  }
 
   return {
     firms,

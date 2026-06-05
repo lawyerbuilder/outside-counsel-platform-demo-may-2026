@@ -3,6 +3,7 @@ import { listRfps, countRfpsByStatus } from "@/server/rfp/queries";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { RfpStatusBadge } from "@/components/rfp/RfpStatusBadge";
 import { Plus } from "lucide-react";
+import { DeleteDraftButton } from "@/components/rfp/DeleteDraftButton";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +58,7 @@ export default async function RfpListPage() {
                 <th className="px-4 py-3 font-medium text-gray-500">Status</th>
                 <th className="px-4 py-3 font-medium text-gray-500">Firms</th>
                 <th className="px-4 py-3 font-medium text-gray-500">Created</th>
+                <th className="px-4 py-3 font-medium text-gray-500"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -84,6 +86,11 @@ export default async function RfpListPage() {
                   </td>
                   <td className="px-4 py-3 text-gray-400">
                     {new Date(rfp.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3">
+                    {(rfp.status === "DRAFT" || rfp.status === "CANCELLED") && (
+                      <DeleteDraftButton rfpId={rfp.id} rfpTitle={rfp.title} />
+                    )}
                   </td>
                 </tr>
               ))}
