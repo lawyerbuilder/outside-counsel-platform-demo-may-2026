@@ -739,7 +739,7 @@ export function AiSearchChat() {
               <h3 className="text-sm font-semibold text-gray-900">
                 AI Counsel Finder
               </h3>
-              <p className="text-[10px] text-gray-400">Powered by Claude</p>
+              <p className="text-[10px] text-gray-400">AI-powered search</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
