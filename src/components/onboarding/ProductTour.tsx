@@ -59,12 +59,23 @@ const STEP_CONFIG = [
     },
   },
   {
-    element: "#tour-rfp",
-    href: "/rfp",
+    element: "#tour-lawyers",
+    href: "/lawyers",
     popover: {
-      title: "Request for Proposals",
+      title: "Lawyers",
       description:
-        "Create RFPs, invite firms to bid, and get AI-powered comparison reports that analyse scope coverage, fees, and risk across all proposals.",
+        "Browse individual lawyers across all firms. Filter by practice area, jurisdiction, seniority, and firm. View career history and alumni connections.",
+      side: "bottom" as const,
+      align: "start" as const,
+    },
+  },
+  {
+    element: "#tour-rankings",
+    href: "/rankings",
+    popover: {
+      title: "Rankings",
+      description:
+        "Chambers, Legal 500, and AsiaLaw rankings across all practice areas and jurisdictions. Filter and compare firm and lawyer rankings side by side.",
       side: "bottom" as const,
       align: "start" as const,
     },
@@ -81,23 +92,34 @@ const STEP_CONFIG = [
     },
   },
   {
-    element: "#tour-insights",
-    href: "/insights",
+    element: "#tour-rfp",
+    href: "/rfp",
     popover: {
-      title: "Insights",
+      title: "Request for Proposals",
       description:
-        "AI-powered timesheet analysis. Upload invoices and get instant insights on billing patterns, rate anomalies, and cost optimisation opportunities.",
+        "Create RFPs, invite firms to bid, and get AI-powered comparison reports that analyse scope coverage, fees, and risk across all proposals.",
       side: "bottom" as const,
       align: "start" as const,
     },
   },
   {
-    element: "#tour-rankings",
-    href: "/rankings",
+    element: "#tour-insights",
+    href: "/insights",
     popover: {
-      title: "Rankings",
+      title: "Timesheet Intelligence",
       description:
-        "See how firms stack up. View rankings by practice area, jurisdiction, and internal performance scores.",
+        "Upload MatterSphere timesheet exports and get AI-powered analysis of external counsel usage patterns, outsource rates, and practice area trends.",
+      side: "bottom" as const,
+      align: "start" as const,
+    },
+  },
+  {
+    element: "#tour-network",
+    href: "/network",
+    popover: {
+      title: "Boutique Network",
+      description:
+        "Visualise firm spin-offs, partner movements, and alumni career paths. See how boutique firms connect to the major firms they spun off from.",
       side: "bottom" as const,
       align: "start" as const,
     },
@@ -108,7 +130,7 @@ const STEP_CONFIG = [
     popover: {
       title: "Settings",
       description:
-        "Configure your platform preferences, AI briefing context, and evaluation criteria.",
+        "Configure your AI briefing context, scoring weights, and evaluation criteria. Add institutional knowledge that guides all AI recommendations.",
       side: "bottom" as const,
       align: "start" as const,
     },
