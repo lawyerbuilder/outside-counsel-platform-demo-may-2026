@@ -36,9 +36,6 @@ const nextConfig: NextConfig = {
     // Skip type checking during build — already checked in dev/CI
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   async headers() {
     return [
       {
