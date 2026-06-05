@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { prisma } from "@/server/db";
 import type { DraftRfpInput, InvitationResponseInput, EvaluationScoreInput } from "@/lib/validation/rfp";
+import { sendRfpInvitationEmail } from "@/server/email";
 
 export async function createDraftRfp(
   data: DraftRfpInput & { createdById: string }
@@ -51,6 +52,7 @@ export async function updateDraftRfp(
 }
 
 export async function sendInvitations(rfpId: string, firmIds: string[]) {
+  // 1. Create invitation records with unique tokens
   await prisma.$transaction(async (tx) => {
     for (const firmId of firmIds) {
       await tx.rfpInvitation.upsert({
@@ -64,6 +66,59 @@ export async function sendInvitations(rfpId: string, firmIds: string[]) {
       data: { status: "OPEN" },
     });
   });
+
+  // 2. Send emails to each firm (non-blocking — don't fail if emails fail)
+  try {
+    const rfp = await prisma.rfp.findUnique({
+      where: { id: rfpId },
+      include: {
+        practiceArea: { select: { name: true } },
+        jurisdiction: { select: { name: true } },
+        invitations: {
+          include: {
+            firm: { select: { name: true, website: true, contacts: { take: 1, select: { email: true } } } },
+          },
+        },
+      },
+    });
+
+    if (!rfp) return;
+
+    const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : process.env.NEXTAUTH_URL ?? "http://localhost:3001";
+
+    for (const inv of rfp.invitations) {
+      if (!inv.responseToken) continue;
+
+      // Find the firm's email: try FirmContact first, then fall back to a constructed address
+      const firmEmail = inv.firm.contacts?.[0]?.email
+        ?? (inv.firm.website
+          ? `info@${new URL(inv.firm.website).hostname.replace("www.", "")}`
+          : null);
+
+      if (!firmEmail) {
+        console.log(`[Email] No email for ${inv.firm.name} — skipping`);
+        continue;
+      }
+
+      const portalUrl = `${baseUrl}/respond/${inv.responseToken}`;
+
+      await sendRfpInvitationEmail({
+        to: firmEmail,
+        firmName: inv.firm.name,
+        rfpTitle: rfp.title,
+        practiceArea: rfp.practiceArea?.name ?? "General",
+        jurisdiction: rfp.jurisdiction?.name ?? "—",
+        deadline: rfp.deadline?.toISOString() ?? null,
+        scopeOfWork: rfp.scopeDocument ?? "See attached scope document.",
+        portalUrl,
+      });
+    }
+  } catch (err) {
+    // Don't fail the RFP creation if emails fail
+    console.error("[Email] Error sending invitations:", err);
+  }
 }
 
 export async function getOrCreateResponseToken(invitationId: string): Promise<string> {
