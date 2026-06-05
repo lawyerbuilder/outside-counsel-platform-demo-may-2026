@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Check, Loader2 } from "lucide-react";
+import { Mail, Check, Loader2, Copy, Link2 } from "lucide-react";
 
 function buildEmailBody(firmName: string, rfpTitle: string, url: string): string {
   return `Dear ${firmName},
@@ -79,6 +79,110 @@ export function CopyLinkButton({
         <Mail size={10} />
       )}
       {state === "done" ? "Email opened" : "Email link"}
+    </button>
+  );
+}
+
+/**
+ * Copy the full draft email text (with portal link) to clipboard.
+ */
+export function CopyDraftButton({
+  rfpId,
+  invitationId,
+  rfpTitle,
+  firmName,
+}: {
+  rfpId: string;
+  invitationId: string;
+  rfpTitle: string;
+  firmName: string;
+}) {
+  const [state, setState] = useState<"idle" | "loading" | "done">("idle");
+
+  async function handleClick() {
+    setState("loading");
+    try {
+      const res = await fetch(
+        `/api/rfp/${rfpId}/invitations/${invitationId}/token`,
+        { method: "POST" }
+      );
+      if (!res.ok) throw new Error("Failed");
+      const { url } = await res.json();
+
+      const text = buildEmailBody(firmName, rfpTitle, url);
+      await navigator.clipboard.writeText(text);
+
+      setState("done");
+      setTimeout(() => setState("idle"), 3000);
+    } catch {
+      setState("idle");
+    }
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={state === "loading"}
+      className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-medium text-gray-600 hover:bg-gray-100 disabled:text-gray-400"
+      title="Copy draft email text with portal link to clipboard"
+    >
+      {state === "loading" ? (
+        <Loader2 size={10} className="animate-spin" />
+      ) : state === "done" ? (
+        <Check size={10} className="text-scg-600" />
+      ) : (
+        <Copy size={10} />
+      )}
+      {state === "done" ? "Copied!" : "Copy draft"}
+    </button>
+  );
+}
+
+/**
+ * Copy just the portal link to clipboard.
+ */
+export function CopyPortalLinkButton({
+  rfpId,
+  invitationId,
+}: {
+  rfpId: string;
+  invitationId: string;
+}) {
+  const [state, setState] = useState<"idle" | "loading" | "done">("idle");
+
+  async function handleClick() {
+    setState("loading");
+    try {
+      const res = await fetch(
+        `/api/rfp/${rfpId}/invitations/${invitationId}/token`,
+        { method: "POST" }
+      );
+      if (!res.ok) throw new Error("Failed");
+      const { url } = await res.json();
+      await navigator.clipboard.writeText(url);
+
+      setState("done");
+      setTimeout(() => setState("idle"), 3000);
+    } catch {
+      setState("idle");
+    }
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={state === "loading"}
+      className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-medium text-purple-600 hover:bg-purple-50 disabled:text-gray-400"
+      title="Copy the firm's unique portal link to clipboard"
+    >
+      {state === "loading" ? (
+        <Loader2 size={10} className="animate-spin" />
+      ) : state === "done" ? (
+        <Check size={10} className="text-scg-600" />
+      ) : (
+        <Link2 size={10} />
+      )}
+      {state === "done" ? "Copied!" : "Copy link"}
     </button>
   );
 }
