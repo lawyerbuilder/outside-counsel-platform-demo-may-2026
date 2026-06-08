@@ -17,8 +17,10 @@ import {
   Brain,
   ChevronLeft,
   ChevronRight,
+  Menu,
+  X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -42,14 +44,15 @@ const adminItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  return (
-    <aside
-      className={cn(
-        "flex flex-col border-r border-gray-200 bg-white transition-all duration-200",
-        collapsed ? "w-16" : "w-60"
-      )}
-    >
+  // Close mobile menu on navigation
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  const sidebarContent = (
+    <>
       <div className="flex h-14 items-center justify-between border-b border-gray-200 px-4">
         {!collapsed && (
           <div className="flex items-center gap-2">
@@ -64,11 +67,16 @@ export function Sidebar() {
         <button
           onClick={() => setCollapsed(!collapsed)}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          aria-expanded={!collapsed}
-          aria-controls="sidebar-nav"
-          className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+          className="hidden rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 lg:block"
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
+        {/* Mobile close button */}
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 lg:hidden"
+        >
+          <X size={18} />
         </button>
       </div>
 
@@ -123,6 +131,47 @@ export function Sidebar() {
           );
         })}
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile hamburger button — shown in topbar area */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="fixed left-3 top-3.5 z-50 rounded-md p-1.5 text-gray-600 hover:bg-gray-100 lg:hidden"
+        aria-label="Open menu"
+      >
+        <Menu size={20} />
+      </button>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Mobile slide-out sidebar */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex w-60 flex-col border-r border-gray-200 bg-white transition-transform duration-200 lg:hidden",
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {sidebarContent}
+      </aside>
+
+      {/* Desktop sidebar */}
+      <aside
+        className={cn(
+          "hidden flex-col border-r border-gray-200 bg-white transition-all duration-200 lg:flex",
+          collapsed ? "w-16" : "w-60"
+        )}
+      >
+        {sidebarContent}
+      </aside>
+    </>
   );
 }

@@ -2,8 +2,8 @@ import { TourTrigger } from "./TourTrigger";
 
 export function Topbar() {
   return (
-    <header role="banner" className="flex h-14 items-center justify-between border-b border-gray-200 bg-white px-6">
-      <h1 className="text-lg font-semibold text-gray-900">
+    <header role="banner" className="flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4 sm:px-6">
+      <h1 className="pl-8 text-base font-semibold text-gray-900 sm:text-lg lg:pl-0">
         Outside Counsel Platform
       </h1>
       <div className="flex items-center gap-3">
