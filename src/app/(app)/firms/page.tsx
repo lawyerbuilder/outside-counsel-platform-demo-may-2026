@@ -9,7 +9,7 @@ import { FIRM_TYPE_LABELS } from "@/lib/schemas";
 import type { FirmTypeEnum } from "@/lib/schemas";
 import { FirmFilters } from "./FirmFilters";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 const firmTypeBadgeVariant: Record<FirmTypeEnum, "scg" | "amber" | "blue" | "gray"> = {
   FULL_SERVICE: "scg",

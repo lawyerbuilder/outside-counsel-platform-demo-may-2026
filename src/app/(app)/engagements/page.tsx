@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function EngagementsPage() {
   const engagements = await listEngagements();

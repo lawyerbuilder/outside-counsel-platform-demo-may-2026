@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { getDashboardStats } from "@/server/dashboard";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 const statusColors: Record<string, string> = {
   DRAFT: "bg-gray-100 text-gray-700",

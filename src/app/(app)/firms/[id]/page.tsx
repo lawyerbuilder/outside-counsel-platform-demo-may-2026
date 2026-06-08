@@ -44,7 +44,7 @@ import {
 } from "@/lib/schemas";
 import type { FirmTypeEnum, RankingPublisherEnum, BenchmarkRoleEnum, BenchmarkSourceEnum } from "@/lib/schemas";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 const firmTypeBadgeVariant: Record<FirmTypeEnum, "scg" | "amber" | "blue" | "gray"> = {
   FULL_SERVICE: "scg",

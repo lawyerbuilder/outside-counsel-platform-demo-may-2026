@@ -3,7 +3,7 @@ import { listTimesheetUploads, getAnalysis } from "@/server/timesheet";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { InsightsClient } from "./InsightsClient";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Timesheet Intelligence",

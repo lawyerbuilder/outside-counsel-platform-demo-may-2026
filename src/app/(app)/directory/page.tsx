@@ -14,7 +14,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { FIRM_TYPE_LABELS, LAWYER_RANKING_CATEGORY_LABELS } from "@/lib/schemas";
 import type { FirmTypeEnum, LawyerRankingCategoryEnum } from "@/lib/schemas";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 interface DirectoryPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

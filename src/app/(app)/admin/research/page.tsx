@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { ResearchReviewCard } from "@/components/admin/ResearchReviewCard";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function ResearchPage() {
   const [updates, stats] = await Promise.all([
