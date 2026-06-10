@@ -37,17 +37,6 @@ const STEP_CONFIG = [
     },
   },
   {
-    element: "#tour-intake",
-    href: "/intake",
-    popover: {
-      title: "Source Counsel",
-      description:
-        "When an internal client opens a matter, describe it here. AI assesses complexity and risk, then recommends the sourcing path: instruct a panel firm directly or run a competitive RFP.",
-      side: "bottom" as const,
-      align: "start" as const,
-    },
-  },
-  {
     element: "#tour-directory",
     href: "/directory",
     popover: {
@@ -92,12 +81,23 @@ const STEP_CONFIG = [
     },
   },
   {
-    element: "#tour-engagements",
-    href: "/engagements",
+    element: "#tour-network",
+    href: "/network",
     popover: {
-      title: "Engagements",
+      title: "Boutique Network",
       description:
-        "Track active legal engagements with firms. Monitor budgets, timelines, and matter progress.",
+        "Visualise firm spin-offs, partner movements, and alumni career paths. See how boutique firms connect to the major firms they spun off from.",
+      side: "bottom" as const,
+      align: "start" as const,
+    },
+  },
+  {
+    element: "#tour-intake",
+    href: "/intake",
+    popover: {
+      title: "Source Counsel",
+      description:
+        "When an internal client opens a matter, describe it here. AI assesses complexity and risk, then recommends the sourcing path: instruct a panel firm directly or run a competitive RFP.",
       side: "bottom" as const,
       align: "start" as const,
     },
@@ -114,12 +114,12 @@ const STEP_CONFIG = [
     },
   },
   {
-    element: "#tour-panel",
-    href: "/panel",
+    element: "#tour-engagements",
+    href: "/engagements",
     popover: {
-      title: "Panel Management",
+      title: "Engagements",
       description:
-        "Panel composition, per-firm spend, scorecard tiers, and recommended actions. Start a review cycle in one click to snapshot panel health.",
+        "Track active legal engagements with firms. Monitor budgets, timelines, and matter progress.",
       side: "bottom" as const,
       align: "start" as const,
     },
@@ -136,12 +136,12 @@ const STEP_CONFIG = [
     },
   },
   {
-    element: "#tour-network",
-    href: "/network",
+    element: "#tour-panel",
+    href: "/panel",
     popover: {
-      title: "Boutique Network",
+      title: "Panel Management",
       description:
-        "Visualise firm spin-offs, partner movements, and alumni career paths. See how boutique firms connect to the major firms they spun off from.",
+        "Panel composition, per-firm spend, scorecard tiers, and recommended actions. Start a review cycle in one click to snapshot panel health.",
       side: "bottom" as const,
       align: "start" as const,
     },
