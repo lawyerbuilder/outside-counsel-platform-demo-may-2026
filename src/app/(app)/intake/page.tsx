@@ -4,15 +4,15 @@ import { IntakeClient } from "./intake-client";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Start a Matter",
+  title: "Source Counsel",
 };
 
 export default function IntakePage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Start a Matter"
-        description="Describe what you need in plain language. We'll assess it and recommend the fastest sourcing path."
+        title="Source Outside Counsel"
+        description="Your internal client has opened a matter. Describe what you need and we'll recommend the sourcing path: instruct a panel firm directly or run an RFP."
       />
       <IntakeClient />
     </div>

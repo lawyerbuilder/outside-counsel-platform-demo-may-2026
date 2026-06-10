@@ -10,6 +10,7 @@ export const maxDuration = 60;
 
 const firstTurnSchema = z.object({
   description: z.string().min(20, "Please describe the matter in a bit more detail"),
+  matterNumber: z.string().max(50).optional(),
 });
 
 const followUpSchema = z.object({
@@ -23,6 +24,7 @@ const followUpSchema = z.object({
     complexityTier: z.enum(["COMPLEX", "STANDARD", "ROUTINE"]),
     urgency: z.string(),
     title: z.string(),
+    matterNumber: z.string().max(50).optional(),
     budgetHighUsd: z.number().default(0),
     excludedFirmNames: z.array(z.string()).default([]),
     history: z
@@ -127,6 +129,7 @@ function buildPrefillUrl(args: {
   urgency: string;
   description: string;
   title: string;
+  matterNumber?: string;
   firmIds: string[];
 }): string {
   const prefill = new URLSearchParams({
@@ -140,6 +143,7 @@ function buildPrefillUrl(args: {
     title: args.title,
     scopeDocument: args.description,
   });
+  if (args.matterNumber) prefill.set("matterNumber", args.matterNumber);
   if (args.firmIds.length > 0) prefill.set("firmIds", args.firmIds.join(","));
   return `/rfp/new?${prefill.toString()}`;
 }
@@ -165,7 +169,7 @@ async function persistOutput(prompt: string, response: string, model: string, to
 
 // ─── First turn: classify + source + reason ──────────────────────────────────
 
-async function handleFirstTurn(description: string) {
+async function handleFirstTurn(description: string, matterNumber?: string) {
   const [practiceAreas, jurisdictions] = await Promise.all([
     prisma.practiceArea.findMany({ select: { id: true, name: true } }),
     prisma.jurisdiction.findMany({ select: { id: true, name: true } }),
@@ -286,6 +290,7 @@ Explain why this path makes sense for this matter and what the team should watch
       urgency: classification.urgency,
       description,
       title: classification.title,
+      matterNumber,
       firmIds: topFirms.map((f) => f.firmId),
     }),
   });
@@ -412,6 +417,7 @@ Updated path: ${recommendedPath === "DIRECT" ? "instruct directly" : "run an RFP
           urgency: context.urgency,
           description: context.description,
           title: context.title,
+          matterNumber: context.matterNumber,
           firmIds: topFirms.map((f) => f.firmId),
         }),
       });
@@ -583,7 +589,7 @@ export async function POST(req: NextRequest) {
 
     const firstParse = firstTurnSchema.safeParse(json);
     if (firstParse.success) {
-      return await handleFirstTurn(firstParse.data.description);
+      return await handleFirstTurn(firstParse.data.description, firstParse.data.matterNumber);
     }
 
     const message =

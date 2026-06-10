@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, tourId: "tour-dashboard" },
-  { label: "Start a Matter", href: "/intake", icon: Compass, tourId: "tour-intake" },
+  { label: "Source Counsel", href: "/intake", icon: Compass, tourId: "tour-intake" },
   { label: "Directory", href: "/directory", icon: Search, tourId: "tour-directory" },
   { label: "Firms", href: "/firms", icon: Building2, tourId: "tour-firms" },
   { label: "Lawyers", href: "/lawyers", icon: Users, tourId: "tour-lawyers" },

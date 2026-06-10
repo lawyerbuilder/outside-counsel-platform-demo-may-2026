@@ -138,6 +138,7 @@ function FirmCard({ firm, topMatch }: { firm: IntakeFirm; topMatch?: boolean }) 
 
 export function IntakeClient() {
   const [description, setDescription] = useState("");
+  const [matterNumber, setMatterNumber] = useState("");
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -165,7 +166,10 @@ export function IntakeClient() {
       const res = await fetch("/api/intake", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: description.trim() }),
+        body: JSON.stringify({
+          description: description.trim(),
+          ...(matterNumber.trim() ? { matterNumber: matterNumber.trim() } : {}),
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -210,6 +214,7 @@ export function IntakeClient() {
             complexityTier: assessment.complexityTier,
             urgency: assessment.urgency,
             title: assessment.title,
+            ...(matterNumber.trim() ? { matterNumber: matterNumber.trim() } : {}),
             budgetHighUsd: assessment.budgetBandUsd?.high ?? 0,
             excludedFirmNames,
             history: turns.slice(-6).map((t) => ({ role: t.role, content: t.text })),
@@ -311,6 +316,19 @@ export function IntakeClient() {
               {ex.slice(0, 60)}…
             </button>
           ))}
+        </div>
+        <div className="mt-3 max-w-xs">
+          <label htmlFor="matter-number" className="text-xs font-medium text-gray-500">
+            MatterSphere matter no. (optional)
+          </label>
+          <input
+            id="matter-number"
+            type="text"
+            value={matterNumber}
+            onChange={(e) => setMatterNumber(e.target.value)}
+            placeholder="e.g. MS-2026-0412"
+            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm placeholder:text-gray-400 focus:border-scg-500 focus:outline-none focus:ring-1 focus:ring-scg-500"
+          />
         </div>
         <div className="mt-4 flex justify-end">
           <button

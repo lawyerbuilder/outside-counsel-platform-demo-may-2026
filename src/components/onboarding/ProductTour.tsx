@@ -40,9 +40,9 @@ const STEP_CONFIG = [
     element: "#tour-intake",
     href: "/intake",
     popover: {
-      title: "Start a Matter",
+      title: "Source Counsel",
       description:
-        "Describe a matter in plain language and get an AI assessment of complexity, risk, and budget, plus the fastest sourcing path: direct to a panel firm or via competitive RFP.",
+        "When an internal client opens a matter, describe it here. AI assesses complexity and risk, then recommends the sourcing path: instruct a panel firm directly or run a competitive RFP.",
       side: "bottom" as const,
       align: "start" as const,
     },
