@@ -54,8 +54,8 @@ export async function POST(req: NextRequest) {
     const paList = practiceAreas.map((p) => `${p.name}|${p.id}`).join("\n");
     const jdList = jurisdictions.map((j) => `${j.name}|${j.id}`).join("\n");
 
+    // Default model (70B on Groq): the 8B fast model misclassifies practice areas
     const classifyResponse = await callClaude({
-      model: "fast",
       maxTokens: 400,
       temperature: 0.1,
       systemPrompt: `You classify legal matter descriptions for an in-house legal team. Respond with ONLY a JSON object, no prose.
