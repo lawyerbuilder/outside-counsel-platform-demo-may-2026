@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { prisma } from "./db";
 import { computeNps, type NpsAggregation } from "./insights";
 import type { UserWeights } from "./preferences";
@@ -138,7 +139,16 @@ export type DirectoryFilters = {
   minNps?: number;
 };
 
-export async function scoreFirms(
+/**
+ * Cached for 60s: directory navigation hits Turso (Tokyo) from the Vercel
+ * lambda (US East), so uncached every visit pays cross-region latency for
+ * each query. Args are part of the cache key.
+ */
+export const scoreFirms = unstable_cache(scoreFirmsImpl, ["score-firms-v1"], {
+  revalidate: 60,
+});
+
+async function scoreFirmsImpl(
   weights: UserWeights,
   filters: DirectoryFilters
 ): Promise<ScoredFirm[]> {
@@ -255,7 +265,11 @@ export async function scoreFirms(
   return filtered.sort((a, b) => b.compositeScore - a.compositeScore);
 }
 
-export async function scoreLawyers(
+export const scoreLawyers = unstable_cache(scoreLawyersImpl, ["score-lawyers-v1"], {
+  revalidate: 60,
+});
+
+async function scoreLawyersImpl(
   weights: UserWeights,
   filters: DirectoryFilters
 ): Promise<ScoredLawyer[]> {

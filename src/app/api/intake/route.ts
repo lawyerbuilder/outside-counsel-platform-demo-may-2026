@@ -38,7 +38,8 @@ type Classification = {
   complexityTier: "COMPLEX" | "STANDARD" | "ROUTINE";
   urgency: "HIGH" | "MEDIUM" | "LOW";
   riskLevel: "HIGH" | "MEDIUM" | "LOW";
-  budgetBandUsd: { low: number; high: number };
+  budgetBandUsd: { low: number; high: number } | null;
+  missingFacts: string[];
   summary: string;
   title: string;
 };
@@ -186,9 +187,14 @@ Jurisdictions (name|id):
 ${jdList}
 
 JSON shape:
-{"practiceAreaId":"<id from list>","jurisdictionId":"<id from list>","complexityTier":"COMPLEX|STANDARD|ROUTINE","urgency":"HIGH|MEDIUM|LOW","riskLevel":"HIGH|MEDIUM|LOW","budgetBandUsd":{"low":<number>,"high":<number>},"summary":"<one sentence>","title":"<short matter title, max 8 words>"}
+{"practiceAreaId":"<id from list>","jurisdictionId":"<id from list>","complexityTier":"COMPLEX|STANDARD|ROUTINE","urgency":"HIGH|MEDIUM|LOW","riskLevel":"HIGH|MEDIUM|LOW","budgetBandUsd":{"low":<number>,"high":<number>} or null,"missingFacts":["<question>"],"summary":"<one sentence>","title":"<short matter title, max 8 words>"}
 
-budgetBandUsd is your estimate of total external legal fees in whole USD. Pick the closest matching practice area and jurisdiction even if imperfect.`,
+STRICT RULES:
+- budgetBandUsd: whole USD for external legal fees. Set ONLY if the user explicitly states a budget, fee expectation, or fee cap. If they state only a deal value, that is NOT a legal budget: return null. Never invent a number.
+- missingFacts: up to 3 short questions a legal ops team must answer before running an RFP that are NOT answered in the description (e.g. "What is your budget or fee cap for external counsel?", "What is the target deadline or signing date?", "Which SCG entity is the client?"). Empty array if the description covers them.
+- summary must only restate facts from the description. Do not add facts.
+- complexityTier, urgency, and riskLevel are your professional assessment and are allowed.
+Pick the closest matching practice area and jurisdiction even if imperfect.`,
     userMessage: description,
   });
 
@@ -212,7 +218,7 @@ budgetBandUsd is your estimate of total external legal fees in whole USD. Pick t
   const recommendedPath = decidePath(
     firms,
     classification.complexityTier,
-    classification.budgetBandUsd.high
+    classification.budgetBandUsd?.high ?? 0
   );
 
   const firmLines = firms
@@ -223,21 +229,27 @@ budgetBandUsd is your estimate of total external legal fees in whole USD. Pick t
     )
     .join("\n");
 
+  const budgetLine = classification.budgetBandUsd
+    ? `Stated budget: USD ${classification.budgetBandUsd.low.toLocaleString()} to ${classification.budgetBandUsd.high.toLocaleString()}.`
+    : "Budget: not stated by the user. Do not assume or invent one.";
+
+  const missingFacts = (classification.missingFacts ?? []).slice(0, 3);
+
   const reasoningResponse = await callClaude({
     maxTokens: 350,
     systemPrompt:
-      "You are an outside counsel sourcing advisor for an in-house legal team. Explain sourcing recommendations concisely and concretely. Plain prose, max 150 words. Do not use markdown headers. Do not use em dashes.",
+      "You are an outside counsel sourcing advisor for an in-house legal team. Explain sourcing recommendations concisely and concretely. Plain prose, max 150 words. Do not use markdown headers. Do not use em dashes. Only use facts you were given; never invent budgets, deadlines, or deal terms.",
     userMessage: `Matter: ${classification.summary}
 Practice area: ${pa.name}. Jurisdiction: ${jd.name}.
 Complexity: ${classification.complexityTier}. Risk: ${classification.riskLevel}. Urgency: ${classification.urgency}.
-Estimated budget: USD ${classification.budgetBandUsd.low.toLocaleString()} to ${classification.budgetBandUsd.high.toLocaleString()}.
+${budgetLine}
 
 Panel firms available:
 ${firmLines || "- None with matching capability"}
 
 Our policy engine recommends: ${recommendedPath === "DIRECT" ? "instruct a panel firm directly" : "run a competitive RFP"}.
 
-Explain why this path makes sense for this matter and what the team should watch for.`,
+Explain why this path makes sense for this matter and what the team should watch for.${missingFacts.length > 0 ? ` End by asking the user to confirm: ${missingFacts.join(" ")}` : ""}`,
   });
 
   await persistOutput(
@@ -259,7 +271,8 @@ Explain why this path makes sense for this matter and what the team should watch
       complexityTier: classification.complexityTier,
       urgency: classification.urgency,
       riskLevel: classification.riskLevel,
-      budgetBandUsd: classification.budgetBandUsd,
+      budgetBandUsd: classification.budgetBandUsd ?? null,
+      missingFacts,
       summary: classification.summary,
       title: classification.title,
     },
@@ -281,8 +294,10 @@ Explain why this path makes sense for this matter and what the team should watch
 // ─── Follow-up turns: exclude / suggest / research / question ────────────────
 
 type Intent = {
-  action: "exclude" | "add_firm" | "research_more" | "question";
+  action: "exclude" | "add_firm" | "research_more" | "provide_facts" | "question";
   firmNames?: string[];
+  budgetLowUsd?: number | null;
+  budgetHighUsd?: number | null;
 };
 
 async function handleFollowUp(body: z.infer<typeof followUpSchema>) {
@@ -304,10 +319,11 @@ async function handleFollowUp(body: z.infer<typeof followUpSchema>) {
 Currently suggested firms: ${currentNames.join(", ") || "none"}
 Already excluded: ${context.excludedFirmNames.join(", ") || "none"}
 
-JSON shape: {"action":"exclude"|"add_firm"|"research_more"|"question","firmNames":["..."]}
+JSON shape: {"action":"exclude"|"add_firm"|"research_more"|"provide_facts"|"question","firmNames":["..."],"budgetLowUsd":<number or null>,"budgetHighUsd":<number or null>}
 - "exclude": user wants to remove, avoid, or has had a bad experience with one or more firms. firmNames = the firms to exclude (prefer exact names from the suggested list).
 - "add_firm": user suggests or asks about a specific firm or lawyer they want considered. firmNames = the proposed name(s).
 - "research_more": user wants more or different firm options beyond what is shown.
+- "provide_facts": user is supplying matter facts such as a budget, fee cap, or deadline. If a budget or fee amount is stated, set budgetLowUsd and budgetHighUsd in whole USD (same value if a single number).
 - "question": anything else (questions about the matter, the firms, the process).`,
     userMessage: followUp,
   });
@@ -361,6 +377,49 @@ Updated path: ${recommendedPath === "DIRECT" ? "instruct directly" : "run an RFP
         title: context.title,
         firmIds: topFirms.map((f) => f.firmId),
       }),
+    });
+  }
+
+  // ── PROVIDE FACTS (budget etc.) ──
+  if (intent.action === "provide_facts") {
+    const high = intent.budgetHighUsd ?? intent.budgetLowUsd ?? null;
+    const low = intent.budgetLowUsd ?? intent.budgetHighUsd ?? null;
+
+    if (high != null && high > 0) {
+      const firms = await sourceFirms(
+        context.jurisdictionId,
+        context.practiceAreaId,
+        context.complexityTier as ComplexityTier,
+        context.excludedFirmNames
+      );
+      const recommendedPath = decidePath(firms, context.complexityTier, high);
+      const topFirms = firms.slice(0, 3);
+
+      const pathText =
+        recommendedPath === "DIRECT"
+          ? `a budget at this level with rated panel firms available supports instructing directly`
+          : `at this budget level a competitive RFP remains the recommended route`;
+
+      return NextResponse.json({
+        message: `Noted: budget of USD ${low?.toLocaleString()}${high !== low ? ` to ${high.toLocaleString()}` : ""} for external fees. Based on the panel options, ${pathText}. The assessment above has been updated.`,
+        budgetBandUsd: { low: low ?? high, high },
+        firms: topFirms.map(toIntakeFirm),
+        recommendedPath,
+        rfpPrefillUrl: buildPrefillUrl({
+          jurisdictionId: context.jurisdictionId,
+          practiceAreaId: context.practiceAreaId,
+          complexityTier: context.complexityTier,
+          urgency: context.urgency,
+          description: context.description,
+          title: context.title,
+          firmIds: topFirms.map((f) => f.firmId),
+        }),
+      });
+    }
+
+    return NextResponse.json({
+      message:
+        "Thanks, noted. If you can share a budget or fee cap for external counsel, I can factor it into the sourcing recommendation. Other facts like deadlines and client entity go into the RFP itself.",
     });
   }
 

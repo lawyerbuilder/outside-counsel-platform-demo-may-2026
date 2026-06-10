@@ -1,6 +1,14 @@
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/server/db";
 
-export async function getDashboardStats() {
+/** Cached 60s: ten Turso queries per dashboard visit otherwise */
+export const getDashboardStats = unstable_cache(
+  getDashboardStatsImpl,
+  ["dashboard-stats-v1"],
+  { revalidate: 60 }
+);
+
+async function getDashboardStatsImpl() {
   const [
     firmCount,
     lawyerCount,

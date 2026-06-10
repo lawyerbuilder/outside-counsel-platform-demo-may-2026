@@ -45,7 +45,8 @@ type Assessment = {
   complexityTier: string;
   urgency: string;
   riskLevel: string;
-  budgetBandUsd: { low: number; high: number };
+  budgetBandUsd: { low: number; high: number } | null;
+  missingFacts?: string[];
   summary: string;
   title: string;
 };
@@ -73,9 +74,10 @@ const levelVariant: Record<string, BadgeVariant> = {
   ROUTINE: "green",
 };
 
-function fmtBudget(low: number, high: number): string {
+function fmtBudget(band: { low: number; high: number } | null): string {
+  if (!band) return "Not provided";
   const f = (n: number) => (n >= 1000 ? `$${Math.round(n / 1000)}K` : `$${n}`);
-  return `${f(low)} - ${f(high)}`;
+  return band.low === band.high ? f(band.high) : `${f(band.low)} - ${f(band.high)}`;
 }
 
 function FirmCard({ firm, topMatch }: { firm: IntakeFirm; topMatch?: boolean }) {
@@ -208,7 +210,7 @@ export function IntakeClient() {
             complexityTier: assessment.complexityTier,
             urgency: assessment.urgency,
             title: assessment.title,
-            budgetHighUsd: assessment.budgetBandUsd.high,
+            budgetHighUsd: assessment.budgetBandUsd?.high ?? 0,
             excludedFirmNames,
             history: turns.slice(-6).map((t) => ({ role: t.role, content: t.text })),
           },
@@ -236,6 +238,19 @@ export function IntakeClient() {
       if (data.recommendedPath) setRecommendedPath(data.recommendedPath);
       if (data.rfpPrefillUrl) setPrefillUrl(data.rfpPrefillUrl);
       if (data.excludedFirmNames) setExcludedFirmNames(data.excludedFirmNames);
+      if (data.budgetBandUsd) {
+        setAssessment((prev) =>
+          prev
+            ? {
+                ...prev,
+                budgetBandUsd: data.budgetBandUsd,
+                missingFacts: prev.missingFacts?.filter(
+                  (q) => !q.toLowerCase().includes("budget") && !q.toLowerCase().includes("fee")
+                ),
+              }
+            : prev
+        );
+      }
     } catch {
       setTurns((prev) => [
         ...prev,
@@ -246,12 +261,28 @@ export function IntakeClient() {
     }
   }
 
-  const followUpChips = assessment
-    ? [
-        currentFirms[0] ? `We had a bad experience with ${currentFirms[0].firmName}, exclude them` : null,
-        "Research more firms beyond the panel",
-        "I want to suggest a firm we have worked with before",
-      ].filter((c): c is string => c !== null)
+  type Chip = { label: string; sendNow: boolean; text: string };
+  const followUpChips: Chip[] = assessment
+    ? (
+        [
+          !assessment.budgetBandUsd
+            ? { label: "Provide our budget", sendNow: false, text: "Our budget for external fees is USD " }
+            : null,
+          currentFirms[0]
+            ? {
+                label: `Exclude ${currentFirms[0].firmName}`,
+                sendNow: true,
+                text: `We had a bad experience with ${currentFirms[0].firmName}, exclude them`,
+              }
+            : null,
+          { label: "Research more firms", sendNow: true, text: "Research more firms beyond the panel" },
+          {
+            label: "Suggest a firm",
+            sendNow: false,
+            text: "I want to suggest a firm we have worked with before: ",
+          },
+        ] as Array<Chip | null>
+      ).filter((c): c is Chip => c !== null)
     : [];
 
   return (
@@ -342,12 +373,24 @@ export function IntakeClient() {
                 </Badge>
               </div>
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Est. Budget</p>
-                <p className="mt-1 text-sm font-medium text-gray-900">
-                  {fmtBudget(assessment.budgetBandUsd.low, assessment.budgetBandUsd.high)}
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Budget</p>
+                <p className={`mt-1 text-sm font-medium ${assessment.budgetBandUsd ? "text-gray-900" : "text-gray-400"}`}>
+                  {fmtBudget(assessment.budgetBandUsd)}
                 </p>
               </div>
             </div>
+            {assessment.missingFacts && assessment.missingFacts.length > 0 && (
+              <div className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-3">
+                <p className="text-xs font-semibold text-amber-800">
+                  To confirm before sending an RFP (answer below in the chat):
+                </p>
+                <ul className="mt-1 space-y-0.5">
+                  {assessment.missingFacts.map((q) => (
+                    <li key={q} className="text-xs text-amber-700">• {q}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
             {excludedFirmNames.length > 0 && (
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Excluded:</span>
@@ -479,13 +522,13 @@ export function IntakeClient() {
               <div className="mb-3 flex flex-wrap gap-2">
                 {followUpChips.map((chip) => (
                   <button
-                    key={chip}
-                    onClick={() => handleFollowUp(chip)}
+                    key={chip.label}
+                    onClick={() => (chip.sendNow ? handleFollowUp(chip.text) : setInput(chip.text))}
                     disabled={isLoading}
                     className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-600 hover:border-scg-300 hover:text-scg-700 disabled:opacity-50"
                   >
-                    {chip.startsWith("Research") ? <Search size={11} /> : <UserX size={11} />}
-                    {chip}
+                    {chip.label.startsWith("Research") ? <Search size={11} /> : <UserX size={11} />}
+                    {chip.label}
                   </button>
                 ))}
               </div>
