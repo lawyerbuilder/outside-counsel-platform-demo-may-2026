@@ -1,11 +1,14 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { Clock } from "lucide-react";
 import { getRfpWithInvitations } from "@/server/rfp/queries";
 import { getLatestComparison } from "@/server/rfp/comparison";
+import { getDemoRole } from "@/server/demo-role";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { RfpStatusBadge } from "@/components/rfp/RfpStatusBadge";
 import { InvitationStatusTracker } from "@/components/rfp/InvitationStatusTracker";
 import { ComparisonSection } from "@/components/rfp/ComparisonSection";
+import { ApproveSendButton } from "@/components/rfp/ApproveSendButton";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +21,7 @@ export default async function RfpDetailPage({
   const rfp = await getRfpWithInvitations(id);
   if (!rfp) notFound();
 
+  const role = await getDemoRole();
   const comparison = await getLatestComparison(id);
 
   let criteria: Array<{ name: string; weight: number }> = [];
@@ -34,6 +38,23 @@ export default async function RfpDetailPage({
         description={`${rfp.practiceArea?.name ?? "—"} · ${rfp.jurisdiction?.name ?? "—"}`}
         action={<RfpStatusBadge status={rfp.status} />}
       />
+
+      {rfp.status === "PENDING_APPROVAL" && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border-2 border-amber-200 bg-amber-50 p-4">
+          <div className="flex items-center gap-2">
+            <Clock size={18} className="text-amber-600" />
+            <div>
+              <p className="text-sm font-semibold text-amber-800">
+                Awaiting manager approval
+              </p>
+              <p className="text-xs text-amber-700">
+                {rfp.invitations.length} firm(s) selected. No invitations have been emailed yet.
+              </p>
+            </div>
+          </div>
+          {role !== "LAWYER" && <ApproveSendButton rfpId={id} />}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/db";
-import { sendInvitations } from "@/server/rfp/mutations";
+import { sendInvitations, submitForApproval } from "@/server/rfp/mutations";
+import { getDemoRole } from "@/server/demo-role";
 import { z } from "zod";
 
 export async function GET(
@@ -31,6 +32,11 @@ export async function POST(
   const parsed = sendSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
+  }
+  const role = await getDemoRole();
+  if (role === "LAWYER") {
+    await submitForApproval(id, parsed.data.firmIds);
+    return NextResponse.json({ ok: true, pendingApproval: true }, { status: 201 });
   }
   await sendInvitations(id, parsed.data.firmIds);
   return NextResponse.json({ ok: true }, { status: 201 });

@@ -1,7 +1,6 @@
-import { prisma } from "@/server/db";
+import { getDemoUser } from "@/server/demo-role";
 
 export async function getCurrentUserId(): Promise<string> {
-  const user = await prisma.user.findFirst({ select: { id: true } });
-  if (!user) throw new Error("No users in database");
+  const user = await getDemoUser();
   return user.id;
 }

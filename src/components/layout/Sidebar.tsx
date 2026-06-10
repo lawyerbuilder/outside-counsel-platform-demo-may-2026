@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import type { DemoRole } from "@/server/demo-role";
 
 /**
  * Grouped by user journey:
@@ -79,10 +80,25 @@ const adminItems = [
   { label: "AI Research", href: "/admin/research", icon: Bot },
 ];
 
-export function Sidebar() {
+/** Hrefs hidden from the LAWYER role (sensitive management views) */
+const managerOnlyHrefs = ["/panel", "/insights"];
+
+export function Sidebar({ role = "MANAGER" }: { role?: DemoRole }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const visibleGroups = navGroups
+    .map((group) => ({
+      ...group,
+      items:
+        role === "LAWYER"
+          ? group.items.filter((item) => !managerOnlyHrefs.includes(item.href))
+          : group.items,
+    }))
+    .filter((group) => group.items.length > 0);
+
+  const showAdmin = role === "ADMIN";
 
   // Close mobile menu on navigation
   useEffect(() => {
@@ -119,7 +135,7 @@ export function Sidebar() {
       </div>
 
       <nav id="sidebar-nav" role="navigation" aria-label="Main navigation" className="flex-1 overflow-y-auto px-2 py-3">
-        {navGroups.map((group, gi) => (
+        {visibleGroups.map((group, gi) => (
           <div key={group.label ?? `group-${gi}`} className={gi > 0 ? "mt-4" : undefined}>
             {group.label && !collapsed && (
               <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
@@ -153,6 +169,7 @@ export function Sidebar() {
         ))}
       </nav>
 
+      {showAdmin && (
       <div className="border-t border-gray-200 px-2 py-3">
         {!collapsed && (
           <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
@@ -180,6 +197,7 @@ export function Sidebar() {
           );
         })}
       </div>
+      )}
     </>
   );
 

@@ -51,8 +51,12 @@ export async function updateDraftRfp(
   });
 }
 
-export async function sendInvitations(rfpId: string, firmIds: string[]) {
-  // 1. Create invitation records with unique tokens
+/** Create invitation records (with tokens) and set the RFP status. No emails. */
+async function createInvitationRecords(
+  rfpId: string,
+  firmIds: string[],
+  rfpStatus: "OPEN" | "PENDING_APPROVAL"
+) {
   await prisma.$transaction(async (tx) => {
     for (const firmId of firmIds) {
       await tx.rfpInvitation.upsert({
@@ -63,11 +67,32 @@ export async function sendInvitations(rfpId: string, firmIds: string[]) {
     }
     await tx.rfp.update({
       where: { id: rfpId },
-      data: { status: "OPEN" },
+      data: { status: rfpStatus },
     });
   });
+}
 
-  // 2. Send emails to each firm (non-blocking — don't fail if emails fail)
+/**
+ * Lawyer path: invitations are created but NOT emailed. The RFP waits in
+ * PENDING_APPROVAL until a manager approves and sends.
+ */
+export async function submitForApproval(rfpId: string, firmIds: string[]) {
+  await createInvitationRecords(rfpId, firmIds, "PENDING_APPROVAL");
+}
+
+/** Manager path: approve a pending RFP and send the invitation emails. */
+export async function approveAndSend(rfpId: string) {
+  await prisma.rfp.update({ where: { id: rfpId }, data: { status: "OPEN" } });
+  await sendInvitationEmails(rfpId);
+}
+
+export async function sendInvitations(rfpId: string, firmIds: string[]) {
+  await createInvitationRecords(rfpId, firmIds, "OPEN");
+  await sendInvitationEmails(rfpId);
+}
+
+/** Email every invited firm its unique portal link (non-blocking on failure) */
+async function sendInvitationEmails(rfpId: string) {
   try {
     const rfp = await prisma.rfp.findUnique({
       where: { id: rfpId },

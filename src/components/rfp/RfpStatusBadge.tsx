@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   DRAFT: { label: "Draft", className: "bg-gray-100 text-gray-700" },
+  PENDING_APPROVAL: { label: "Pending Approval", className: "bg-amber-100 text-amber-800" },
   OPEN: { label: "Open", className: "bg-blue-100 text-blue-700" },
   EVALUATING: { label: "Evaluating", className: "bg-amber-100 text-amber-700" },
   SHORTLISTED: { label: "Shortlisted", className: "bg-purple-100 text-purple-700" },

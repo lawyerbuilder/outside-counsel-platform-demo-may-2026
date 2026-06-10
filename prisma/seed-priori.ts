@@ -27,6 +27,14 @@ async function main() {
 
   const sarah = await prisma.user.findFirstOrThrow({ where: { email: "sarah.scales@example.com" } });
 
+  // Demo role users: lawyer (Sarah, exists), manager, admin (exists)
+  await prisma.user.upsert({
+    where: { email: "manager@example.com" },
+    update: { role: "MANAGER" },
+    create: { email: "manager@example.com", name: "Pranee Charoensuk", role: "MANAGER" },
+  });
+  console.log("  Manager user ensured");
+
   const pas = Object.fromEntries(
     (await prisma.practiceArea.findMany()).map((p) => [p.slug, p])
   );

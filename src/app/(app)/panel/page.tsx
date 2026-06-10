@@ -1,4 +1,6 @@
+import { redirect } from "next/navigation";
 import { Building2, ShieldCheck, AlertTriangle, Compass } from "lucide-react";
+import { getDemoRole, canSee } from "@/server/demo-role";
 import { getPanelComposition, getPanelFirmRows } from "@/server/panel";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { PanelTable } from "@/components/panel/PanelTable";
@@ -8,6 +10,9 @@ import { prisma } from "@/server/db";
 export const dynamic = "force-dynamic";
 
 export default async function PanelPage() {
+  const role = await getDemoRole();
+  if (!canSee(role, "panel")) redirect("/dashboard");
+
   const [composition, rows, latestReview] = await Promise.all([
     getPanelComposition(),
     getPanelFirmRows(),

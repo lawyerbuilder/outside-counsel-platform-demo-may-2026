@@ -29,7 +29,7 @@ export default async function RfpListPage() {
       />
 
       <div className="flex gap-2">
-        {(["DRAFT", "OPEN", "EVALUATING", "SHORTLISTED", "CLOSED", "CANCELLED"] as const).map(
+        {(["DRAFT", "PENDING_APPROVAL", "OPEN", "EVALUATING", "SHORTLISTED", "CLOSED", "CANCELLED"] as const).map(
           (status) => (
             <span
               key={status}

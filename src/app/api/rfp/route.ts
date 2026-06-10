@@ -1,6 +1,7 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { listRfps } from "@/server/rfp/queries";
-import { createDraftRfp, sendInvitations } from "@/server/rfp/mutations";
+import { createDraftRfp, sendInvitations, submitForApproval } from "@/server/rfp/mutations";
+import { getDemoRole } from "@/server/demo-role";
 import { getCurrentUserId } from "./current-user";
 import { z } from "zod";
 
@@ -57,9 +58,24 @@ export async function POST(req: NextRequest) {
     createdById: await getCurrentUserId(),
   });
 
+  let pendingApproval = false;
   if (data.firmIds && data.firmIds.length > 0) {
-    await sendInvitations(rfp.id, data.firmIds);
+    const role = await getDemoRole();
+    if (role === "LAWYER") {
+      // Lawyers' RFPs wait for manager approval before any email goes out
+      await submitForApproval(rfp.id, data.firmIds);
+      pendingApproval = true;
+    } else {
+      await sendInvitations(rfp.id, data.firmIds);
+    }
   }
 
-  return NextResponse.json(rfp, { status: 201 });
+  // rfp was captured before invitations updated its status; reflect the final state
+  const finalStatus = pendingApproval
+    ? "PENDING_APPROVAL"
+    : data.firmIds && data.firmIds.length > 0
+      ? "OPEN"
+      : rfp.status;
+
+  return NextResponse.json({ ...rfp, status: finalStatus, pendingApproval }, { status: 201 });
 }

@@ -1,4 +1,6 @@
+import { redirect } from "next/navigation";
 import { Brain, FileSpreadsheet, Clock } from "lucide-react";
+import { getDemoRole, canSee } from "@/server/demo-role";
 import { listTimesheetUploads, getAnalysis } from "@/server/timesheet";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { InsightsClient } from "./InsightsClient";
@@ -10,6 +12,9 @@ export const metadata = {
 };
 
 export default async function InsightsPage() {
+  const role = await getDemoRole();
+  if (!canSee(role, "insights")) redirect("/dashboard");
+
   const uploads = await listTimesheetUploads();
 
   // Load analysis for the most recent analyzed upload

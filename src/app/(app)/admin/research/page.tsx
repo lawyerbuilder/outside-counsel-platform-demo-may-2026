@@ -1,4 +1,6 @@
+import { redirect } from "next/navigation";
 import { Bot, CheckCircle, XCircle, Clock, Zap } from "lucide-react";
+import { getDemoRole, canSee } from "@/server/demo-role";
 import { listResearchUpdates, getResearchStats, type ResearchUpdateItem } from "@/server/research";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
@@ -7,6 +9,9 @@ import { ResearchReviewCard } from "@/components/admin/ResearchReviewCard";
 export const dynamic = "force-dynamic";
 
 export default async function ResearchPage() {
+  const role = await getDemoRole();
+  if (!canSee(role, "admin")) redirect("/dashboard");
+
   const [updates, stats] = await Promise.all([
     listResearchUpdates("PENDING"),
     getResearchStats(),

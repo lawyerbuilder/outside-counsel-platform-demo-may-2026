@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getDemoRole, canSee } from "@/server/demo-role";
 import { Trophy, Plus, Building2, Users, Download } from "lucide-react";
 import { listRankingSources } from "@/server/rankings";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -17,6 +19,9 @@ const publisherBadge: Record<RankingPublisherEnum, "scg" | "blue" | "amber" | "g
 };
 
 export default async function AdminRankingsPage() {
+  const role = await getDemoRole();
+  if (!canSee(role, "admin")) redirect("/dashboard");
+
   const sources = await listRankingSources();
 
   return (
