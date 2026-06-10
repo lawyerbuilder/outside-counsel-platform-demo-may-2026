@@ -117,7 +117,14 @@ async function renderStep(
     }
 
     case 7: {
-      return <RfpDetailsStep draftId={draftId} />;
+      const defaults = {
+        title: typeof params.title === "string" ? params.title : undefined,
+        matterNumber: typeof params.matterNumber === "string" ? params.matterNumber : undefined,
+        scopeDocument: typeof params.scopeDocument === "string" ? params.scopeDocument : undefined,
+        pricingRequirements:
+          typeof params.pricingRequirements === "string" ? params.pricingRequirements : undefined,
+      };
+      return <RfpDetailsStep draftId={draftId} defaults={defaults} />;
     }
 
     case 8: {

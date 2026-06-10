@@ -159,3 +159,97 @@ export async function getLatestComparison(rfpId: string) {
     orderBy: { createdAt: "desc" },
   });
 }
+
+/**
+ * Compact "key differences" summary for the side-by-side compare view.
+ * Deliberately small prompt (~900 input tokens) so it fits the Groq free
+ * tier; the full structured report is generateComparisonReport above.
+ */
+export async function generateKeyDifferences(
+  rfpId: string,
+  userId: string,
+  benchmarkMedianCents?: number | null,
+): Promise<string> {
+  const rfp = await prisma.rfp.findUniqueOrThrow({
+    where: { id: rfpId },
+    include: {
+      practiceArea: { select: { name: true } },
+      jurisdiction: { select: { name: true } },
+      invitations: {
+        where: { status: { in: ["SUBMITTED", "SCORED", "SHORTLISTED", "SELECTED"] } },
+        include: { firm: { select: { name: true } } },
+      },
+    },
+  });
+
+  const firmLines = rfp.invitations.map((inv) => {
+    const fee = inv.proposedFeeCents
+      ? `${inv.currencyCode ?? "USD"} ${(inv.proposedFeeCents / 100).toLocaleString()} (${inv.proposedFeeType ?? "?"})`
+      : "no fee given";
+    let staffing = "";
+    try {
+      const plan = inv.staffingPlan ? JSON.parse(inv.staffingPlan) : null;
+      staffing = plan
+        ? typeof plan === "string"
+          ? plan
+          : [plan.partner, plan.associates].filter(Boolean).join("; ")
+        : "";
+    } catch {
+      staffing = inv.staffingPlan ?? "";
+    }
+    const doc = (inv.responseDocument ?? "").slice(0, 300);
+    return `- ${inv.firm.name}: ${fee}. Staffing: ${staffing || "n/a"}. Approach: ${doc}`;
+  });
+
+  const benchmarkLine = benchmarkMedianCents
+    ? `Historical median fee for comparable matters: USD ${(benchmarkMedianCents / 100).toLocaleString()}.`
+    : "";
+
+  const prompt = `RFP: ${rfp.title} (${rfp.practiceArea?.name ?? "?"}, ${rfp.jurisdiction?.name ?? "?"})
+${benchmarkLine}
+
+Proposals:
+${firmLines.join("\n")}
+
+In max 200 words, give:
+1. Three bullet points on the KEY DIFFERENCES between these proposals
+2. One line each: "Best on cost:", "Best on experience:", "Best on approach:" naming a firm with a 5-10 word reason`;
+
+  const response = await callClaude({
+    systemPrompt:
+      "You are a legal operations analyst summarizing law firm RFP proposals for quick decision-making. Be concise and specific. Use the firm names given.",
+    userMessage: prompt,
+    maxTokens: 400,
+  });
+
+  await prisma.aiOutput.create({
+    data: {
+      outputType: "FIRM_COMPARISON",
+      userId,
+      prompt,
+      response: response.content,
+      model: response.model,
+      promptVersion: "rfp-key-diff-v1.0",
+      tokenCount: response.inputTokens + response.outputTokens,
+    },
+  });
+
+  return response.content;
+}
+
+export async function getLatestKeyDifferences(rfpId: string) {
+  const rfp = await prisma.rfp.findUnique({
+    where: { id: rfpId },
+    select: { title: true },
+  });
+
+  if (!rfp) return null;
+
+  return prisma.aiOutput.findFirst({
+    where: {
+      outputType: "FIRM_COMPARISON",
+      prompt: { contains: rfp.title },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}

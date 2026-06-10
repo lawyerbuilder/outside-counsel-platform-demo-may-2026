@@ -205,8 +205,14 @@ function writeSystemPromptFile(systemPrompt: string): string {
   return filePath;
 }
 
+/** Map abstract model names ("fast") to Claude CLI aliases */
+function mapModelToClaudeCLI(model: string): string {
+  if (model.includes("fast")) return "haiku";
+  return model;
+}
+
 async function callClaudeCLI(request: ClaudeRequest): Promise<ClaudeResponse> {
-  const model = request.model ?? "claude-sonnet-4-6";
+  const model = mapModelToClaudeCLI(request.model ?? "claude-sonnet-4-6");
   const systemPromptFile = writeSystemPromptFile(request.systemPrompt);
 
   const useFileArg = process.platform !== "win32";
@@ -282,7 +288,7 @@ async function streamClaudeCLI(
   request: ClaudeRequest,
   onText: (chunk: string) => void,
 ): Promise<ClaudeResponse> {
-  const model = request.model ?? "claude-sonnet-4-6";
+  const model = mapModelToClaudeCLI(request.model ?? "claude-sonnet-4-6");
 
   const useFileArg = process.platform !== "win32";
   const finalArgs = useFileArg

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getRfpWithInvitations } from "@/server/rfp/queries";
+import { getFeeBenchmark, computeFeeDelta } from "@/server/rfp/benchmarking";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EvaluationForm } from "./evaluation-form";
 
@@ -21,6 +22,8 @@ export default async function EvaluatePage({
     criteria = [];
   }
 
+  const benchmark = await getFeeBenchmark(rfp.practiceAreaId, rfp.jurisdictionId);
+
   const invitations = rfp.invitations
     .filter((inv) => inv.status === "SUBMITTED" || inv.status === "SCORED")
     .map((inv) => ({
@@ -33,6 +36,7 @@ export default async function EvaluatePage({
       staffingPlan: inv.staffingPlan,
       responseDocument: inv.responseDocument,
       feeBreakdown: inv.feeBreakdown,
+      benchmarkDelta: computeFeeDelta(inv.proposedFeeCents, benchmark),
       existingScores: inv.evaluations.map((ev) => ({
         criterionName: ev.criterionName,
         score: ev.score,

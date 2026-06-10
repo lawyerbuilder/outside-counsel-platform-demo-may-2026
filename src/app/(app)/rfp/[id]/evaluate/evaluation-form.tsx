@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
+import { FeeBenchmarkBadge } from "@/components/rfp/FeeBenchmarkBadge";
+import type { FeeDelta } from "@/server/rfp/benchmarking";
 
 type Criterion = { name: string; weight: number };
 type ExistingScore = { criterionName: string; score: number; comment: string | null };
@@ -18,6 +20,7 @@ type Invitation = {
   feeBreakdown: string | null;
   staffingPlan: string | null;
   responseDocument: string | null;
+  benchmarkDelta: FeeDelta | null;
   existingScores: ExistingScore[];
 };
 
@@ -129,11 +132,14 @@ export function EvaluationForm({
 
             {inv.proposedFeeCents && (
               <div className="mt-1">
-                <p className="text-xs text-gray-500">
-                  Total fee: {inv.currencyCode ?? "USD"}{" "}
-                  {(inv.proposedFeeCents / 100).toLocaleString()}{" "}
-                  ({inv.proposedFeeType ?? "N/A"})
-                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-xs text-gray-500">
+                    Total fee: {inv.currencyCode ?? "USD"}{" "}
+                    {(inv.proposedFeeCents / 100).toLocaleString()}{" "}
+                    ({inv.proposedFeeType ?? "N/A"})
+                  </p>
+                  <FeeBenchmarkBadge delta={inv.benchmarkDelta} />
+                </div>
                 {(() => {
                   try {
                     const phases: FeePhase[] = inv.feeBreakdown ? JSON.parse(inv.feeBreakdown) : [];

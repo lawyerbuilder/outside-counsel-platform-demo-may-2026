@@ -37,6 +37,17 @@ const STEP_CONFIG = [
     },
   },
   {
+    element: "#tour-intake",
+    href: "/intake",
+    popover: {
+      title: "Start a Matter",
+      description:
+        "Describe a matter in plain language and get an AI assessment of complexity, risk, and budget, plus the fastest sourcing path: direct to a panel firm or via competitive RFP.",
+      side: "bottom" as const,
+      align: "start" as const,
+    },
+  },
+  {
     element: "#tour-directory",
     href: "/directory",
     popover: {
@@ -98,6 +109,17 @@ const STEP_CONFIG = [
       title: "Request for Proposals",
       description:
         "Create RFPs, invite firms to bid, and get AI-powered comparison reports that analyse scope coverage, fees, and risk across all proposals.",
+      side: "bottom" as const,
+      align: "start" as const,
+    },
+  },
+  {
+    element: "#tour-panel",
+    href: "/panel",
+    popover: {
+      title: "Panel Management",
+      description:
+        "Panel composition, per-firm spend, scorecard tiers, and recommended actions. Start a review cycle in one click to snapshot panel health.",
       side: "bottom" as const,
       align: "start" as const,
     },
@@ -196,8 +218,8 @@ export function ProductTour() {
 
   useEffect(() => {
     const mainPaths = [
-      "/dashboard", "/directory", "/firms", "/rfp",
-      "/engagements", "/insights", "/rankings",
+      "/dashboard", "/intake", "/directory", "/firms", "/rfp",
+      "/panel", "/engagements", "/insights", "/rankings",
       "/lawyers", "/network", "/settings",
     ];
     const isMainPage = mainPaths.some((p) => pathname === p);

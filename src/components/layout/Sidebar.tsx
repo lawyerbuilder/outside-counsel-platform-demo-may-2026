@@ -19,18 +19,22 @@ import {
   ChevronRight,
   Menu,
   X,
+  Compass,
+  ClipboardCheck,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, tourId: "tour-dashboard" },
+  { label: "Start a Matter", href: "/intake", icon: Compass, tourId: "tour-intake" },
   { label: "Directory", href: "/directory", icon: Search, tourId: "tour-directory" },
   { label: "Firms", href: "/firms", icon: Building2, tourId: "tour-firms" },
   { label: "Lawyers", href: "/lawyers", icon: Users, tourId: "tour-lawyers" },
   { label: "Rankings", href: "/rankings", icon: Trophy, tourId: "tour-rankings" },
   { label: "Engagements", href: "/engagements", icon: Briefcase, tourId: "tour-engagements" },
   { label: "RFP", href: "/rfp", icon: FileText, tourId: "tour-rfp" },
+  { label: "Panel", href: "/panel", icon: ClipboardCheck, tourId: "tour-panel" },
   { label: "Insights", href: "/insights", icon: Brain, tourId: "tour-insights" },
   { label: "Network", href: "/network", icon: GitBranch, tourId: "tour-network" },
   { label: "Settings", href: "/settings", icon: Settings, tourId: "tour-settings" },

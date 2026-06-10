@@ -54,12 +54,24 @@ export default async function RfpDetailPage({
                 Firm Responses ({rfp.invitations.length})
               </h2>
               {rfp.status !== "DRAFT" && rfp.status !== "CANCELLED" && (
-                <Link
-                  href={`/rfp/${id}/evaluate`}
-                  className="text-xs text-scg-700 hover:text-scg-800"
-                >
-                  Evaluate firms
-                </Link>
+                <div className="flex items-center gap-3">
+                  {rfp.invitations.some((inv) =>
+                    ["SUBMITTED", "SCORED", "SHORTLISTED", "SELECTED"].includes(inv.status)
+                  ) && (
+                    <Link
+                      href={`/rfp/${id}/compare`}
+                      className="text-xs font-medium text-scg-700 hover:text-scg-800"
+                    >
+                      Compare proposals
+                    </Link>
+                  )}
+                  <Link
+                    href={`/rfp/${id}/evaluate`}
+                    className="text-xs text-scg-700 hover:text-scg-800"
+                  >
+                    Evaluate firms
+                  </Link>
+                </div>
               )}
             </div>
             <div className="mt-3">

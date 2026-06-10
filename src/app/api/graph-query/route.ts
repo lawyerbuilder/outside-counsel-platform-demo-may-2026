@@ -30,7 +30,11 @@ export async function POST(request: Request) {
     }
 
     const latestMessage = messages[messages.length - 1].content;
-    const history = messages.slice(0, -1);
+    const historyMessages = messages.slice(0, -1) as Array<{ role: string; content: string }>;
+    const history =
+      historyMessages.length > 0
+        ? historyMessages.map((m) => `${m.role}: ${m.content}`).join("\n")
+        : undefined;
 
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
