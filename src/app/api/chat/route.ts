@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { prisma } from "@/server/db";
 import { computeNps } from "@/server/insights";
 import { getCurrentUser } from "@/server/current-user";
@@ -201,12 +202,24 @@ async function getShortlistContext(userId: string): Promise<string> {
   return `Current shortlist (${rfp.invitations.length} firms): ${names}`;
 }
 
-export async function POST(request: Request) {
-  const { messages } = (await request.json()) as { messages: ChatMessage[] };
+const chatBodySchema = z.object({
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string().max(8000),
+      })
+    )
+    .min(1)
+    .max(30),
+});
 
-  if (!messages || messages.length === 0) {
-    return Response.json({ error: "No messages provided" }, { status: 400 });
+export async function POST(request: Request) {
+  const parsedBody = chatBodySchema.safeParse(await request.json());
+  if (!parsedBody.success) {
+    return Response.json({ error: "Invalid request" }, { status: 400 });
   }
+  const { messages } = parsedBody.data;
 
   try {
     const user = await getCurrentUser();

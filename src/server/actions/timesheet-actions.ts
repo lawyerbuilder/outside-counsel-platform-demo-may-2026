@@ -29,6 +29,23 @@ export async function importTimesheetCsv(
     return { success: false, uploadId: null, imported: 0, skipped: 0, errors: ["No file provided"] };
   }
 
+  const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
+  const MAX_ROWS = 50_000;
+
+  if (file.size > MAX_FILE_BYTES) {
+    return {
+      success: false, uploadId: null, imported: 0, skipped: 0,
+      errors: [`File exceeds the ${MAX_FILE_BYTES / 1024 / 1024} MB limit`],
+    };
+  }
+  const lowerName = file.name.toLowerCase();
+  if (!lowerName.endsWith(".csv") && !lowerName.endsWith(".tsv") && file.type && !file.type.includes("csv") && !file.type.includes("text")) {
+    return {
+      success: false, uploadId: null, imported: 0, skipped: 0,
+      errors: ["Please upload a CSV file"],
+    };
+  }
+
   const text = await file.text();
   const rows = parseCsv(text);
 
@@ -39,6 +56,13 @@ export async function importTimesheetCsv(
       imported: 0,
       skipped: 0,
       errors: ["CSV must have a header row and at least one data row"],
+    };
+  }
+
+  if (rows.length > MAX_ROWS) {
+    return {
+      success: false, uploadId: null, imported: 0, skipped: 0,
+      errors: [`CSV exceeds the ${MAX_ROWS.toLocaleString()} row limit (${rows.length.toLocaleString()} rows)`],
     };
   }
 

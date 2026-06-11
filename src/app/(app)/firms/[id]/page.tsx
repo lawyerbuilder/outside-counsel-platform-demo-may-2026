@@ -12,6 +12,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import { Trophy, MessageSquare, Pin, DollarSign, Brain, FileText } from "lucide-react";
+import { getDemoRole } from "@/server/demo-role";
 import { getFirmById } from "@/server/firms";
 import { getFirmRankings } from "@/server/rankings";
 import {
@@ -60,6 +61,9 @@ interface FirmDetailPageProps {
 
 export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
   const { id } = await params;
+  const role = await getDemoRole();
+  // Internal notes and relationship notes are management-confidential
+  const canSeeInternal = role === "MANAGER" || role === "ADMIN";
   const [firm, rankings, nps, internalRatings, engagements, notes, costBenchmarks, timesheetMentions, allPracticeAreas, allJurisdictions] =
     await Promise.all([
       getFirmById(id),
@@ -153,7 +157,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
               </div>
             )}
 
-            {firm.internalNotes && (
+            {canSeeInternal && firm.internalNotes && (
               <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3">
                 <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-amber-700">
                   AI Knowledge Notes
@@ -455,7 +459,8 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
             </div>
           </div>
 
-          {/* Relationship Notes */}
+          {/* Relationship Notes — management-confidential */}
+          {canSeeInternal && (
           <div className="rounded-lg border border-gray-200 bg-white p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               <MessageSquare size={14} className="mr-2 inline" />
@@ -486,6 +491,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
             )}
             <NoteForm targetType="FIRM" targetId={id} />
           </div>
+          )}
         </div>
       </div>
 

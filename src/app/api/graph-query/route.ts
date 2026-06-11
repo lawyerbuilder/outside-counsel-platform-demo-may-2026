@@ -1,11 +1,20 @@
+import { z } from "zod";
 import { streamGraphQuery, getGraph, getGraphStats } from "@/server/graph-rag";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120; // 2 minutes for Claude CLI calls
 
-type RequestBody = {
-  messages: Array<{ role: "user" | "assistant"; content: string }>;
-};
+const bodySchema = z.object({
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string().max(4000),
+      })
+    )
+    .min(1)
+    .max(20),
+});
 
 /**
  * POST /api/graph-query
@@ -19,15 +28,11 @@ type RequestBody = {
  */
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as RequestBody;
-    const { messages } = body;
-
-    if (!messages?.length) {
-      return Response.json(
-        { error: "No messages provided" },
-        { status: 400 },
-      );
+    const parsed = bodySchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return Response.json({ error: "Invalid request" }, { status: 400 });
     }
+    const { messages } = parsed.data;
 
     const latestMessage = messages[messages.length - 1].content;
     const historyMessages = messages.slice(0, -1) as Array<{ role: string; content: string }>;

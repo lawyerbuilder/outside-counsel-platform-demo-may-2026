@@ -1,6 +1,7 @@
 import { prisma } from "@/server/db";
 import { callClaude } from "@/server/ai/anthropic";
 import { getAiBriefing } from "@/server/platform-settings";
+import { wrapUntrusted, sanitizeLabel, ANTI_INJECTION_RULE } from "@/server/ai/untrusted";
 
 export async function shouldAutoGenerate(rfpId: string): Promise<boolean> {
   const invitations = await prisma.rfpInvitation.findMany({
@@ -72,12 +73,15 @@ export async function generateComparisonReport(
         staffing = inv.staffingPlan ?? "Not provided";
       }
 
-      const notes = inv.firm.internalNotes ? `\nInternal notes (confidential — from SCG Legal Operations): ${inv.firm.internalNotes}` : "";
-      return `## Firm ${i + 1}: ${inv.firm.name} (${inv.firm.firmType})
+      // Internal notes are trusted (written by SCG); firm-supplied fields are NOT.
+      const notes = inv.firm.internalNotes
+        ? `\nInternal notes (confidential, from SCG Legal Operations, trusted): ${inv.firm.internalNotes}`
+        : "";
+      return `## Firm ${i + 1}: ${sanitizeLabel(inv.firm.name)} (${inv.firm.firmType})
 Total fee proposal: ${feeDisplay}${phaseBreakdown}
-Staffing plan: ${staffing}
-AI disclosure: ${inv.aiDisclosure ?? "None provided"}
-Response document: ${inv.responseDocument ?? "Not provided"}${notes}`;
+Staffing plan (firm-supplied): ${wrapUntrusted("staffing plan", staffing)}
+AI disclosure (firm-supplied): ${wrapUntrusted("ai disclosure", inv.aiDisclosure)}
+Response document (firm-supplied): ${wrapUntrusted("response document", inv.responseDocument)}${notes}`;
     })
     .join("\n\n");
 
@@ -119,7 +123,8 @@ Be specific and actionable. This report goes to the General Counsel.`;
 
   const response = await callClaude({
     systemPrompt:
-      "You are an expert legal operations advisor evaluating outside counsel RFP responses for SCG (Siam Cement Group). Be analytical, fair, and specific. If internal notes are provided for any firm, factor them into your evaluation — they reflect the in-house team's institutional knowledge and prior experience with that firm. Produce a professional report suitable for GC review. No markdown headers larger than ##.",
+      "You are an expert legal operations advisor evaluating outside counsel RFP responses for SCG (Siam Cement Group). Be analytical, fair, and specific. If internal notes are provided for any firm, factor them into your evaluation — they reflect the in-house team's institutional knowledge and prior experience with that firm. Produce a professional report suitable for GC review. No markdown headers larger than ##. " +
+      ANTI_INJECTION_RULE,
     userMessage: prompt,
   });
 
@@ -197,8 +202,8 @@ export async function generateKeyDifferences(
     } catch {
       staffing = inv.staffingPlan ?? "";
     }
-    const doc = (inv.responseDocument ?? "").slice(0, 300);
-    return `- ${inv.firm.name}: ${fee}. Staffing: ${staffing || "n/a"}. Approach: ${doc}`;
+    const doc = inv.responseDocument ?? "";
+    return `- ${sanitizeLabel(inv.firm.name)}: ${fee}.\n  Staffing (firm-supplied): ${wrapUntrusted("staffing", staffing, 400)}\n  Approach (firm-supplied): ${wrapUntrusted("approach", doc, 400)}`;
   });
 
   const benchmarkLine = benchmarkMedianCents
@@ -217,7 +222,8 @@ In max 200 words, give:
 
   const response = await callClaude({
     systemPrompt:
-      "You are a legal operations analyst summarizing law firm RFP proposals for quick decision-making. Be concise and specific. Use the firm names given.",
+      "You are a legal operations analyst summarizing law firm RFP proposals for quick decision-making. Be concise and specific. Use the firm names given. " +
+      ANTI_INJECTION_RULE,
     userMessage: prompt,
     maxTokens: 400,
   });

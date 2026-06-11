@@ -6,6 +6,7 @@
 // Includes fast-path regex matching for common query patterns.
 
 import { callClaude, streamClaude } from "@/server/ai/anthropic";
+import { sanitizeLabel } from "@/server/ai/untrusted";
 import { getGraph, getGraphStats } from "./graph-builder";
 import type { LegalKnowledgeGraph } from "./graph-builder";
 import {
@@ -364,15 +365,18 @@ function getGraphSchemaDescription(graph: LegalKnowledgeGraph): string {
     if (count > 0) lines.push(`  - ${type}: ${count}`);
   }
 
-  // Collect sample node labels directly from the graph (up to 5 per type)
+  // Collect sample node labels directly from the graph (up to 5 per type).
+  // Labels originate from firm/lawyer names (untrusted) so sanitize them
+  // before they enter the prompt.
   const sampleLabels = new Map<string, string[]>();
   graph.forEachNode((_id, attrs) => {
     const type = attrs.nodeType;
+    const label = sanitizeLabel(attrs.label, 60);
     const existing = sampleLabels.get(type);
     if (!existing) {
-      sampleLabels.set(type, [attrs.label]);
+      sampleLabels.set(type, [label]);
     } else if (existing.length < 5) {
-      existing.push(attrs.label);
+      existing.push(label);
     }
   });
 

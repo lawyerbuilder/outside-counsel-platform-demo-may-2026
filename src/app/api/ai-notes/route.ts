@@ -1,7 +1,13 @@
+import { z } from "zod";
 import { prisma } from "@/server/db";
 import { callClaude } from "@/server/ai/anthropic";
+import { wrapUntrusted, ANTI_INJECTION_RULE } from "@/server/ai/untrusted";
 
 export const dynamic = "force-dynamic";
+
+const bodySchema = z.object({
+  instruction: z.string().trim().min(1, "No instruction provided").max(2000),
+});
 
 type NoteProposal = {
   firmId: string;
@@ -12,11 +18,14 @@ type NoteProposal = {
 
 export async function POST(request: Request) {
   try {
-    const { instruction } = (await request.json()) as { instruction: string };
-
-    if (!instruction?.trim()) {
-      return Response.json({ error: "No instruction provided" }, { status: 400 });
+    const bodyParsed = bodySchema.safeParse(await request.json());
+    if (!bodyParsed.success) {
+      return Response.json(
+        { error: bodyParsed.error.issues[0]?.message ?? "Invalid request" },
+        { status: 400 }
+      );
     }
+    const { instruction } = bodyParsed.data;
 
     // Fetch all active firms with their current notes
     const firms = await prisma.firm.findMany({
@@ -62,10 +71,10 @@ If no firms match, return {"proposals": [], "unmatched": ["the names"]}.`;
 ${JSON.stringify(firmList, null, 2)}
 
 USER INSTRUCTION:
-${instruction}`;
+${wrapUntrusted("user instruction", instruction, 2000)}`;
 
     const response = await callClaude({
-      systemPrompt,
+      systemPrompt: systemPrompt + "\n\n" + ANTI_INJECTION_RULE,
       userMessage,
     });
 

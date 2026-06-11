@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { callClaude } from "@/server/ai/anthropic";
+import { wrapUntrusted, sanitizeLabel, ANTI_INJECTION_RULE } from "@/server/ai/untrusted";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 /**
  * POST /api/respond/[token]/extract
@@ -12,6 +14,15 @@ export async function POST(
   { params }: { params: Promise<{ token: string }> }
 ) {
   const { token } = await params;
+
+  // Per-token rate limit: this is an unauthenticated, paid AI endpoint.
+  const rl = checkRateLimit(`extract:${token}`, { limit: 8, windowMs: 60 * 60_000 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many extraction attempts. Please wait, or fill in the form manually." },
+      { status: 429 }
+    );
+  }
 
   // Validate the token exists and is still INVITED
   const invitation = await prisma.rfpInvitation.findUnique({
@@ -53,10 +64,12 @@ export async function POST(
   // Build AI extraction prompt
   const systemPrompt = `You are a legal billing data extraction assistant. Extract structured fee proposal data from the text provided by an outside counsel law firm.
 
+${ANTI_INJECTION_RULE}
+
 Context about the RFP:
-- Title: ${invitation.rfp.title}
-${invitation.rfp.scopeDocument ? `- Scope: ${invitation.rfp.scopeDocument}` : ""}
-${invitation.rfp.pricingRequirements ? `- Pricing requirements: ${invitation.rfp.pricingRequirements}` : ""}
+- Title: ${sanitizeLabel(invitation.rfp.title, 200)}
+${invitation.rfp.scopeDocument ? `- Scope: ${sanitizeLabel(invitation.rfp.scopeDocument, 1000)}` : ""}
+${invitation.rfp.pricingRequirements ? `- Pricing requirements: ${sanitizeLabel(invitation.rfp.pricingRequirements, 500)}` : ""}
 
 Return ONLY valid JSON with this exact structure (omit fields you cannot confidently extract):
 {
@@ -85,7 +98,7 @@ Rules:
   try {
     const response = await callClaude({
       systemPrompt,
-      userMessage: proposalText.slice(0, 15000), // Cap input length
+      userMessage: wrapUntrusted("firm proposal text to extract from", proposalText, 15000),
     });
 
     // Parse the AI response as JSON
