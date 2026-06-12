@@ -52,7 +52,7 @@ export function PreferenceForm({ userId, currentWeights }: PreferenceFormProps) 
 
       <div className="space-y-6">
         {WEIGHT_KEYS.map((key) => (
-          <div key={key} className="rounded-lg border border-gray-200 bg-white p-4">
+          <div key={key} className="surface p-4">
             <div className="flex items-center justify-between">
               <div>
                 <label

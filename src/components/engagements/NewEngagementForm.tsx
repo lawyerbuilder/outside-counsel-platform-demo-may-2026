@@ -121,7 +121,7 @@ export function NewEngagementForm({
 
       {/* AI Upload mode */}
       {mode === "upload" && (
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <div className="surface p-6">
           <div className="mb-4 flex items-start gap-3">
             <FileText size={20} className="mt-0.5 text-scg-600" />
             <div>
@@ -174,7 +174,7 @@ export function NewEngagementForm({
 
       {/* Manual form (also shown after AI extraction with prefilled data) */}
       {mode === "manual" && (
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <div className="surface p-6">
           {prefilled && (
             <div className="mb-4 rounded-md bg-green-50 p-3 text-sm text-green-700">
               <Sparkles size={14} className="mr-1 inline" />

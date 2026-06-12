@@ -7,6 +7,7 @@ export async function listRfps(filters?: {
 }) {
   return prisma.rfp.findMany({
     where: {
+      title: { not: "__ai_shortlist__" },
       ...(filters?.status ? { status: filters.status } : {}),
       ...(filters?.createdById ? { createdById: filters.createdById } : {}),
     },
@@ -54,6 +55,7 @@ export async function getRfpWithInvitations(id: string) {
 export async function countRfpsByStatus() {
   const rfps = await prisma.rfp.groupBy({
     by: ["status"],
+    where: { title: { not: "__ai_shortlist__" } },
     _count: { id: true },
   });
   return Object.fromEntries(

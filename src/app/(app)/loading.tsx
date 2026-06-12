@@ -15,7 +15,7 @@ export default function Loading() {
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-lg border border-gray-200 bg-white p-4"
+            className="surface p-4"
           >
             <div className="h-5 w-5 rounded bg-gray-200" />
             <div className="mt-3 h-8 w-16 rounded bg-gray-200" />
@@ -25,7 +25,7 @@ export default function Loading() {
       </div>
 
       {/* Content skeleton */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="surface p-6">
         <div className="h-5 w-32 rounded bg-gray-200" />
         <div className="mt-4 space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (

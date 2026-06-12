@@ -189,7 +189,7 @@ export function AiRfpAssistant({
   return (
     <div className="flex gap-6">
       {/* Chat panel */}
-      <div className="flex flex-1 flex-col rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div className="flex flex-1 flex-col surface shadow-sm">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
           <div className="flex items-center gap-2">
@@ -266,7 +266,7 @@ export function AiRfpAssistant({
                 <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-100">
                   <Bot size={14} className="text-purple-700" />
                 </div>
-                <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-500">
+                <div className="flex items-center gap-2 surface px-3.5 py-2.5 text-sm text-gray-500">
                   <Loader2 size={14} className="animate-spin" />
                   Thinking...
                 </div>
@@ -302,7 +302,7 @@ export function AiRfpAssistant({
 
       {/* Side panel — extracted fields */}
       <div className="w-72 shrink-0">
-        <div className="sticky top-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="sticky top-4 surface p-4 shadow-sm">
           <h4 className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">
             <FileText size={14} />
             RFP Fields ({fieldCount})

@@ -31,7 +31,7 @@ export default async function EditLawyerPage({ params }: EditLawyerPageProps) {
         ]}
       />
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="surface p-6">
         <LawyerForm
           action={boundAction}
           initialData={lawyer}

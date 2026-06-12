@@ -53,7 +53,7 @@ export default async function NetworkPage({ searchParams }: NetworkPageProps) {
           <NetworkGraph nodes={networkData.nodes} edges={networkData.edges} />
         </div>
       ) : (
-        <div className="mb-8 rounded-lg border border-gray-200 bg-white p-8 text-center">
+        <div className="mb-8 surface p-8 text-center">
           <GitBranch size={32} className="mx-auto text-gray-300" />
           <p className="mt-2 text-sm text-gray-500">
             No spin-off relationships found. Add parentFirmId to firms to see the network.
@@ -72,7 +72,7 @@ export default async function NetworkPage({ searchParams }: NetworkPageProps) {
             {comparisons.map((comp) => (
               <div
                 key={comp.spinOff.id}
-                className="overflow-hidden rounded-lg border border-gray-200 bg-white"
+                className="overflow-hidden surface"
               >
                 <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
                   {/* Parent */}
@@ -166,7 +166,7 @@ export default async function NetworkPage({ searchParams }: NetworkPageProps) {
           Alumni Search
         </h3>
 
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="surface p-4">
           <Suspense fallback={null}>
             <AlumniSearch firms={firmsWithAlumni} />
           </Suspense>

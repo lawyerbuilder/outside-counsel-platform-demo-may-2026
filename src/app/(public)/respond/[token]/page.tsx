@@ -75,7 +75,7 @@ export default async function PublicRespondPage({
   return (
     <div className="space-y-6">
       {/* RFP context banner */}
-      <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+      <div className="surface p-5 shadow-sm">
         <p className="text-xs font-medium uppercase tracking-wider text-scg-600">
           Request for Proposal
         </p>
@@ -111,7 +111,7 @@ export default async function PublicRespondPage({
         )}
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+      <div className="surface p-5 shadow-sm">
         <p className="mb-1 text-xs text-gray-400">
           Responding as <strong className="text-gray-700">{invitation.firm.name}</strong>
         </p>

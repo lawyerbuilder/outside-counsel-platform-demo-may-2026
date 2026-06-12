@@ -62,7 +62,7 @@ export function AnalyzeTrigger({
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6 text-center">
+    <div className="surface p-6 text-center">
       <Brain size={32} className="mx-auto mb-3 text-scg-600" />
       <h3 className="text-sm font-semibold text-gray-900">
         Ready to Extract Intelligence
@@ -151,7 +151,7 @@ function AnalysisDashboard({
       )}
 
       {/* External Firm Mentions */}
-      <section className="rounded-lg border border-gray-200 bg-white p-5">
+      <section className="surface p-5">
         <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
           <Building2 size={14} />
           External Firm Mentions
@@ -251,7 +251,7 @@ function AnalysisDashboard({
 
       {/* Outsource Patterns */}
       {analysis.outsourcePatterns.length > 0 && (
-        <section className="rounded-lg border border-gray-200 bg-white p-5">
+        <section className="surface p-5">
           <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
             <TrendingUp size={14} />
             Outsource vs. In-House Patterns
@@ -290,7 +290,7 @@ function AnalysisDashboard({
       )}
 
       {/* Matter Classifications */}
-      <section className="rounded-lg border border-gray-200 bg-white p-5">
+      <section className="surface p-5">
         <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
           <Globe size={14} />
           Matter Classification ({analysis.matterClassifications.length})
@@ -378,7 +378,7 @@ function SummaryCard({
   small?: boolean;
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4">
+    <div className="surface p-4">
       <p className="text-xs font-medium text-gray-400">{label}</p>
       <p
         className={`mt-1 font-bold text-gray-900 ${

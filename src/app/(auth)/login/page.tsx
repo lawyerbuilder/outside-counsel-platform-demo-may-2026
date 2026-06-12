@@ -1,7 +1,7 @@
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
+      <div className="w-full max-w-sm surface p-8 shadow-sm">
         <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-scg-600">
           <span className="text-xs font-bold text-white">SCG</span>
         </div>

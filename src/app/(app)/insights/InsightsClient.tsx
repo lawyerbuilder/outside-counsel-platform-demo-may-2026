@@ -49,7 +49,7 @@ export function InsightsClient({
 
         {/* Upload History */}
         {uploads.length > 0 && (
-          <div className="rounded-lg border border-gray-200 bg-white p-5">
+          <div className="surface p-5">
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-500">
               <Clock size={14} className="mr-2 inline" />
               Upload History

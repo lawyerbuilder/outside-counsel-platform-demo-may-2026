@@ -86,7 +86,7 @@ export default async function LawyerDetailPage({
         {/* Main column */}
         <div className="space-y-6 lg:col-span-2">
           {/* Overview */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               Overview
             </h3>
@@ -155,7 +155,7 @@ export default async function LawyerDetailPage({
           </div>
 
           {/* Career History */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               <Briefcase size={14} className="mr-2 inline" />
               Career History
@@ -240,7 +240,7 @@ export default async function LawyerDetailPage({
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Practice Areas */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               Practice Areas
             </h3>
@@ -266,7 +266,7 @@ export default async function LawyerDetailPage({
           </div>
 
           {/* Rankings */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               <Trophy size={14} className="mr-2 inline" />
               Rankings ({rankings.length})
@@ -317,7 +317,7 @@ export default async function LawyerDetailPage({
           </div>
 
           {/* NPS & Internal Ratings */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               Internal Sentiment
             </h3>
@@ -345,7 +345,7 @@ export default async function LawyerDetailPage({
           </div>
 
           {/* Notes */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               <MessageSquare size={14} className="mr-2 inline" />
               Notes ({notes.length})
@@ -380,7 +380,7 @@ export default async function LawyerDetailPage({
 
       {/* Engagements — full width */}
       {engagements.length > 0 && (
-        <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
+        <div className="mt-6 surface p-6">
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
             <DollarSign size={14} className="mr-2 inline" />
             Engagements ({engagements.length})

@@ -66,7 +66,7 @@ export function ResearchReviewCard({ update }: ResearchReviewCardProps) {
       : "text-red-500";
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4">
+    <div className="surface p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <div className="flex items-center gap-2">

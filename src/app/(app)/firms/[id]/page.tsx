@@ -109,7 +109,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
         {/* Main column */}
         <div className="space-y-6 lg:col-span-2">
           {/* Overview Card */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               Overview
             </h3>
@@ -168,7 +168,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
           </div>
 
           {/* Lawyers */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
                 <Users size={14} className="mr-2 inline" />
@@ -240,7 +240,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Practice Areas */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               <Briefcase size={14} className="mr-2 inline" />
               Practice Areas
@@ -265,7 +265,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
 
           {/* Spin-off Lineage */}
           {(firm.parentFirm || firm.spinOffs.length > 0) && (
-            <div className="rounded-lg border border-gray-200 bg-white p-6">
+            <div className="surface p-6">
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
                 <GitBranch size={14} className="mr-2 inline" />
                 Firm Lineage
@@ -301,7 +301,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
           )}
 
           {/* Rankings */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               <Trophy size={14} className="mr-2 inline" />
               Rankings ({rankings.length})
@@ -432,7 +432,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
           )}
 
           {/* NPS & Internal Ratings */}
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               Internal Sentiment
             </h3>
@@ -461,7 +461,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
 
           {/* Relationship Notes — management-confidential */}
           {canSeeInternal && (
-          <div className="rounded-lg border border-gray-200 bg-white p-6">
+          <div className="surface p-6">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
               <MessageSquare size={14} className="mr-2 inline" />
               Notes ({notes.length})
@@ -496,7 +496,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
       </div>
 
       {/* Engagements section — full width below */}
-      <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
+      <div className="mt-6 surface p-6">
         <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
           <DollarSign size={14} className="mr-2 inline" />
           Engagements ({engagements.length})
@@ -581,7 +581,7 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
 
       {/* Cost Benchmarks — full width */}
       {costBenchmarks.length > 0 && (
-        <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
+        <div className="mt-6 surface p-6">
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
             <DollarSign size={14} className="mr-2 inline" />
             Cost Benchmarks ({costBenchmarks.length})

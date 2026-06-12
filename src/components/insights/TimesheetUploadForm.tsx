@@ -28,7 +28,7 @@ export function TimesheetUploadForm({
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6">
+    <div className="surface p-6">
       <h3 className="mb-1 text-sm font-semibold uppercase tracking-wider text-gray-500">
         <FileSpreadsheet size={14} className="mr-2 inline" />
         Upload Timesheet Data

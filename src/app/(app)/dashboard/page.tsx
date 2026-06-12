@@ -40,29 +40,35 @@ export default async function DashboardPage() {
   const stats = await getDashboardStats();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-end justify-between">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Outside Counsel Platform overview
+          <h1 className="text-[1.75rem] font-semibold tracking-tight text-foreground">
+            Dashboard
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {stats.firmCount} firms
+            <span className="px-1.5 text-foreground/25">·</span>
+            {stats.jurisdictionCount} jurisdictions
+            <span className="px-1.5 text-foreground/25">·</span>
+            {stats.activeRfps} active RFP{stats.activeRfps === 1 ? "" : "s"}
           </p>
         </div>
         <div className="flex gap-2">
           <Link
-            href="/rfp"
-            className="inline-flex items-center gap-1.5 rounded-md bg-scg-600 px-3 py-2 text-xs font-medium text-white hover:bg-scg-700"
+            href="/intake"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-scg-700"
           >
-            <Plus size={14} />
-            New RFP
+            <Plus size={15} />
+            Source counsel
           </Link>
           <Link
             href="/directory"
-            className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent"
           >
-            <Users size={14} />
-            Find Counsel
+            <Users size={15} />
+            Find a firm
           </Link>
         </div>
       </div>
@@ -117,9 +123,9 @@ export default async function DashboardPage() {
       {/* Two column layout */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Active RFPs — takes 2 columns */}
-        <div className="lg:col-span-2 rounded-lg border border-gray-200 bg-white">
-          <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3">
-            <h2 className="text-sm font-semibold text-gray-900">
+        <div className="lg:col-span-2 surface overflow-hidden">
+          <div className="flex items-center justify-between border-b border-border/70 px-6 py-4">
+            <h2 className="text-base font-semibold tracking-tight text-foreground">
               RFP Pipeline
             </h2>
             <Link
@@ -208,8 +214,8 @@ export default async function DashboardPage() {
           )}
 
           {/* Panel health */}
-          <div className="rounded-lg border border-gray-200 bg-white p-5">
-            <h3 className="mb-3 text-sm font-semibold text-gray-900">
+          <div className="surface p-6">
+            <h3 className="mb-4 text-base font-semibold tracking-tight text-foreground">
               Panel Health
             </h3>
             <div className="space-y-2">
@@ -238,9 +244,9 @@ export default async function DashboardPage() {
           </div>
 
           {/* Recent AI activity */}
-          <div className="rounded-lg border border-gray-200 bg-white">
-            <div className="border-b border-gray-200 px-5 py-3">
-              <h3 className="text-sm font-semibold text-gray-900">
+          <div className="surface overflow-hidden">
+            <div className="border-b border-border/70 px-6 py-4">
+              <h3 className="text-base font-semibold tracking-tight text-foreground">
                 Recent AI Activity
               </h3>
             </div>
@@ -296,29 +302,26 @@ function StatCard({
   highlight?: boolean;
 }) {
   return (
-    <Link
-      href={href}
-      className={`group rounded-lg border p-4 transition-all hover:shadow-md ${
-        highlight
-          ? "border-scg-200 bg-scg-50/50"
-          : "border-gray-200 bg-white"
-      }`}
-    >
+    <Link href={href} className="group surface surface-hover p-5">
       <div className="flex items-center justify-between">
-        <span
-          className={`${highlight ? "text-scg-600" : "text-gray-400"} transition-colors group-hover:text-scg-600`}
-        >
+        <span className="text-muted-foreground/60 transition-colors group-hover:text-foreground/70">
           {icon}
         </span>
-        <ArrowRight
-          size={14}
-          className="text-gray-300 transition-colors group-hover:text-scg-500"
-        />
+        {highlight && (
+          <span className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-scg-500" />
+            <span className="text-[10px] font-medium uppercase tracking-wider text-scg-600">
+              Active
+            </span>
+          </span>
+        )}
       </div>
-      <p className="mt-3 text-2xl font-bold text-gray-900">{value}</p>
-      <p className="text-xs text-gray-500">{label}</p>
+      <p className="mt-5 text-[2rem] font-semibold leading-none tracking-tight tabular-nums text-foreground">
+        {value}
+      </p>
+      <p className="mt-2.5 text-sm text-muted-foreground">{label}</p>
       {detail && (
-        <p className="mt-0.5 text-[10px] text-gray-400">{detail}</p>
+        <p className="mt-0.5 text-xs text-muted-foreground/60">{detail}</p>
       )}
     </Link>
   );

@@ -83,7 +83,7 @@ export default async function ResearchPage() {
 
       {/* Pending updates */}
       {updates.length === 0 ? (
-        <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
+        <div className="surface p-12 text-center">
           <CheckCircle size={32} className="mx-auto text-green-300" />
           <p className="mt-2 text-sm text-gray-500">
             No pending updates to review. The directory is up to date!

@@ -21,7 +21,7 @@ export function CsvImportForm() {
   );
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6">
+    <div className="surface p-6">
       <h3 className="mb-2 text-sm font-semibold text-gray-900">
         Import Firm Rankings from CSV
       </h3>

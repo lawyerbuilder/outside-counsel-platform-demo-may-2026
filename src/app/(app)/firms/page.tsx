@@ -95,7 +95,7 @@ export default async function FirmsPage({ searchParams }: FirmsPageProps) {
               <Link
                 key={firm.id}
                 href={`/firms/${firm.id}`}
-                className="group rounded-lg border border-gray-200 bg-white p-5 transition-shadow hover:shadow-md"
+                className="group surface p-5 transition-shadow hover:shadow-md"
               >
                 <div className="mb-3 flex items-start justify-between">
                   <div className="flex items-center gap-3">

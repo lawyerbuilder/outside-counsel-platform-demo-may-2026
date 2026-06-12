@@ -89,7 +89,7 @@ export function NetworkGraph({ nodes, edges }: NetworkGraphProps) {
     .filter(Boolean) as { from: NodeLayout; to: NodeLayout }[];
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4">
+    <div className="surface p-4">
       <svg
         viewBox="0 0 900 440"
         className="w-full"

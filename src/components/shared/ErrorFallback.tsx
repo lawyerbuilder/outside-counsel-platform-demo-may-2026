@@ -20,7 +20,7 @@ export function ErrorFallback({
 }: ErrorFallbackProps) {
   return (
     <div className="flex min-h-[60vh] items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
+      <div className="w-full max-w-md surface p-8 shadow-sm">
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50">
           <AlertTriangle className="h-6 w-6 text-red-500" />
         </div>

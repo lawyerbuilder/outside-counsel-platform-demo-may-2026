@@ -62,7 +62,7 @@ export default async function PanelPage() {
         {cards.map((card) => {
           const Icon = card.icon;
           return (
-            <div key={card.label} className="rounded-lg border border-gray-200 bg-white p-4">
+            <div key={card.label} className="surface p-4">
               <div className={`inline-flex rounded-md p-2 ${card.color}`}>
                 <Icon size={18} />
               </div>

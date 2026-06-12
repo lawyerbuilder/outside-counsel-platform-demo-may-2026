@@ -48,7 +48,7 @@ export function CostBenchmarkForm({
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4">
+    <div className="surface p-4">
       <h4 className="mb-3 text-sm font-semibold text-gray-900">
         Add Cost Benchmark
       </h4>

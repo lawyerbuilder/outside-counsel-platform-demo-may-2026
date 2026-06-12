@@ -107,28 +107,29 @@ export function Sidebar({ role = "MANAGER" }: { role?: DemoRole }) {
 
   const sidebarContent = (
     <>
-      <div className="flex h-14 items-center justify-between border-b border-gray-200 px-4">
+      <div className="flex h-16 items-center justify-between border-b border-white/[0.07] px-4">
         {!collapsed && (
-          <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded bg-scg-600">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-scg-600 shadow-sm">
               <span className="text-[10px] font-bold text-white">SCG</span>
             </div>
-            <span className="text-sm font-semibold text-gray-900">
-              Legal OCP
-            </span>
+            <div className="leading-tight">
+              <span className="block text-sm font-semibold text-white">Legal OCP</span>
+              <span className="block text-[10px] text-white/55">Outside Counsel</span>
+            </div>
           </div>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="hidden rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 lg:block"
+          className="hidden rounded-md p-1 text-white/40 hover:bg-white/10 hover:text-white lg:block"
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
         </button>
         {/* Mobile close button */}
         <button
           onClick={() => setMobileOpen(false)}
-          className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 lg:hidden"
+          className="rounded-md p-1 text-white/40 hover:bg-white/10 hover:text-white lg:hidden"
         >
           <X size={18} />
         </button>
@@ -138,11 +139,11 @@ export function Sidebar({ role = "MANAGER" }: { role?: DemoRole }) {
         {visibleGroups.map((group, gi) => (
           <div key={group.label ?? `group-${gi}`} className={gi > 0 ? "mt-4" : undefined}>
             {group.label && !collapsed && (
-              <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+              <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/50">
                 {group.label}
               </p>
             )}
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {group.items.map((item) => {
                 const isActive =
                   pathname === item.href || pathname.startsWith(item.href + "/");
@@ -153,13 +154,13 @@ export function Sidebar({ role = "MANAGER" }: { role?: DemoRole }) {
                     href={item.href}
                     id={item.tourId}
                     className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                       isActive
-                        ? "bg-scg-50 text-scg-700"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        ? "bg-scg-600 text-white shadow-sm shadow-scg-900/30"
+                        : "text-white/75 hover:bg-white/[0.08] hover:text-white"
                     )}
                   >
-                    <Icon size={18} />
+                    <Icon size={18} className={isActive ? "" : "opacity-90"} />
                     {!collapsed && <span>{item.label}</span>}
                   </Link>
                 );
@@ -170,9 +171,9 @@ export function Sidebar({ role = "MANAGER" }: { role?: DemoRole }) {
       </nav>
 
       {showAdmin && (
-      <div className="border-t border-gray-200 px-2 py-3">
+      <div className="border-t border-white/[0.07] px-2 py-3">
         {!collapsed && (
-          <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
+          <p className="mb-1.5 px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/50">
             Admin
           </p>
         )}
@@ -185,10 +186,10 @@ export function Sidebar({ role = "MANAGER" }: { role?: DemoRole }) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-scg-50 text-scg-700"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  ? "bg-scg-600 text-white shadow-sm shadow-scg-900/30"
+                  : "text-white/55 hover:bg-white/[0.06] hover:text-white"
               )}
             >
               <Icon size={18} />
@@ -223,7 +224,7 @@ export function Sidebar({ role = "MANAGER" }: { role?: DemoRole }) {
       {/* Mobile slide-out sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-60 flex-col border-r border-gray-200 bg-white transition-transform duration-200 lg:hidden",
+          "fixed inset-y-0 left-0 z-50 flex w-60 flex-col bg-[#0a2540] transition-transform duration-200 lg:hidden",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -233,8 +234,8 @@ export function Sidebar({ role = "MANAGER" }: { role?: DemoRole }) {
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          "hidden flex-col border-r border-gray-200 bg-white transition-all duration-200 lg:flex",
-          collapsed ? "w-16" : "w-60"
+          "hidden flex-col bg-[#0a2540] transition-all duration-200 lg:flex",
+          collapsed ? "w-16" : "w-64"
         )}
       >
         {sidebarContent}

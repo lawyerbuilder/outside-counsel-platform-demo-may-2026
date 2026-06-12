@@ -805,7 +805,7 @@ export function AiSearchChat() {
                 <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100">
                   <Bot size={14} className="text-amber-700" />
                 </div>
-                <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-500">
+                <div className="flex items-center gap-2 surface px-3.5 py-2.5 text-sm text-gray-500">
                   <Loader2 size={14} className="animate-spin" />
                   Searching the directory...
                 </div>

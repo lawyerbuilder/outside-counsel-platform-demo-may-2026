@@ -47,7 +47,7 @@ export default async function SourceDetailPage({ params }: SourceDetailPageProps
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Firm Rankings */}
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <div className="surface p-6">
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
             Firm Rankings ({source.firmRankings.length})
           </h3>
@@ -88,7 +88,7 @@ export default async function SourceDetailPage({ params }: SourceDetailPageProps
         </div>
 
         {/* Lawyer Rankings */}
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <div className="surface p-6">
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
             Lawyer Rankings ({source.lawyerRankings.length})
           </h3>

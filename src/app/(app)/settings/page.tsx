@@ -26,7 +26,7 @@ export default async function SettingsPage() {
 
       <div className="mx-auto max-w-2xl">
         {/* AI Briefing Section */}
-        <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6">
+        <div className="mb-8 surface p-6">
           <div className="mb-4 flex items-start gap-3">
             <Brain size={20} className="mt-0.5 text-scg-600" />
             <div>
@@ -45,7 +45,7 @@ export default async function SettingsPage() {
         </div>
 
         {/* AI Notes Assistant */}
-        <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6">
+        <div className="mb-8 surface p-6">
           <div className="mb-4 flex items-start gap-3">
             <MessageSquare size={20} className="mt-0.5 text-scg-600" />
             <div>
@@ -87,7 +87,7 @@ export default async function SettingsPage() {
         <PreferenceForm userId={user.id} currentWeights={weights} />
 
         {/* Product Tour */}
-        <div className="mt-8 rounded-lg border border-gray-200 bg-white p-6">
+        <div className="mt-8 surface p-6">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-3">
               <Navigation size={20} className="mt-0.5 text-scg-600" />
@@ -105,7 +105,7 @@ export default async function SettingsPage() {
           </div>
         </div>
 
-        <div className="mt-8 rounded-lg border border-gray-200 bg-white p-6">
+        <div className="mt-8 surface p-6">
           <h3 className="mb-2 text-sm font-semibold text-gray-700">
             About You
           </h3>

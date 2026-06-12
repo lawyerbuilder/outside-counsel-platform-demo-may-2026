@@ -63,7 +63,7 @@ export default async function AdminRankingsPage() {
       {/* CSV Import/Export */}
       <div className="mb-6 grid gap-4 md:grid-cols-2">
         <CsvImportForm />
-        <div className="rounded-lg border border-gray-200 bg-white p-6">
+        <div className="surface p-6">
           <h3 className="mb-2 text-sm font-semibold text-gray-900">
             Export Data
           </h3>
@@ -108,7 +108,7 @@ export default async function AdminRankingsPage() {
           </Link>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+        <div className="overflow-x-auto surface">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>

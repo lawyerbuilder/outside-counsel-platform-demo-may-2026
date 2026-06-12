@@ -18,7 +18,7 @@ export default async function NewFirmPage() {
         ]}
       />
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="surface p-6">
         <FirmForm
           action={createFirmAction}
           firms={firms}

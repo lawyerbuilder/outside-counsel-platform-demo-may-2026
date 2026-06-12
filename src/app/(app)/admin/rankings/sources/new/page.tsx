@@ -15,7 +15,7 @@ export default function NewRankingSourcePage() {
           { label: "New Source" },
         ]}
       />
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="surface p-6">
         <RankingSourceForm action={createRankingSourceAction} />
       </div>
     </div>

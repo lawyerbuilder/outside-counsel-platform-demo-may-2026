@@ -109,7 +109,7 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
               <p className="text-sm text-gray-500">No firm rankings match your filters.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+            <div className="overflow-x-auto surface">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -158,7 +158,7 @@ export default async function RankingsPage({ searchParams }: RankingsPageProps) 
               <p className="text-sm text-gray-500">No lawyer rankings match your filters.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+            <div className="overflow-x-auto surface">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>

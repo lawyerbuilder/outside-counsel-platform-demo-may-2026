@@ -120,7 +120,7 @@ async function FirmResults({
 
   if (firms.length === 0) {
     return (
-      <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
+      <div className="surface p-12 text-center">
         <Building2 size={32} className="mx-auto text-gray-300" />
         <p className="mt-2 text-sm text-gray-500">No firms match your criteria.</p>
       </div>
@@ -259,7 +259,7 @@ async function LawyerResults({
 
   if (lawyers.length === 0) {
     return (
-      <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
+      <div className="surface p-12 text-center">
         <Users size={32} className="mx-auto text-gray-300" />
         <p className="mt-2 text-sm text-gray-500">No lawyers match your criteria.</p>
       </div>

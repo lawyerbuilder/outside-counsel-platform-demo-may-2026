@@ -15,7 +15,7 @@ export default function NewLawyerPage() {
         ]}
       />
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="surface p-6">
         <LawyerForm action={createLawyerAction} submitLabel="Create Lawyer" />
       </div>
     </div>

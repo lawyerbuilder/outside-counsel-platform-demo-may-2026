@@ -8,7 +8,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <>
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-background">
         <Sidebar role={role} />
         <div className="flex flex-1 flex-col overflow-hidden">
           <Topbar role={role} />

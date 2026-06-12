@@ -127,7 +127,7 @@ function FirmCard({ firm, topMatch }: { firm: IntakeFirm; topMatch?: boolean }) 
     return (
       <Link
         href={`/firms/${firm.firmId}`}
-        className="rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
+        className="surface p-4 transition-shadow hover:shadow-md"
       >
         {inner}
       </Link>
@@ -293,7 +293,7 @@ export function IntakeClient() {
   return (
     <div className="space-y-6">
       {/* Initial input */}
-      <div className="rounded-lg border border-gray-200 bg-white p-5">
+      <div className="surface p-5">
         <label htmlFor="matter-description" className="flex items-center gap-2 text-sm font-medium text-gray-700">
           <Sparkles size={16} className="text-scg-600" />
           What do you need help with?
@@ -357,7 +357,7 @@ export function IntakeClient() {
       {assessment && (
         <>
           {/* Assessment summary (pinned) */}
-          <div className="rounded-lg border border-gray-200 bg-white p-5">
+          <div className="surface p-5">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-gray-700">{assessment.title}</h2>
               <AiGeneratedBadge />
@@ -476,7 +476,7 @@ export function IntakeClient() {
                     {turn.text}
                   </div>
                 ) : (
-                  <div className="mr-12 space-y-3 rounded-lg border border-gray-200 bg-white px-4 py-3">
+                  <div className="mr-12 space-y-3 surface px-4 py-3">
                     <div className="flex items-center gap-2">
                       <Sparkles size={12} className="text-scg-600" />
                       <span className="text-[10px] font-medium uppercase text-gray-400">Sourcing advisor</span>
@@ -526,7 +526,7 @@ export function IntakeClient() {
               </div>
             ))}
             {isLoading && turns.length > 0 && (
-              <div className="mr-12 flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-500">
+              <div className="mr-12 flex items-center gap-2 surface px-4 py-3 text-sm text-gray-500">
                 <Loader2 size={14} className="animate-spin" />
                 Working on it...
               </div>
@@ -535,7 +535,7 @@ export function IntakeClient() {
           </div>
 
           {/* Follow-up input */}
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <div className="surface p-4">
             {turns.length <= 2 && (
               <div className="mb-3 flex flex-wrap gap-2">
                 {followUpChips.map((chip) => (

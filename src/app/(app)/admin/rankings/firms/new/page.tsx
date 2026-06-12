@@ -24,7 +24,7 @@ export default async function NewFirmRankingPage() {
           { label: "Rank Firm" },
         ]}
       />
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="surface p-6">
         <FirmRankingForm
           action={createFirmRankingAction}
           firms={firms}

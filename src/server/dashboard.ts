@@ -30,6 +30,7 @@ async function getDashboardStatsImpl() {
     // RFP counts by status
     prisma.rfp.groupBy({
       by: ["status"],
+      where: { title: { not: "__ai_shortlist__" } },
       _count: { id: true },
     }),
 
@@ -41,7 +42,10 @@ async function getDashboardStatsImpl() {
 
     // Recent/active RFPs (up to 5)
     prisma.rfp.findMany({
-      where: { status: { in: ["OPEN", "EVALUATING", "SHORTLISTED", "DRAFT"] } },
+      where: {
+        status: { in: ["OPEN", "EVALUATING", "SHORTLISTED", "DRAFT", "PENDING_APPROVAL"] },
+        title: { not: "__ai_shortlist__" },
+      },
       orderBy: { createdAt: "desc" },
       take: 5,
       include: {

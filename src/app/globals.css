@@ -63,38 +63,44 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  /* Branded token system: SCG red primary (#E0251C ≈ oklch 0.55 0.215 27)
+     with neutrals warmed a hair toward the brand hue so the grays feel
+     cohesive instead of dead-neutral. Borrowed structure from the contract
+     builder's OKLCH/shadcn setup, hue-shifted from indigo to SCG red. */
+  --background: oklch(0.992 0.0035 60);   /* warm off-white */
+  --foreground: oklch(0.21 0.012 40);     /* warm near-black */
+  --card: oklch(1 0 0);                    /* pure white for surface lift */
+  --card-foreground: oklch(0.21 0.012 40);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.21 0.012 40);
+  --primary: oklch(0.55 0.215 27);         /* SCG red */
+  --primary-foreground: oklch(0.985 0.005 27);
+  --secondary: oklch(0.965 0.008 50);
+  --secondary-foreground: oklch(0.28 0.012 40);
+  --muted: oklch(0.97 0.006 55);
+  --muted-foreground: oklch(0.55 0.018 45);
+  --accent: oklch(0.955 0.012 45);
+  --accent-foreground: oklch(0.28 0.014 40);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --border: oklch(0.905 0.006 55);
+  --input: oklch(0.905 0.006 55);
+  --ring: oklch(0.62 0.17 27);             /* branded focus ring */
+  /* Branded chart palette: brand red, warm orange, amber, plus cool
+     complements so multi-series viz stays legible. */
+  --chart-1: oklch(0.55 0.215 27);
+  --chart-2: oklch(0.68 0.16 45);
+  --chart-3: oklch(0.74 0.13 80);
+  --chart-4: oklch(0.55 0.09 230);
+  --chart-5: oklch(0.62 0.1 165);
+  --radius: 0.875rem;
+  --sidebar: oklch(0.985 0.003 60);
+  --sidebar-foreground: oklch(0.21 0.012 40);
+  --sidebar-primary: oklch(0.55 0.215 27);
+  --sidebar-primary-foreground: oklch(0.985 0.005 27);
+  --sidebar-accent: oklch(0.955 0.012 45);
+  --sidebar-accent-foreground: oklch(0.28 0.014 40);
+  --sidebar-border: oklch(0.905 0.006 55);
+  --sidebar-ring: oklch(0.62 0.17 27);
 }
 
 /* Dark mode disabled for pilot — light only, see CLAUDE.md
@@ -139,9 +145,31 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   html {
     @apply font-sans;
+  }
+  /* Tighter tracking on headings reads as more designed (Linear/Notion feel) */
+  h1, h2, h3 {
+    letter-spacing: -0.018em;
+  }
+  /* Numbers in stat cards and tables align cleanly */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  /* Restrained surface: hairline border, barely-there resting shadow.
+     Depth comes from the border and a whisper of shadow, not heavy elevation. */
+  .surface {
+    @apply rounded-2xl border border-border bg-card shadow-[0_1px_2px_0_rgb(20_10_8/0.04)];
+  }
+  /* Hover lifts subtly with a soft neutral shadow, no colored glow. */
+  .surface-hover {
+    @apply transition-[box-shadow,transform] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_4px_16px_-6px_rgb(20_10_8/0.12)];
   }
 }
 
