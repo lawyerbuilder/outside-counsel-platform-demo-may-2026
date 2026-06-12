@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useApiKey } from "@/components/ApiKeyProvider";
 import {
   Send,
   Bot,
@@ -408,7 +407,6 @@ function ShortlistPanel({
 
 export function AiSearchChat() {
   const router = useRouter();
-  const { getHeaders, needsKey, showKeyPrompt } = useApiKey();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -560,11 +558,6 @@ export function AiSearchChat() {
     const trimmed = text.trim();
     if (!trimmed || isLoading) return;
 
-    if (needsKey) {
-      showKeyPrompt();
-      return;
-    }
-
     if (!isOpen) setIsOpen(true);
 
     const userMsg: Message = {
@@ -592,7 +585,7 @@ export function AiSearchChat() {
 
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json", ...getHeaders() },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: chatHistory }),
       });
 
@@ -600,12 +593,7 @@ export function AiSearchChat() {
       const contentType = res.headers.get("content-type") ?? "";
       if (contentType.includes("application/json")) {
         const data = await res.json();
-        if (data.needsApiKey) {
-          showKeyPrompt();
-          setError("Please configure your Anthropic API key to use AI features.");
-        } else {
-          setError(data.error ?? "Something went wrong");
-        }
+        setError(data.error ?? "Something went wrong");
         return;
       }
 

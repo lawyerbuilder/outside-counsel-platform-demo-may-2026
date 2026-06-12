@@ -194,30 +194,42 @@ export async function getSpinOffComparisons(): Promise<SpinOffComparison[]> {
     },
   });
 
+  // Batch the "moved lawyers" lookup into ONE query instead of one per spin-off.
+  // Fetch all current lawyers at any spin-off plus their prior (non-current)
+  // firm ids, then pair each to its own spin-off's parent in memory.
+  const parentBySpinOff = new Map(
+    spinOffs.filter((s) => s.parentFirmId).map((s) => [s.id, s.parentFirmId as string])
+  );
+  const currentAtSpinOffs = await prisma.firmLawyer.findMany({
+    where: { firmId: { in: [...parentBySpinOff.keys()] }, isCurrent: true },
+    include: {
+      lawyer: {
+        select: {
+          id: true,
+          name: true,
+          title: true,
+          firmLawyers: { where: { isCurrent: false }, select: { firmId: true } },
+        },
+      },
+    },
+  });
+
+  const movedBySpinOff = new Map<string, typeof currentAtSpinOffs>();
+  for (const fl of currentAtSpinOffs) {
+    const parentId = parentBySpinOff.get(fl.firmId);
+    if (!parentId) continue;
+    if (!fl.lawyer.firmLawyers.some((h) => h.firmId === parentId)) continue;
+    const list = movedBySpinOff.get(fl.firmId) ?? [];
+    list.push(fl);
+    movedBySpinOff.set(fl.firmId, list);
+  }
+
   const comparisons: SpinOffComparison[] = [];
 
   for (const spinOff of spinOffs) {
     if (!spinOff.parentFirm) continue;
 
-    // Find lawyers who moved from parent to this spin-off
-    const movedLawyers = await prisma.firmLawyer.findMany({
-      where: {
-        firmId: spinOff.id,
-        isCurrent: true,
-        lawyer: {
-          firmLawyers: {
-            some: {
-              firmId: spinOff.parentFirmId!,
-              isCurrent: false,
-            },
-          },
-        },
-      },
-      include: {
-        lawyer: { select: { id: true, name: true, title: true } },
-      },
-    });
-
+    const movedLawyers = movedBySpinOff.get(spinOff.id) ?? [];
     const parent = spinOff.parentFirm;
 
     comparisons.push({

@@ -14,7 +14,6 @@ import {
   ExternalLink,
   ArrowUpRight,
 } from "lucide-react";
-import { useApiKey } from "@/components/ApiKeyProvider";
 import type { TimesheetAnalysis } from "@/server/timesheet";
 
 export function AnalyzeTrigger({
@@ -29,33 +28,21 @@ export function AnalyzeTrigger({
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { getHeaders, needsKey, showKeyPrompt } = useApiKey();
 
   const runAnalysis = useCallback(async () => {
-    if (needsKey) {
-      showKeyPrompt();
-      return;
-    }
     setLoading(true);
     setError(null);
     try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-        ...getHeaders(),
-      };
-
       const res = await fetch("/api/timesheet/analyze", {
         method: "POST",
-        headers,
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ uploadId }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        if (data.needsApiKey) {
-          setError("API key required. Please set your Anthropic API key in Settings.");
-        } else if (data.error?.includes("credit balance")) {
-          setError("Anthropic API credit balance is too low. Please add credits at console.anthropic.com.");
+        if (data.error?.includes("credit balance")) {
+          setError("AI credit balance is too low. Please contact the platform administrator.");
         } else {
           setError(data.error ?? "Analysis failed");
         }
@@ -68,7 +55,7 @@ export function AnalyzeTrigger({
     } finally {
       setLoading(false);
     }
-  }, [uploadId, getHeaders, needsKey, showKeyPrompt]);
+  }, [uploadId]);
 
   if (analysis) {
     return <AnalysisDashboard analysis={analysis} onReanalyze={runAnalysis} loading={loading} />;

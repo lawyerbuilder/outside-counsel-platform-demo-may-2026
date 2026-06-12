@@ -1,17 +1,19 @@
+import { z } from "zod";
 import { callClaude } from "@/server/ai/anthropic";
 
 export const dynamic = "force-dynamic";
 
-type ChatMessage = { role: "user" | "assistant"; content: string };
-
-type RequestBody = {
-  messages: ChatMessage[];
-  currentFields: Record<string, unknown>;
-  firmIds: string[];
-  firmNames: Record<string, string>;
-  jurisdictions: { id: string; name: string }[];
-  practiceAreas: { id: string; name: string }[];
-};
+const bodySchema = z.object({
+  messages: z
+    .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(8000) }))
+    .min(1, "No messages")
+    .max(40),
+  currentFields: z.record(z.string(), z.unknown()).default({}),
+  firmIds: z.array(z.string()).max(100).default([]),
+  firmNames: z.record(z.string(), z.string()).default({}),
+  jurisdictions: z.array(z.object({ id: z.string(), name: z.string() })).max(100).default([]),
+  practiceAreas: z.array(z.object({ id: z.string(), name: z.string() })).max(100).default([]),
+});
 
 const SYSTEM_PROMPT = `You are an AI assistant helping an in-house lawyer at SCG create a Request for Proposal (RFP) to instruct external counsel. Your job is to have a natural conversation that extracts the key information needed for the RFP.
 
@@ -66,12 +68,14 @@ RULES:
 - Always respond with pure JSON. No markdown code fences, no extra text.`;
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as RequestBody;
-  const { messages, currentFields, jurisdictions, practiceAreas } = body;
-
-  if (!messages?.length) {
-    return Response.json({ error: "No messages" }, { status: 400 });
+  const parsed = bodySchema.safeParse(await request.json());
+  if (!parsed.success) {
+    return Response.json(
+      { error: parsed.error.issues[0]?.message ?? "Invalid request" },
+      { status: 400 }
+    );
   }
+  const { messages, currentFields, jurisdictions, practiceAreas } = parsed.data;
 
   const systemPrompt = SYSTEM_PROMPT
     .replace("{JURISDICTIONS}", JSON.stringify(jurisdictions.map((j) => ({ id: j.id, name: j.name }))))

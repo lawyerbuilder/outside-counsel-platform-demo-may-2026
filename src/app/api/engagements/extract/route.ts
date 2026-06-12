@@ -1,21 +1,27 @@
+import { z } from "zod";
 import { callClaude } from "@/server/ai/anthropic";
 
 export const dynamic = "force-dynamic";
 
-type FirmRef = { id: string; name: string; shortName: string | null };
-type LawyerRef = { id: string; name: string };
+const bodySchema = z.object({
+  text: z.string().trim().min(1, "No document text provided").max(50000),
+  firms: z
+    .array(z.object({ id: z.string(), name: z.string(), shortName: z.string().nullable() }))
+    .max(500)
+    .default([]),
+  lawyers: z.array(z.object({ id: z.string(), name: z.string() })).max(2000).default([]),
+});
 
 export async function POST(request: Request) {
   try {
-    const { text, firms, lawyers } = (await request.json()) as {
-      text: string;
-      firms: FirmRef[];
-      lawyers: LawyerRef[];
-    };
-
-    if (!text?.trim()) {
-      return Response.json({ error: "No document text provided" }, { status: 400 });
+    const parsed = bodySchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return Response.json(
+        { error: parsed.error.issues[0]?.message ?? "Invalid request" },
+        { status: 400 }
+      );
     }
+    const { text, firms, lawyers } = parsed.data;
 
     const systemPrompt = `You are a legal document parser for SCG's Outside Counsel Platform. You extract structured engagement data from engagement letters, retainer agreements, or similar documents.
 

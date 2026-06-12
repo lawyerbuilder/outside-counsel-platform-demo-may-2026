@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { callClaude } from "@/server/ai/anthropic";
 import {
   getTimesheetEntries,
@@ -47,12 +48,17 @@ Your task: Analyze the timesheet data below and produce a structured JSON respon
 
 Return ONLY valid JSON, no markdown fences, no explanation.`;
 
-export async function POST(request: Request) {
-  const { uploadId } = (await request.json()) as { uploadId: string };
+const bodySchema = z.object({ uploadId: z.string().min(1, "uploadId required") });
 
-  if (!uploadId) {
-    return Response.json({ error: "uploadId required" }, { status: 400 });
+export async function POST(request: Request) {
+  const parsed = bodySchema.safeParse(await request.json());
+  if (!parsed.success) {
+    return Response.json(
+      { error: parsed.error.issues[0]?.message ?? "Invalid request" },
+      { status: 400 }
+    );
   }
+  const { uploadId } = parsed.data;
 
   try {
     // Mark as processing

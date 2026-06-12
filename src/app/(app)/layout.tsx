@@ -1,6 +1,5 @@
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
-import { ApiKeyProvider } from "@/components/ApiKeyProvider";
 import { ProductTour } from "@/components/onboarding/ProductTour";
 import { getDemoRole } from "@/server/demo-role";
 
@@ -8,7 +7,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const role = await getDemoRole();
 
   return (
-    <ApiKeyProvider>
+    <>
       <div className="flex h-screen bg-gray-50">
         <Sidebar role={role} />
         <div className="flex flex-1 flex-col overflow-hidden">
@@ -17,6 +16,6 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         </div>
       </div>
       <ProductTour />
-    </ApiKeyProvider>
+    </>
   );
 }

@@ -1,9 +1,15 @@
+import { z } from "zod";
 import { prisma } from "@/server/db";
 import { getCurrentUser } from "@/server/current-user";
 
 export const dynamic = "force-dynamic";
 
 const SHORTLIST_SENTINEL = "__ai_shortlist__";
+
+const postSchema = z.object({
+  action: z.enum(["add_firm", "remove_firm", "clear", "approve"]),
+  firmId: z.string().min(1).optional(),
+});
 
 type ShortlistFirm = {
   id: string;
@@ -77,10 +83,11 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
-    const { action, firmId } = (await request.json()) as {
-      action: string;
-      firmId?: string;
-    };
+    const parsed = postSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return Response.json({ error: "Invalid request" }, { status: 400 });
+    }
+    const { action, firmId } = parsed.data;
 
     const rfp = await getOrCreateShortlist(user.id);
 

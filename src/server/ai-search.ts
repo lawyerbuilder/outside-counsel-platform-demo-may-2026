@@ -139,17 +139,18 @@ export async function executeSearchFirms(
     minNps: args.minNps as number | undefined,
   });
 
-  // Enrich top 10 with contact details
+  // Enrich top 10 with contact details (one batched query, not 10)
   const top = firms.slice(0, 10);
-  const enriched = await Promise.all(
-    top.map(async (f) => {
-      const firm = await prisma.firm.findUnique({
-        where: { id: f.id },
-        select: { website: true, headcount: true },
-      });
-      return { ...f, website: firm?.website ?? null, headcount: firm?.headcount ?? null };
-    })
-  );
+  const details = await prisma.firm.findMany({
+    where: { id: { in: top.map((f) => f.id) } },
+    select: { id: true, website: true, headcount: true },
+  });
+  const byId = new Map(details.map((d) => [d.id, d]));
+  const enriched = top.map((f) => ({
+    ...f,
+    website: byId.get(f.id)?.website ?? null,
+    headcount: byId.get(f.id)?.headcount ?? null,
+  }));
 
   return { firms: enriched };
 }
@@ -173,30 +174,31 @@ export async function executeSearchLawyers(
     jurisdictionId,
   });
 
-  // Enrich top 10 with contact details
+  // Enrich top 10 with contact details (one batched query, not 10)
   const top = lawyers.slice(0, 10);
-  const enriched = await Promise.all(
-    top.map(async (l) => {
-      const lawyer = await prisma.lawyer.findUnique({
-        where: { id: l.id },
-        select: {
-          email: true,
-          linkedInUrl: true,
-          firmLawyers: {
-            where: { isCurrent: true },
-            include: { firm: { select: { website: true } } },
-            take: 1,
-          },
-        },
-      });
-      return {
-        ...l,
-        email: lawyer?.email ?? null,
-        linkedInUrl: lawyer?.linkedInUrl ?? null,
-        firmWebsite: lawyer?.firmLawyers[0]?.firm?.website ?? null,
-      };
-    })
-  );
+  const details = await prisma.lawyer.findMany({
+    where: { id: { in: top.map((l) => l.id) } },
+    select: {
+      id: true,
+      email: true,
+      linkedInUrl: true,
+      firmLawyers: {
+        where: { isCurrent: true },
+        include: { firm: { select: { website: true } } },
+        take: 1,
+      },
+    },
+  });
+  const byId = new Map(details.map((d) => [d.id, d]));
+  const enriched = top.map((l) => {
+    const d = byId.get(l.id);
+    return {
+      ...l,
+      email: d?.email ?? null,
+      linkedInUrl: d?.linkedInUrl ?? null,
+      firmWebsite: d?.firmLawyers[0]?.firm?.website ?? null,
+    };
+  });
 
   return { lawyers: enriched };
 }

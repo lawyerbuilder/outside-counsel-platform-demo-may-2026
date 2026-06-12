@@ -1,19 +1,30 @@
+import { z } from "zod";
 import { prisma } from "@/server/db";
 
 export const dynamic = "force-dynamic";
 
-type NoteUpdate = {
-  firmId: string;
-  notes: string;
-};
+const bodySchema = z.object({
+  updates: z
+    .array(
+      z.object({
+        firmId: z.string().min(1),
+        notes: z.string().max(5000),
+      })
+    )
+    .min(1, "No updates provided")
+    .max(200),
+});
 
 export async function POST(request: Request) {
   try {
-    const { updates } = (await request.json()) as { updates: NoteUpdate[] };
-
-    if (!updates || updates.length === 0) {
-      return Response.json({ error: "No updates provided" }, { status: 400 });
+    const parsed = bodySchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return Response.json(
+        { error: parsed.error.issues[0]?.message ?? "Invalid request" },
+        { status: 400 }
+      );
     }
+    const { updates } = parsed.data;
 
     // Update each firm's internalNotes
     const results = await Promise.all(
