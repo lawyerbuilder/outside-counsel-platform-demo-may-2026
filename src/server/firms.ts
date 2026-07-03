@@ -78,6 +78,9 @@ export async function getFirmById(id: string) {
       spinOffs: {
         where: { deletedAt: null },
       },
+      contacts: {
+        orderBy: [{ isPrimary: "desc" }, { createdAt: "asc" }],
+      },
     },
   });
 }

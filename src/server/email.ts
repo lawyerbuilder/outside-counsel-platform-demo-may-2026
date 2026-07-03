@@ -3,7 +3,13 @@ import { Resend } from "resend";
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
-// On free tier, use Resend's test domain
+// Dev fallback only. In production EMAIL_FROM must be a verified SCG domain:
+// a resend.dev sender fails deliverability and looks like phishing to firms.
+if (process.env.NODE_ENV === "production" && RESEND_API_KEY && !process.env.EMAIL_FROM) {
+  throw new Error(
+    "EMAIL_FROM is not set. Refusing to send production email from the resend.dev test domain."
+  );
+}
 const FROM_ADDRESS = process.env.EMAIL_FROM ?? "SCG Legal <onboarding@resend.dev>";
 
 export type RfpInvitationEmail = {

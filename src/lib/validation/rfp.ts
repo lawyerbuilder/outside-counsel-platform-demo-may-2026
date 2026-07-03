@@ -97,18 +97,20 @@ export const draftRfpSchema = z.object({
 });
 
 export const feePhaseSchema = z.object({
-  phase: z.string().min(1),
+  phase: z.string().min(1).max(200),
   feeCents: z.number().int().nonnegative(),
 });
 
+// Length caps matter here: this schema accepts unauthenticated input from the
+// public portal (POST /api/respond/[token]).
 export const invitationResponseSchema = z.object({
   proposedFeeCents: z.number().int().positive().optional(),
   proposedFeeType: feeTypeSchema.optional(),
   currencyCode: z.string().length(3).optional(),
-  feeBreakdown: z.array(feePhaseSchema).optional(),
-  staffingPlan: z.string().optional(),
-  responseDocument: z.string().optional(),
-  aiDisclosure: z.string().optional(),
+  feeBreakdown: z.array(feePhaseSchema).max(30).optional(),
+  staffingPlan: z.string().max(20000).optional(),
+  responseDocument: z.string().max(20000).optional(),
+  aiDisclosure: z.string().max(20000).optional(),
 });
 
 export const evaluationScoreSchema = z.object({

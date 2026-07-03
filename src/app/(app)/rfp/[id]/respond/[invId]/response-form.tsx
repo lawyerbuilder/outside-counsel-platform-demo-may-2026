@@ -1,13 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/Label";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import { CheckCircle2, Send, Plus, Trash2 } from "lucide-react";
+import { CheckCircle2, Send, Plus, Trash2, Upload, Loader2, Sparkles } from "lucide-react";
 
 type FeePhase = { phase: string; fee: string };
+
+type ExtractedProposal = {
+  feeType?: string;
+  currencyCode?: string;
+  phases?: { phase: string; feeCents: number }[];
+  staffingPlan?: string;
+  narrative?: string;
+};
 
 export function FirmResponseForm({
   invitationId,
@@ -16,6 +24,8 @@ export function FirmResponseForm({
   requestSuggestedBudget,
   pricingRequirements,
   additionalRequirements,
+  canUploadForFirm,
+  initial,
 }: {
   invitationId: string;
   rfpId: string;
@@ -23,17 +33,32 @@ export function FirmResponseForm({
   requestSuggestedBudget: boolean;
   pricingRequirements: string | null;
   additionalRequirements: string | null;
+  canUploadForFirm: boolean;
+  initial?: {
+    feeType?: string;
+    currency?: string;
+    phases?: FeePhase[];
+    staffingPlan?: string;
+    responseDocument?: string;
+  };
 }) {
   const router = useRouter();
-  const [feeType, setFeeType] = useState("CAPPED");
-  const [currency, setCurrency] = useState("THB");
-  const [phases, setPhases] = useState<FeePhase[]>([
-    { phase: "", fee: "" },
-  ]);
-  const [staffingPlan, setStaffingPlan] = useState("");
-  const [responseDocument, setResponseDocument] = useState("");
+  const [feeType, setFeeType] = useState(initial?.feeType ?? "CAPPED");
+  const [currency, setCurrency] = useState(initial?.currency ?? "THB");
+  const [phases, setPhases] = useState<FeePhase[]>(
+    initial?.phases && initial.phases.length > 0
+      ? initial.phases
+      : [{ phase: "", fee: "" }]
+  );
+  const [staffingPlan, setStaffingPlan] = useState(initial?.staffingPlan ?? "");
+  const [responseDocument, setResponseDocument] = useState(initial?.responseDocument ?? "");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadName, setUploadName] = useState<string | null>(null);
+  const [extractionDone, setExtractionDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function addPhase() {
     setPhases((prev) => [...prev, { phase: "", fee: "" }]);
@@ -47,6 +72,47 @@ export function FirmResponseForm({
     setPhases((prev) =>
       prev.map((p, i) => (i === index ? { ...p, [field]: value } : p))
     );
+  }
+
+  function populateFromExtraction(data: ExtractedProposal) {
+    if (data.feeType) setFeeType(data.feeType);
+    if (data.currencyCode) setCurrency(data.currencyCode);
+    if (data.phases && data.phases.length > 0) {
+      setPhases(
+        data.phases.map((p) => ({ phase: p.phase, fee: String(p.feeCents / 100) }))
+      );
+    }
+    if (data.staffingPlan) setStaffingPlan(data.staffingPlan);
+    if (data.narrative) setResponseDocument(data.narrative);
+    setExtractionDone(true);
+  }
+
+  // Manager/admin uploads the PDF/Word proposal a firm emailed to the team.
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadName(file.name);
+    setUploading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch(
+        `/api/rfp/${rfpId}/respond/${invitationId}/extract-file`,
+        { method: "POST", body: formData }
+      );
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? "Could not read that file");
+      }
+      const data = await res.json();
+      populateFromExtraction(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not read that file");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   }
 
   // Calculate total from phases
@@ -121,6 +187,56 @@ export function FirmResponseForm({
         <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
           <p className="text-xs font-medium text-amber-700">Additional requirements:</p>
           <p className="mt-1 text-sm text-amber-800">{additionalRequirements}</p>
+        </div>
+      )}
+
+      {/* Upload on the firm's behalf (manager / admin only) */}
+      {canUploadForFirm && (
+        <div className="space-y-2 rounded-lg border border-gray-200 p-4">
+          <div>
+            <Label className="text-sm font-medium">
+              Upload the proposal the firm sent
+            </Label>
+            <p className="text-xs text-gray-400">
+              Upload the PDF or Word file the firm emailed to the team. AI will
+              read it and fill in the fields below for you to review.
+            </p>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            onChange={handleFileUpload}
+            disabled={uploading}
+            className="hidden"
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 px-4 py-6 text-sm text-gray-500 hover:border-scg-400 hover:text-scg-700 disabled:opacity-60"
+          >
+            {uploading ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                <span>Reading {uploadName}...</span>
+              </>
+            ) : (
+              <>
+                <Upload size={18} />
+                <span className="font-medium">Choose a file to upload</span>
+                <span className="text-xs text-gray-400">
+                  PDF or Word (.docx), up to 8 MB.
+                </span>
+              </>
+            )}
+          </button>
+          {extractionDone && (
+            <p className="flex items-center gap-1.5 text-xs font-medium text-scg-700">
+              <Sparkles size={12} />
+              Fields below were pre-filled from the file. Please review and
+              adjust before submitting.
+            </p>
+          )}
         </div>
       )}
 
@@ -242,6 +358,12 @@ export function FirmResponseForm({
           className="resize-none"
         />
       </div>
+
+      {error && (
+        <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </p>
+      )}
 
       <div className="flex justify-end pt-2">
         <button

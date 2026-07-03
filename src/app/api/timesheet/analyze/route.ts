@@ -6,6 +6,7 @@ import {
   updateUploadStatus,
 } from "@/server/timesheet";
 import { prisma } from "@/server/db";
+import { ANTI_INJECTION_RULE } from "@/server/ai/untrusted";
 import type { TimesheetAnalysis } from "@/server/timesheet";
 
 export const dynamic = "force-dynamic";
@@ -131,7 +132,9 @@ ${ocpData.practiceAreas.map((pa) => `- ${pa.name}`).join("\n")}
 `;
 
     const response = await callClaude({
-      systemPrompt: ANALYSIS_PROMPT,
+      systemPrompt: `${ANALYSIS_PROMPT}
+
+${ANTI_INJECTION_RULE}`,
       userMessage: `${ocpContext}\n\n=== TIMESHEET DATA ===\n${dataPayload}`,
       maxTokens: 8192,
       temperature: 0.2,

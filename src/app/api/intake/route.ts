@@ -9,26 +9,26 @@ import type { ComplexityTier } from "@/generated/prisma/client";
 export const maxDuration = 60;
 
 const firstTurnSchema = z.object({
-  description: z.string().min(20, "Please describe the matter in a bit more detail"),
+  description: z.string().min(20, "Please describe the matter in a bit more detail").max(5000),
   matterNumber: z.string().max(50).optional(),
 });
 
 const followUpSchema = z.object({
-  followUp: z.string().min(2),
+  followUp: z.string().min(2).max(5000),
   context: z.object({
-    description: z.string(),
+    description: z.string().max(5000),
     practiceAreaId: z.string(),
     jurisdictionId: z.string(),
-    practiceArea: z.string(),
-    jurisdiction: z.string(),
+    practiceArea: z.string().max(300),
+    jurisdiction: z.string().max(300),
     complexityTier: z.enum(["COMPLEX", "STANDARD", "ROUTINE"]),
-    urgency: z.string(),
-    title: z.string(),
+    urgency: z.string().max(300),
+    title: z.string().max(300),
     matterNumber: z.string().max(50).optional(),
     budgetHighUsd: z.number().default(0),
-    excludedFirmNames: z.array(z.string()).default([]),
+    excludedFirmNames: z.array(z.string().max(200)).max(50).default([]),
     history: z
-      .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string() }))
+      .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(2000) }))
       .max(12)
       .default([]),
   }),

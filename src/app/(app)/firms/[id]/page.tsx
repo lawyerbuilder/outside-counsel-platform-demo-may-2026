@@ -33,6 +33,7 @@ import { RatingForm } from "@/components/insights/RatingForm";
 import { NoteForm } from "@/components/insights/NoteForm";
 import { EngagementForm } from "@/components/insights/EngagementForm";
 import { CostBenchmarkForm } from "@/components/insights/CostBenchmarkForm";
+import { RfpContactSection } from "@/components/firms/RfpContactSection";
 import {
   FIRM_TYPE_LABELS,
   LAWYER_ROLE_LABELS,
@@ -458,6 +459,18 @@ export default async function FirmDetailPage({ params }: FirmDetailPageProps) {
               <RatingForm targetType="FIRM" targetId={id} />
             </div>
           </div>
+
+          {/* RFP Contact: the verified address invitation emails go to */}
+          <RfpContactSection
+            firmId={id}
+            contacts={firm.contacts.map((c) => ({
+              id: c.id,
+              name: c.name,
+              email: c.email,
+              role: c.role,
+            }))}
+            canEdit={canSeeInternal}
+          />
 
           {/* Relationship Notes — management-confidential */}
           {canSeeInternal && (

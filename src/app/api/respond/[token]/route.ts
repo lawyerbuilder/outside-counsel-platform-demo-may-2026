@@ -3,6 +3,7 @@ import { prisma } from "@/server/db";
 import { updateInvitationResponse } from "@/server/rfp/mutations";
 import { invitationResponseSchema } from "@/lib/validation/rfp";
 import { shouldAutoGenerate, generateComparisonReport } from "@/server/rfp/comparison";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET /api/respond/[token]
@@ -57,6 +58,15 @@ export async function POST(
   { params }: { params: Promise<{ token: string }> }
 ) {
   const { token } = await params;
+
+  // Public endpoint: same per-token limiter as the extract sibling.
+  const rl = checkRateLimit(`respond:${token}`, { limit: 10, windowMs: 60 * 60_000 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many attempts. Try again later." },
+      { status: 429 }
+    );
+  }
 
   // Look up the invitation by token
   const invitation = await prisma.rfpInvitation.findUnique({

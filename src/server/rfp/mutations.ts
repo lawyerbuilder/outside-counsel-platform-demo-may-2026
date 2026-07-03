@@ -109,6 +109,15 @@ async function sendInvitationEmails(rfpId: string) {
 
     if (!rfp) return;
 
+    if (
+      process.env.NODE_ENV === "production" &&
+      !process.env.VERCEL_PROJECT_PRODUCTION_URL &&
+      !process.env.NEXTAUTH_URL
+    ) {
+      // Never email a localhost portal link from a production deploy.
+      console.error("[Email] No base URL configured in production — aborting invitation emails");
+      return;
+    }
     const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : process.env.NEXTAUTH_URL ?? "http://localhost:3001";
@@ -116,14 +125,12 @@ async function sendInvitationEmails(rfpId: string) {
     for (const inv of rfp.invitations) {
       if (!inv.responseToken) continue;
 
-      // Find the firm's email: try FirmContact first, then fall back to a constructed address
-      const firmEmail = inv.firm.contacts?.[0]?.email
-        ?? (inv.firm.website
-          ? `info@${new URL(inv.firm.website).hostname.replace("www.", "")}`
-          : null);
+      // Only send to a verified FirmContact. Never guess an address: the email
+      // carries the confidential scope and a no-login portal link.
+      const firmEmail = inv.firm.contacts?.[0]?.email ?? null;
 
       if (!firmEmail) {
-        console.log(`[Email] No email for ${inv.firm.name} — skipping`);
+        console.log(`[Email] No verified contact for ${inv.firm.name} — invitation NOT emailed`);
         continue;
       }
 

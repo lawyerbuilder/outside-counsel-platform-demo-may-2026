@@ -136,7 +136,7 @@ describe("lawyerFilterSchema", () => {
 
 describe("display label maps", () => {
   it("has labels for all firm types", () => {
-    expect(Object.keys(FIRM_TYPE_LABELS)).toHaveLength(4);
+    expect(Object.keys(FIRM_TYPE_LABELS)).toHaveLength(5);
     expect(FIRM_TYPE_LABELS.FULL_SERVICE).toBe("Full Service");
     expect(FIRM_TYPE_LABELS.BOUTIQUE).toBe("Boutique");
   });

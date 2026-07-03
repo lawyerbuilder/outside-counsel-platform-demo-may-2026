@@ -32,13 +32,18 @@ export function middleware(request: NextRequest) {
     "camera=(), microphone=(), geolocation=(), payment=()"
   );
 
-  // Content Security Policy — allow self and inline styles (Tailwind), block everything else
+  // Content Security Policy — allow self and inline styles (Tailwind), block everything else.
+  // unsafe-eval is required by Next.js dev tooling only; never ship it to production.
+  const scriptSrc =
+    process.env.NODE_ENV === "production"
+      ? "script-src 'self' 'unsafe-inline'"
+      : "script-src 'self' 'unsafe-eval' 'unsafe-inline'";
   response.headers.set(
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // Next.js needs eval in dev
-      "style-src 'self' 'unsafe-inline'",                 // Tailwind inline styles
+      scriptSrc,
+      "style-src 'self' 'unsafe-inline'", // Tailwind inline styles
       "img-src 'self' data: blob:",
       "font-src 'self'",
       "connect-src 'self'",

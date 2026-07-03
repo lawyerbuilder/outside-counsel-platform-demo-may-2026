@@ -98,7 +98,6 @@ export default async function RfpDetailPage({
             <div className="mt-3">
               <InvitationStatusTracker
                 rfpId={id}
-                rfpTitle={rfp.title}
                 invitations={rfp.invitations.map((inv) => ({
                   id: inv.id,
                   firmName: inv.firm.name,

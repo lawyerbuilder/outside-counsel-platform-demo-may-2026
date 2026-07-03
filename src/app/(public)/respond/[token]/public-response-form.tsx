@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   CheckCircle2,
   Send,
@@ -10,10 +10,19 @@ import {
   ClipboardPaste,
   PenLine,
   Loader2,
+  Upload,
 } from "lucide-react";
 
 type FeePhase = { phase: string; fee: string };
-type Tab = "paste" | "manual";
+type Tab = "paste" | "upload" | "manual";
+
+type ExtractedProposal = {
+  feeType?: string;
+  currencyCode?: string;
+  phases?: { phase: string; feeCents: number }[];
+  staffingPlan?: string;
+  narrative?: string;
+};
 
 export function PublicResponseForm({
   token,
@@ -36,6 +45,9 @@ export function PublicResponseForm({
   const [pastedText, setPastedText] = useState("");
   const [extracting, setExtracting] = useState(false);
   const [extractionDone, setExtractionDone] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadName, setUploadName] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [feeType, setFeeType] = useState("CAPPED");
   const [currency, setCurrency] = useState("THB");
@@ -63,7 +75,25 @@ export function PublicResponseForm({
     return sum + (isNaN(val) ? 0 : val);
   }, 0);
 
-  // ── AI extraction ──
+  // Populate the form fields from an AI extraction result (shared by paste + upload).
+  function populateFromExtraction(data: ExtractedProposal) {
+    if (data.feeType) setFeeType(data.feeType);
+    if (data.currencyCode) setCurrency(data.currencyCode);
+    if (data.phases && data.phases.length > 0) {
+      setPhases(
+        data.phases.map((p) => ({
+          phase: p.phase,
+          fee: String(p.feeCents / 100),
+        }))
+      );
+    }
+    if (data.staffingPlan) setStaffingPlan(data.staffingPlan);
+    if (data.narrative) setResponseDocument(data.narrative);
+    setExtractionDone(true);
+    setTab("manual"); // Switch to manual tab so they can review
+  }
+
+  // ── AI extraction from pasted text ──
   async function handleExtract() {
     if (!pastedText.trim()) return;
     setExtracting(true);
@@ -79,27 +109,40 @@ export function PublicResponseForm({
         throw new Error(data.error ?? "Extraction failed");
       }
       const data = await res.json();
-
-      // Populate form fields from extraction
-      if (data.feeType) setFeeType(data.feeType);
-      if (data.currencyCode) setCurrency(data.currencyCode);
-      if (data.phases && data.phases.length > 0) {
-        setPhases(
-          data.phases.map((p: { phase: string; feeCents: number }) => ({
-            phase: p.phase,
-            fee: String(p.feeCents / 100),
-          }))
-        );
-      }
-      if (data.staffingPlan) setStaffingPlan(data.staffingPlan);
-      if (data.narrative) setResponseDocument(data.narrative);
-
-      setExtractionDone(true);
-      setTab("manual"); // Switch to manual tab so they can review
+      populateFromExtraction(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Extraction failed");
     } finally {
       setExtracting(false);
+    }
+  }
+
+  // ── AI extraction from an uploaded PDF / Word file ──
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadName(file.name);
+    setUploading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch(`/api/respond/${token}/extract-file`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? "Could not read that file");
+      }
+      const data = await res.json();
+      populateFromExtraction(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not read that file");
+    } finally {
+      setUploading(false);
+      // Reset the input so re-selecting the same file fires onChange again.
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   }
 
@@ -199,6 +242,17 @@ export function PublicResponseForm({
           Paste proposal
         </button>
         <button
+          onClick={() => setTab("upload")}
+          className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+            tab === "upload"
+              ? "bg-white text-gray-900 shadow-sm"
+              : "text-gray-500 hover:text-gray-700"
+          }`}
+        >
+          <Upload size={14} />
+          Upload file
+        </button>
+        <button
           onClick={() => setTab("manual")}
           className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
             tab === "manual"
@@ -257,6 +311,51 @@ export function PublicResponseForm({
               review.
             </p>
           )}
+        </div>
+      )}
+
+      {/* ── Upload tab ── */}
+      {tab === "upload" && (
+        <div className="space-y-3">
+          <div>
+            <label className="text-sm font-medium text-gray-700">
+              Upload your proposal file
+            </label>
+            <p className="text-xs text-gray-400">
+              Upload your fee proposal, staffing plan, or engagement letter. AI
+              will read the file and fill in the structured data for you to
+              review.
+            </p>
+          </div>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            onChange={handleFileUpload}
+            disabled={uploading}
+            className="hidden"
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 px-4 py-8 text-sm text-gray-500 hover:border-scg-400 hover:text-scg-700 disabled:opacity-60"
+          >
+            {uploading ? (
+              <>
+                <Loader2 size={20} className="animate-spin" />
+                <span>Reading {uploadName}...</span>
+              </>
+            ) : (
+              <>
+                <Upload size={20} />
+                <span className="font-medium">Choose a file to upload</span>
+                <span className="text-xs text-gray-400">
+                  PDF or Word (.docx), up to 8 MB.
+                </span>
+              </>
+            )}
+          </button>
         </div>
       )}
 

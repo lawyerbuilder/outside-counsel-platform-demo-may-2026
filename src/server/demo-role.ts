@@ -7,14 +7,15 @@ const ROLE_COOKIE = "demo-role";
 
 /**
  * Demo role switching: the active role is a cookie set by the topbar
- * switcher. Defaults to MANAGER (full main-nav visibility). Replace with
- * real session roles when NextAuth logins go live.
+ * switcher. Defaults to LAWYER (least privilege: no cookie must never grant
+ * approval or admin rights). Replace with real session roles when NextAuth
+ * logins go live.
  */
 export async function getDemoRole(): Promise<DemoRole> {
   const store = await cookies();
   const value = store.get(ROLE_COOKIE)?.value;
   if (value === "LAWYER" || value === "MANAGER" || value === "ADMIN") return value;
-  return "MANAGER";
+  return "LAWYER";
 }
 
 const roleEmail: Record<DemoRole, string> = {

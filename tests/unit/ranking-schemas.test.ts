@@ -146,19 +146,19 @@ describe("format helpers", () => {
   it("rankingBadgeVariant for Chambers", () => {
     expect(rankingBadgeVariant("CHAMBERS", 1)).toBe("green");
     expect(rankingBadgeVariant("CHAMBERS", 2)).toBe("green");
-    expect(rankingBadgeVariant("CHAMBERS", 3)).toBe("teal");
+    expect(rankingBadgeVariant("CHAMBERS", 3)).toBe("scg");
     expect(rankingBadgeVariant("CHAMBERS", 5)).toBe("gray");
   });
 
   it("rankingBadgeVariant for Legal500", () => {
     expect(rankingBadgeVariant("LEGAL500", 1)).toBe("green");
-    expect(rankingBadgeVariant("LEGAL500", 3)).toBe("teal");
+    expect(rankingBadgeVariant("LEGAL500", 3)).toBe("scg");
     expect(rankingBadgeVariant("LEGAL500", 5)).toBe("gray");
   });
 
   it("rankingBadgeVariant for star-based (Benchmark/AsiaLaw)", () => {
     expect(rankingBadgeVariant("BENCHMARK_LITIGATION", 5)).toBe("green");
-    expect(rankingBadgeVariant("ASIALAW", 3)).toBe("teal");
+    expect(rankingBadgeVariant("ASIALAW", 3)).toBe("scg");
     expect(rankingBadgeVariant("ASIALAW", 2)).toBe("gray");
   });
 });

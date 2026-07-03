@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
-import { CopyLinkButton, CopyDraftButton, CopyPortalLinkButton } from "@/components/rfp/CopyLinkButton";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, Clock, XCircle, FileText, Star, Pencil } from "lucide-react";
+import { CheckCircle2, Clock, XCircle, FileText, Star, ChevronRight } from "lucide-react";
 
 type InvitationStatus = "INVITED" | "SUBMITTED" | "DECLINED" | "SCORED" | "SHORTLISTED" | "SELECTED" | "UNSUCCESSFUL";
 
@@ -23,7 +22,7 @@ type Invitation = {
   respondedAt?: string | null;
 };
 
-export function InvitationStatusTracker({ rfpId, rfpTitle, invitations }: { rfpId: string; rfpTitle: string; invitations: Invitation[] }) {
+export function InvitationStatusTracker({ rfpId, invitations }: { rfpId: string; invitations: Invitation[] }) {
   if (invitations.length === 0) {
     return <p className="text-sm text-gray-400">No invitations sent yet.</p>;
   }
@@ -42,37 +41,30 @@ export function InvitationStatusTracker({ rfpId, rfpTitle, invitations }: { rfpI
           style={{ width: `${(responded / invitations.length) * 100}%` }}
         />
       </div>
-      <div className="space-y-2">
+      <div className="space-y-1">
         {invitations.map((inv) => {
           const config = statusConfig[inv.status as InvitationStatus] ?? statusConfig.INVITED;
           const Icon = config.icon;
+          // The whole row opens the firm's page for this matter, where the
+          // actions live (email link, copy draft, copy link, enter response).
           return (
-            <div key={inv.id} className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">{inv.firmName}</span>
-              <div className="flex items-center gap-2">
-                {inv.status === "INVITED" && (
-                  <>
-                    <CopyLinkButton rfpId={rfpId} invitationId={inv.id} rfpTitle={rfpTitle} firmName={inv.firmName} />
-                    <CopyDraftButton rfpId={rfpId} invitationId={inv.id} rfpTitle={rfpTitle} firmName={inv.firmName} />
-                    <CopyPortalLinkButton rfpId={rfpId} invitationId={inv.id} />
-                    <Link
-                      href={`/rfp/${rfpId}/respond/${inv.id}`}
-                      className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-medium text-scg-700 hover:bg-scg-50"
-                    >
-                      <Pencil size={10} />
-                      Enter response
-                    </Link>
-                  </>
-                )}
-                <Badge
-                  variant="outline"
-                  className={cn("gap-1 text-[10px]", config.className)}
-                >
-                  <Icon size={10} />
-                  {config.label}
-                </Badge>
-              </div>
-            </div>
+            <Link
+              key={inv.id}
+              href={`/rfp/${rfpId}/respond/${inv.id}`}
+              className="-mx-2 flex items-center justify-between rounded-md px-2 py-2 hover:bg-gray-50"
+            >
+              <span className="flex items-center gap-1.5 text-sm font-medium text-scg-700">
+                {inv.firmName}
+                <ChevronRight size={14} className="text-gray-300" />
+              </span>
+              <Badge
+                variant="outline"
+                className={cn("gap-1 text-[10px]", config.className)}
+              >
+                <Icon size={10} />
+                {config.label}
+              </Badge>
+            </Link>
           );
         })}
       </div>

@@ -13,7 +13,7 @@ const GROQ_FAST_MODEL = "llama-3.1-8b-instant";
 
 export const DEFAULT_MODEL = GROQ_API_KEY ? GROQ_DEFAULT_MODEL : "claude-sonnet-4-6";
 
-function useGroq(): boolean {
+function isGroqEnabled(): boolean {
   return !!GROQ_API_KEY;
 }
 
@@ -370,7 +370,7 @@ async function streamClaudeCLI(
  * - Claude CLI if no API key (local dev with Claude Max)
  */
 export async function callClaude(request: ClaudeRequest): Promise<ClaudeResponse> {
-  if (useGroq()) return callGroq(request);
+  if (isGroqEnabled()) return callGroq(request);
   return callClaudeCLI(request);
 }
 
@@ -381,19 +381,19 @@ export async function streamClaude(
   request: ClaudeRequest,
   onText: (chunk: string) => void,
 ): Promise<ClaudeResponse> {
-  if (useGroq()) return streamGroq(request, onText);
+  if (isGroqEnabled()) return streamGroq(request, onText);
   return streamClaudeCLI(request, onText);
 }
 
 export function hasServerApiKey(): boolean {
-  return useGroq() || true; // Groq API key or Claude CLI always available
+  return isGroqEnabled() || true; // Groq API key or Claude CLI always available
 }
 
 /**
  * Returns the current LLM provider being used.
  */
 export function getLLMProvider(): { provider: "groq" | "claude-cli"; model: string } {
-  if (useGroq()) {
+  if (isGroqEnabled()) {
     return { provider: "groq", model: GROQ_DEFAULT_MODEL };
   }
   return { provider: "claude-cli", model: "claude-sonnet-4-6" };
