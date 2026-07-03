@@ -5,11 +5,8 @@ const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
 // Dev fallback only. In production EMAIL_FROM must be a verified SCG domain:
 // a resend.dev sender fails deliverability and looks like phishing to firms.
-if (process.env.NODE_ENV === "production" && RESEND_API_KEY && !process.env.EMAIL_FROM) {
-  throw new Error(
-    "EMAIL_FROM is not set. Refusing to send production email from the resend.dev test domain."
-  );
-}
+// This is checked at send time (below), NOT at module load, so it cannot
+// crash the build when EMAIL_FROM is unset in the build environment.
 const FROM_ADDRESS = process.env.EMAIL_FROM ?? "SCG Legal <onboarding@resend.dev>";
 
 export type RfpInvitationEmail = {
@@ -32,6 +29,15 @@ export async function sendRfpInvitationEmail(
 ): Promise<boolean> {
   if (!resend) {
     console.log(`[Email] Resend not configured — skipping email to ${data.to}`);
+    return false;
+  }
+
+  // Refuse to send from the resend.dev test domain in production. Skip (do not
+  // throw) so a missing EMAIL_FROM never crashes the RFP flow.
+  if (process.env.NODE_ENV === "production" && !process.env.EMAIL_FROM) {
+    console.error(
+      "[Email] EMAIL_FROM not set in production; not sending from the resend.dev test domain."
+    );
     return false;
   }
 
